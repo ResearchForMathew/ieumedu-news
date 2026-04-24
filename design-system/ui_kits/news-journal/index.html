@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>이음교육저널 — UI kit</title>
+  <link rel="stylesheet" href="../../colors_and_type.css">
+  <link rel="stylesheet" href="./kit.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">본문으로 바로가기</a>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script type="text/babel" src="./Header.jsx"></script>
+  <script type="text/babel" src="./Hero.jsx"></script>
+  <script type="text/babel" src="./SectionHead.jsx"></script>
+  <script type="text/babel" src="./ArticleCard.jsx"></script>
+  <script type="text/babel" src="./PrincipleCard.jsx"></script>
+  <script type="text/babel" src="./Footer.jsx"></script>
+
+  <script type="text/babel">
+    const latest = [
+      { href:'#', img:'../../assets/articles/infant-sleep.jpg', alt:'아기 침대와 은은한 조명', category:'영유아 수면', title:'잠들기 어려운 아이의 밤, 훈련보다 공동조절이 먼저인 이유', desc:'잠들기 어려운 아이의 밤을 수면 훈련보다 공동조절의 관점에서 다시 읽습니다.' },
+      { href:'#', img:'../../assets/articles/youth-sleep.jpg', alt:'푸른 나무와 달빛', category:'청소년 리듬', title:'청소년이 늦게 잠드는 이유, 게으름보다 먼저 봐야 할 리듬 변화', desc:'늦게 잠드는 청소년의 밤을 생체리듬과 사회적 압박의 충돌로 설명합니다.' },
+      { href:'#', img:'../../assets/articles/development-delay.png', alt:'놀이 도구 앞의 아이', category:'발달 현장', title:'발달지연 조기 발견이 중요한 이유, 함께 보는 신호', desc:'발달지연 조기 발견의 중요성과 가정, 어린이집이 함께 보는 신호를 짚습니다.' },
+    ];
+    const columns = [
+      { href:'#', img:'../../assets/articles/recovery-daily-life.png', alt:'따뜻한 밤거리', category:'회복', title:'회복은 일상에서 시작된다', desc:'회복은 특별한 밤이 아니라 낮의 작은 멈춤과 조정에서 시작된다고 말합니다.' },
+      { href:'#', img:'../../assets/articles/sleep-not-medicine.jpg', alt:'어두운 밤과 창문 불빛', category:'불안과 잠', title:'잠은 최고의 보약이 아니다', desc:'잘 자야 한다는 강박이 왜 밤을 더 긴장시키는지 돌아봅니다.' },
+      { href:'#', img:'../../assets/articles/case-sleep-gap.jpg', alt:'고요한 설경', category:'사례 기록', title:'잠은 오는데 왜 쉬지 못하는가', desc:'잠은 오지만 쉬지 못하는 한 사람의 밤을 통해 수면과 회복의 간격을 살핍니다.' },
+    ];
+    const topics = [
+      { t:'생애주기와 수면', d:'영유아기부터 성인기까지 발달 흐름 안에서 읽는 수면을 다룹니다.' },
+      { t:'발달과 애착', d:'애착, 공동조절, 사회학습을 현장의 언어로 풀어낸 기록을 모읍니다.' },
+      { t:'교육현장', d:'발달지연, 통합교육, 특수교육의 쟁점과 실제를 함께 다룹니다.' },
+      { t:'연구와 기록', d:'저서, 논문, 학위, 언론 보도 등 관련 기록을 한자리에서 확인할 수 있습니다.' },
+    ];
+    const principles = [
+      { n:'01', t:'단편적인 건강 정보보다 감정과 발달의 맥락을 먼저 설명합니다.' },
+      { n:'02', t:'개인의 고통을 자기관리 실패처럼 다루지 않습니다.' },
+      { n:'03', t:'현장의 언어를 공공의 문장으로 번역합니다.' },
+      { n:'04', t:'사례는 철저히 익명화하며, 광고와 기사를 명확히 분리합니다.' },
+    ];
+
+    function App(){
+      return (
+        <>
+          <Header />
+          <main id="main">
+            <Hero />
+
+            <section className="section" id="latest">
+              <div className="container">
+                <SectionHead kicker="latest" title="최신 기사" desc="현장에서 가장 자주 마주치는 질문과 해답을 묶었습니다." />
+                <div className="card-grid">{latest.map((a,i)=><ArticleCard key={i} {...a} />)}</div>
+              </div>
+            </section>
+
+            <section className="section section--tint" id="columns">
+              <div className="container">
+                <SectionHead kicker="columns" title="칼럼" desc="수면과 회복, 불안의 감각을 개인의 문장으로 짚어냅니다." />
+                <div className="card-grid">{columns.map((a,i)=><ArticleCard key={i} {...a} />)}</div>
+              </div>
+            </section>
+
+            <section className="section" id="topics">
+              <div className="container">
+                <SectionHead kicker="topics" title="다루는 주제" desc="생애주기와 수면, 발달과 애착, 교육현장을 중심으로 다룹니다." />
+                <div className="topics-grid">
+                  {topics.map((t,i)=>(
+                    <article className="topic-card" key={i}>
+                      <h3>{t.t}</h3><p>{t.d}</p>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            <section className="section" id="archive">
+              <div className="container">
+                <div className="archive-wrap">
+                  <div className="archive-intro">
+                    <span className="kicker">archive</span>
+                    <h2>저서 · 연구 · 언론보도 아카이브</h2>
+                    <p>저서, 논문, 학위, 언론 보도 등 관련 연구 기록을 한곳에서 확인할 수 있습니다.</p>
+                    <a className="btn btn--primary" href="#">아카이브 전체 보기</a>
+                  </div>
+                  <div className="archive-panel">
+                    <div className="archive-list">
+                      <a className="archive-item" href="#"><strong>저서</strong><span>출간 도서와 관련 기록을 함께 확인합니다.</span></a>
+                      <a className="archive-item" href="#"><strong>논문 · 학위</strong><span>논문과 학위, 연구 주제를 연도별로 확인합니다.</span></a>
+                      <a className="archive-item" href="#"><strong>언론보도</strong><span>외부 인터뷰와 기사, 보도 이력을 함께 살핍니다.</span></a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section className="section" id="principles">
+              <div className="container">
+                <SectionHead kicker="principles" title="이음저널의 4가지 원칙" desc="홈에서는 운영의 기준이 되는 네 가지 원칙만 짧게 제시합니다." />
+                <div className="principles-grid">{principles.map(p=><PrincipleCard key={p.n} num={p.n} text={p.t} />)}</div>
+              </div>
+            </section>
+          </main>
+          <Footer />
+        </>
+      );
+    }
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>회복은 일상에서 시작된다 · 이음교육저널</title>
+  <link rel="stylesheet" href="../../colors_and_type.css">
+  <link rel="stylesheet" href="./kit.css">
+  <link rel="stylesheet" href="./detail.css">
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="./Header.jsx"></script>
+<script type="text/babel" src="./Footer.jsx"></script>
+<script type="text/babel" src="./ArticleCard.jsx"></script>
+
+<script type="text/babel">
+function ColumnPage(){
+  const more = [
+    { href:'#', img:'../../assets/articles/sleep-not-medicine.jpg', alt:'어두운 밤과 창문 불빛', category:'불안과 잠', title:'잠은 최고의 보약이 아니다', desc:'잘 자야 한다는 강박이 왜 밤을 더 긴장시키는지 돌아봅니다.' },
+    { href:'#', img:'../../assets/articles/case-sleep-gap.jpg', alt:'고요한 설경', category:'사례 기록', title:'잠은 오는데 왜 쉬지 못하는가', desc:'잠은 오지만 쉬지 못하는 한 사람의 밤을 통해 수면과 회복의 간격을 살핍니다.' },
+    { href:'#', img:'../../assets/articles/recovery-daily-life.png', alt:'따뜻한 밤거리', category:'회복', title:'회복은 일상에서 시작된다', desc:'회복은 특별한 밤이 아니라 낮의 작은 멈춤과 조정에서 시작된다고 말합니다.' },
+  ];
+
+  return (
+    <>
+      <Header />
+      <main id="main">
+        <article className="column-bleed">
+          <div className="container">
+            <header className="column-masthead">
+              <div className="column-number">columns · №03</div>
+              <h1 className="column-title">회복은 일상에서<br/>시작된다</h1>
+              <p className="column-sub">밤을 바꾸고 싶다면 밤만 관리해서는 충분하지 않다. 회복은 낮의 리듬을 다시 짜는 데서 시작된다.</p>
+              <div className="column-ornament" />
+              <div className="column-author-row">
+                <span><strong>선애순</strong> · 편집장</span>
+                <span>·</span>
+                <span>2026.04.23</span>
+                <span>·</span>
+                <span>읽기 5분</span>
+              </div>
+            </header>
+
+            <figure className="column-hero">
+              <div className="column-hero__frame">
+                <img src="../../assets/articles/recovery-daily-life.png" alt="따뜻한 조명이 비치는 밤거리 — 회복과 일상을 상징하는 칼럼 대표 이미지" />
+              </div>
+              <figcaption className="column-hero__cap">
+                <span className="column-hero__cap-mark">cover</span>
+                <span className="column-hero__cap-text">회복은 특별한 밤에 완성되지 않는다. 낮의 속도를 잠시 늦추는 작은 멈춤에서, 밤의 깊이는 조금씩 만들어진다.</span>
+                <span className="column-hero__cap-credit">illustration · 이음교육저널</span>
+              </figcaption>
+            </figure>
+
+            <div className="column-body">
+              <p className="lead-drop">잠을 이야기할 때 사람들은 거의 자동처럼 밤을 떠올린다. 불을 끄는 시간, 잠자리에 드는 자세, 눈을 감은 뒤의 몇 시간을 먼저 생각한다. 하지만 많은 밤의 각성은 그 순간부터 시작되지 않는다. 이미 낮 동안 몸과 마음은 충분히 긴장된 상태로 남아 있고, 밤은 그 흐름이 조금 다른 모습으로 이어지는 시간일 뿐이다.</p>
+
+              <h2>밤으로 밀려오는 낮의 긴장</h2>
+
+              <p>그래서 잠은 밤에 실패한 것이 아닐 수 있다. 하루 종일 삼킨 말, 미뤄 둔 감정, 멈추지 않은 속도, 자꾸만 자신을 다그치게 되는 생활 구조가 밤으로 흘러와 각성을 만든다.</p>
+              <p>잠자리에 들자마자 생각이 많아지는 이유를 의지 부족으로만 읽으면 중요한 것을 놓치게 된다. 낮에 비워지지 못한 것들이 이제야 떠오르는 것일 수도 있기 때문이다.</p>
+
+              <h2>회복은 낮의 작은 조정에서 시작된다</h2>
+
+              <p>회복은 특별한 어느 밤에 갑자기 완성되지 않는다. 오히려 낮에 아주 작은 조정이 생길 때 밤은 조금 덜 버거워진다. 짧은 멈춤, 호흡이 제자리로 돌아오는 순간, 해야 할 일을 하나 덜어내는 선택, 감정을 미루지 않고 한번 확인해 보는 태도 같은 것들이다.</p>
+              <p>몸은 그런 경험이 쌓일 때 비로소 "계속 견디지 않아도 된다"는 신호를 받는다.</p>
+
+              <figure className="column-figure">
+                <div className="column-figure__frame">
+                  <img src="../../assets/articles/case-sleep-gap.jpg" alt="고요한 겨울밤의 장면 — 쉬지 못한 하루의 긴장을 떠올리게 하는 풍경" />
+                </div>
+                <figcaption className="column-figure__cap">잠은 오지만 쉬지 못하는 밤이 있다. 몸은 낮에 삼킨 긴장을 먼저 기억한다.</figcaption>
+              </figure>
+
+              <div className="column-divider">◆ ◆ ◆</div>
+
+              <h2>회복을 허락하지 않는 하루의 구조</h2>
+
+              <p>문제는 우리의 일상이 너무 자주 회복을 허락하지 않는다는 데 있다. 하루는 빽빽하고, 쉬는 시간마저 자기관리 과제로 채워지고, 감정을 다룰 틈은 자꾸만 뒤로 밀린다. 회복을 말하면서도 정작 회복할 시간을 주지 않는 문화 안에서 밤은 쉽게 무거워진다. 밤의 문제만으로 남겨 두기에는 낮의 구조가 너무 깊이 개입해 있다.</p>
+              <p>회복은 결국 결과가 아니라 조건이다. 잘 잔 하룻밤이 모든 것을 바꾸기보다, 오늘 하루 어디에서도 쉬지 못했던 자신을 조금 더 이해하는 일에서 시작된다. 평범한 일상 속의 작은 느슨함이 밤의 깊이를 만든다.</p>
+            </div>
+
+            <footer className="column-footer">
+              <div className="column-footer__avatar">선</div>
+              <div>
+                <div className="column-footer__name">선애순 · 편집장</div>
+                <p className="column-footer__bio">이음통합평생교육원 대표. 수면, 회복, 교육현장의 감정 구조에 관한 글을 씁니다.</p>
+              </div>
+            </footer>
+          </div>
+        </article>
+
+        <section className="related-section">
+          <div className="container">
+            <div className="related-header">
+              <div>
+                <span className="kicker">more columns</span>
+                <h2>이 필자의 다른 글</h2>
+              </div>
+              <a className="inline-link" href="#">칼럼 전체 보기 <span aria-hidden="true">→</span></a>
+            </div>
+            <div className="card-grid">
+              {more.map((a,i)=><ArticleCard key={i} {...a} />)}
+            </div>
+          </div>
+        </section>
+      </main>
+      <Footer />
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<ColumnPage />);
+</script>
+</body>
+</html>

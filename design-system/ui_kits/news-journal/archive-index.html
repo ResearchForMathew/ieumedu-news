@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>아카이브 · 이음교육저널</title>
+  <link rel="stylesheet" href="../../colors_and_type.css">
+  <link rel="stylesheet" href="./kit.css">
+  <link rel="stylesheet" href="./detail.css">
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="./Header.jsx"></script>
+<script type="text/babel" src="./Footer.jsx"></script>
+
+<script type="text/babel">
+const { useState } = React;
+
+const BOOKS = [
+  {
+    year:'2022', role:'공동저자',
+    cover:'../../assets/books/attachment-child-emotion.jpeg',
+    title:'애착과 아동정서 중심치료',
+    authors:'김현진 · 선애순 공저',
+    publisher:'한출판'
+  },
+  {
+    year:'2021', role:'공동저자',
+    cover:'../../assets/books/drawing-child-psychology.jpeg',
+    title:'그림을 통한 아동심리 진단 및 해석',
+    authors:'김동례 · 선애순 공저',
+    publisher:'공동체'
+  },
+  {
+    year:'2021', role:'공동저자',
+    cover:'../../assets/books/figure-psychology-counseling.jpeg',
+    title:'도형심리 상담 이해와 분석',
+    authors:'고재윤 · 선애순 · 윤동화 공저',
+    publisher:'양성원'
+  },
+  {
+    year:'2020', role:'공동저자',
+    cover:'../../assets/books/infant-young-development.jpeg',
+    title:'영유아 발달',
+    authors:'김영애 · 선애순 · 정효정 공저',
+    publisher:'양서원'
+  },
+  {
+    year:'2020', role:'공동저자',
+    cover:'../../assets/books/early-childhood-guidance.jpeg',
+    title:'영유아 생활지도 및 상담',
+    authors:'박순길 · 김동례 · 선애순 공저',
+    publisher:'공동체'
+  },
+  {
+    year:'2019', role:'공동저자',
+    cover:'../../assets/books/infant-development.jpeg',
+    title:'영아 발달',
+    authors:'권순황 · 선애순 · 이형선 공저',
+    publisher:'양서원'
+  },
+  {
+    year:'2019', role:'공동저자',
+    cover:'../../assets/books/sand-play-counseling.jpeg',
+    title:'모래놀이심리상담의 이해와 적용',
+    authors:'김동례 · 선애순 · 한재금 공저',
+    publisher:'인맥스디자인'
+  },
+  {
+    year:'2018', role:'공동저자',
+    cover:'../../assets/books/child-bibliotherapy.jpeg',
+    title:'아동 독서치료 이론과 실제',
+    authors:'선애순 · 이형선 공저',
+    publisher:'양서원'
+  },
+  {
+    year:'2018', role:'공동저자',
+    cover:'../../assets/books/child-counseling.jpeg',
+    title:'아동상담',
+    authors:'박순길 · 권순황 · 김현진 · 선애순 · 한재금 공저',
+    publisher:'양서원'
+  },
+  {
+    year:'2017', role:'공동저자',
+    cover:'../../assets/books/child-literature.jpeg',
+    title:'아동문학',
+    authors:'김동례 · 권순황 · 선애순 공저',
+    publisher:'공동체'
+  },
+];
+
+const PAPERS = [
+  { year:'2023', tag:'journal', title:'공동조절 관점에서 본 영유아 수면 문제의 재해석', meta:'한국아동가족학회지 · 제34권 2호 · 공동저자', source:'KCI 등재'},
+  { year:'2022', tag:'journal', title:'청소년 수면 지연과 학업 리듬의 상관 연구', meta:'교육심리연구 · 제36권 4호', source:'KCI 등재'},
+  { year:'2020', tag:'dissertation', title:'발달지연 조기 선별 도구의 가정 내 활용 가능성', meta:'박사학위논문 · 전남대학교 대학원', source:'학위논문'},
+  { year:'2016', tag:'journal', title:'통합교육 현장의 교사 자기효능감에 관한 질적 연구', meta:'특수교육학연구 · 제51권 1호', source:'KCI 등재'},
+];
+
+const MEDIA = [
+  { year:'2025', tag:'interview', title:'"잠들기 어려운 아이에게 필요한 건 훈련이 아니라 조율입니다"', meta:'한겨레 토요판 · 교육면 · 이음통합평생교육원 대표 인터뷰', source:'한겨레'},
+  { year:'2024', tag:'column', title:'회복을 허락하지 않는 하루에 관하여', meta:'경향신문 오피니언 · 객원 칼럼', source:'경향신문'},
+  { year:'2023', tag:'feature', title:'수면·발달·교육을 한 지면에서 읽는 사람들', meta:'시사IN · 인물기획', source:'시사IN'},
+  { year:'2022', tag:'broadcast', title:'청소년 수면 리듬과 사회적 압박 — 라디오 대담', meta:'KBS라디오 · 주간 교육', source:'KBS'},
+];
+
+function ArchivePage(){
+  const [filter, setFilter] = useState('all');
+
+  const show = (tag) => filter === 'all' || filter === tag;
+
+  return (
+    <>
+      <Header />
+      <main id="main">
+        <section className="archive-bleed">
+          <header className="archive-masthead">
+            <div>
+              <span className="kicker">archive</span>
+              <h1 className="archive-title">저서 · 연구 · 언론보도<br/>아카이브</h1>
+            </div>
+            <p className="archive-lede">
+              이음교육저널 편집진과 이음통합평생교육원의 발간·연구·외부 기고 기록을 한곳에서 확인할 수 있습니다.
+              수면, 발달, 애착, 통합교육을 중심으로 모으고 있습니다.
+            </p>
+          </header>
+
+          <div className="archive-tools">
+            <div className="archive-search">
+              <input type="search" placeholder="연도, 제목, 학술지, 매체로 검색" />
+            </div>
+            <div className="archive-filter" role="tablist">
+              {['all','books','papers','media'].map(f =>
+                <button key={f}
+                        className={filter===f?'is-active':''}
+                        onClick={()=>setFilter(f)}>{f}</button>
+              )}
+            </div>
+          </div>
+
+          <div className="archive-body">
+            <nav className="archive-toc" aria-label="섹션 바로가기">
+              <span className="archive-toc-label">sections</span>
+              <a href="#books">저서 <span>{BOOKS.length}</span></a>
+              <a href="#papers">논문 · 학위 <span>{PAPERS.length}</span></a>
+              <a href="#media">언론보도 <span>{MEDIA.length}</span></a>
+            </nav>
+
+            <div>
+              {(filter==='all'||filter==='books') &&
+                <section className="archive-section" id="books">
+                  <div className="archive-section__head">
+                    <h2 className="archive-section__label">저서</h2>
+                    <span className="archive-section__count">{BOOKS.length} entries · 2017–2022</span>
+                  </div>
+
+                  <ul className="archive-list">
+                    {BOOKS.map((b,i) =>
+                      <li key={i}>
+                        <a className="archive-row" href="#">
+                          <span className="archive-row__year">{b.year}</span>
+                          <span className="archive-row__tag">{b.role}</span>
+                          <div>
+                            <h3 className="archive-row__title">{b.title}</h3>
+                            <p className="archive-row__meta">{b.authors}</p>
+                          </div>
+                          <span className="archive-row__source">{b.publisher}</span>
+                        </a>
+                      </li>
+                    )}
+                  </ul>
+                </section>
+              }
+
+              {(filter==='all'||filter==='papers') &&
+                <section className="archive-section" id="papers">
+                  <div className="archive-section__head">
+                    <h2 className="archive-section__label">논문 · 학위</h2>
+                    <span className="archive-section__count">{PAPERS.length} entries</span>
+                  </div>
+                  <ul className="archive-list">
+                    {PAPERS.map((p,i) =>
+                      <li key={i}>
+                        <a className="archive-row" href="#">
+                          <span className="archive-row__year">{p.year}</span>
+                          <span className="archive-row__tag">{p.tag}</span>
+                          <div>
+                            <h3 className="archive-row__title">{p.title}</h3>
+                            <p className="archive-row__meta">{p.meta}</p>
+                          </div>
+                          <span className="archive-row__source">{p.source}</span>
+                        </a>
+                      </li>
+                    )}
+                  </ul>
+                </section>
+              }
+
+              {(filter==='all'||filter==='media') &&
+                <section className="archive-section" id="media">
+                  <div className="archive-section__head">
+                    <h2 className="archive-section__label">언론보도</h2>
+                    <span className="archive-section__count">{MEDIA.length} entries</span>
+                  </div>
+                  <ul className="archive-list">
+                    {MEDIA.map((m,i) =>
+                      <li key={i}>
+                        <a className="archive-row" href="#">
+                          <span className="archive-row__year">{m.year}</span>
+                          <span className="archive-row__tag">{m.tag}</span>
+                          <div>
+                            <h3 className="archive-row__title">{m.title}</h3>
+                            <p className="archive-row__meta">{m.meta}</p>
+                          </div>
+                          <span className="archive-row__source">{m.source}</span>
+                        </a>
+                      </li>
+                    )}
+                  </ul>
+                </section>
+              }
+            </div>
+          </div>
+        </section>
+      </main>
+      <Footer />
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<ArchivePage />);
+</script>
+</body>
+</html>

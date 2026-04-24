@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body{margin:0;background:var(--color-bg);padding:24px;font-family:var(--font-sans)}
+  .stack{display:flex;flex-direction:column;gap:14px}
+  .panel{border-radius:14px;padding:22px 24px;border:.5px solid var(--color-border);position:relative;overflow:hidden}
+  .panel__label{position:absolute;top:10px;right:14px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-family:ui-monospace,Menlo,monospace;opacity:.55}
+  .panel h3{font-family:var(--font-serif);font-weight:600;font-size:22px;line-height:1.25;margin:0 0 6px;letter-spacing:-.02em}
+  .panel .body{font-size:14px;line-height:1.65;margin:0 0 6px;max-width:58ch}
+  .panel .faint{font-size:12px;letter-spacing:.04em}
+  .panel .kicker{font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px;display:block;opacity:.7}
+
+  /* Light surfaces — dark text stack */
+  .on-bg{background:var(--color-bg)}
+  .on-surface{background:var(--color-surface)}
+  .on-tint{background:var(--color-surface-tint)}
+  .on-bg h3, .on-surface h3, .on-tint h3{color:var(--fg-1)}
+  .on-bg .body, .on-surface .body, .on-tint .body{color:var(--fg-2)}
+  .on-bg .faint, .on-surface .faint, .on-tint .faint{color:var(--fg-3)}
+  .on-bg .kicker, .on-surface .kicker, .on-tint .kicker{color:var(--color-accent)}
+
+  /* Accent surface — light text stack */
+  .on-accent{background:var(--color-accent);border-color:transparent}
+  .on-accent h3{color:#FAFBF8}
+  .on-accent .body{color:rgba(250,251,248,.82)}
+  .on-accent .faint{color:rgba(250,251,248,.58)}
+  .on-accent .kicker{color:rgba(250,251,248,.7)}
+
+  /* Deep surface — light text stack */
+  .on-deep{background:#0D1F1F;border-color:transparent}
+  .on-deep h3{color:#FAFBF8}
+  .on-deep .body{color:rgba(250,251,248,.78)}
+  .on-deep .faint{color:rgba(250,251,248,.5)}
+  .on-deep .kicker{color:#9FC9C1}
+</style></head>
+<body>
+<div class="stack">
+
+  <div class="panel on-bg">
+    <span class="panel__label">on bg · #F1F3EF</span>
+    <span class="kicker">fg-1 · fg-2 · fg-3</span>
+    <h3>밤의 감정과 낮의 교육</h3>
+    <p class="body">본문은 fg-2로 설정합니다. 제목보다 한 톤 부드러워 가독성과 위계가 모두 유지됩니다.</p>
+    <p class="faint">보조 메타 · 2025.03.18 · 읽기 4분</p>
+  </div>
+
+  <div class="panel on-surface">
+    <span class="panel__label">on surface · #FAFBF8</span>
+    <span class="kicker">fg-1 · fg-2 · fg-3</span>
+    <h3>잠들지 못하는 마음에게</h3>
+    <p class="body">카드나 기사 본문 배경. 흰색보다 아주 살짝 녹색조가 섞여 눈의 피로를 낮춥니다.</p>
+    <p class="faint">보조 메타 · 발달심리 · 선애순</p>
+  </div>
+
+  <div class="panel on-tint">
+    <span class="panel__label">on surface-tint · #E8EDE7</span>
+    <span class="kicker">fg-1 · fg-2 · fg-3</span>
+    <h3>섹션 구분과 리듬</h3>
+    <p class="body">틴트 배경에서도 fg-1/fg-2 조합이 충분한 대비를 확보하도록 명도를 맞췄습니다.</p>
+    <p class="faint">보조 메타 · 인용 · 사이드바</p>
+  </div>
+
+  <div class="panel on-accent">
+    <span class="panel__label">on accent · #2D6A6A</span>
+    <span class="kicker">inverse stack</span>
+    <h3>CTA와 강조 영역</h3>
+    <p class="body">짙은 틸 위에서는 텍스트를 반전시켜 사용합니다. 본문은 82% 투명도로 낮춰 위계를 만듭니다.</p>
+    <p class="faint">58% — 보조 메타용</p>
+  </div>
+
+  <div class="panel on-deep">
+    <span class="panel__label">on deep · #0D1F1F</span>
+    <span class="kicker">inverse stack</span>
+    <h3>야간 섹션 · 히어로 변형</h3>
+    <p class="body">어두운 배경에서는 흰 계열을 쓰되, 키커에는 민트 톤(#9FC9C1)을 사용해 녹색 체계를 이어갑니다.</p>
+    <p class="faint">50% — 낮은 우선순위 정보</p>
+  </div>
+
+</div>
+</body></html>

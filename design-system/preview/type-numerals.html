@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body{margin:0;background:var(--color-bg);padding:22px;font-family:var(--font-sans);color:var(--fg-1)}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .cell{background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;padding:14px;display:flex;flex-direction:column;align-items:center;gap:8px}
+  .num{font-family:var(--font-serif);font-weight:500;color:var(--color-accent);letter-spacing:-.02em;font-feature-settings:"lnum"}
+  .n1{font-size:44px}.n2{font-size:32px}.n3{font-size:24px}.n4{font-size:18px}
+  .lbl{font-size:10.5px;color:var(--fg-3);letter-spacing:.08em;text-transform:uppercase}
+</style></head>
+<body>
+<div class="grid">
+  <div class="cell"><div class="num n1">01</div><div class="lbl">serif · 44</div></div>
+  <div class="cell"><div class="num n2">02</div><div class="lbl">serif · 32</div></div>
+  <div class="cell"><div class="num n3">2026</div><div class="lbl">serif · 24</div></div>
+  <div class="cell"><div class="num n4">04.23</div><div class="lbl">serif · 18</div></div>
+</div>
+</body></html>

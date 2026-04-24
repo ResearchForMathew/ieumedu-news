@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body{margin:0;background:var(--color-bg);padding:24px;font-family:var(--font-sans);color:var(--fg-1)}
+  .row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+  .sw{border-radius:10px;overflow:hidden;border:1px solid var(--color-border);background:var(--color-surface)}
+  .chip{height:72px}
+  .lbl{padding:8px 10px;display:flex;justify-content:space-between;align-items:baseline;font-size:11px;color:var(--fg-2)}
+  .name{font-weight:500;color:var(--fg-1);font-size:12px}
+  .hex{font-family:ui-monospace,Menlo,monospace;font-size:10.5px;color:var(--fg-3)}
+</style></head>
+<body>
+<div class="row">
+  <div class="sw"><div class="chip" style="background:#E4F0EC"></div><div class="lbl"><span class="name">accent-surface</span><span class="hex">#E4F0EC</span></div></div>
+  <div class="sw"><div class="chip" style="background:#9FE1CB"></div><div class="lbl"><span class="name">accent-light</span><span class="hex">#9FE1CB</span></div></div>
+  <div class="sw"><div class="chip" style="background:#2D6A6A"></div><div class="lbl"><span class="name" style="color:#fff">accent</span><span class="hex" style="color:#C8E8E0">#2D6A6A</span></div></div>
+  <div class="sw"><div class="chip" style="background:#0D3D3D"></div><div class="lbl"><span class="name" style="color:#fff">accent-dark</span><span class="hex" style="color:#C8E8E0">#0D3D3D</span></div></div>
+  <div class="sw"><div class="chip" style="background:#0D2E2E"></div><div class="lbl"><span class="name" style="color:#fff">footer-bg</span><span class="hex" style="color:#C8E8E0">#0D2E2E</span></div></div>
+</div>
+</body></html>

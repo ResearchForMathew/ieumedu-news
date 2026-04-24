@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body{margin:0;background:var(--color-bg);padding:24px;font-family:var(--font-sans);color:var(--fg-1)}
+  .row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .sw{border-radius:10px;overflow:hidden;border:1px solid var(--color-border)}
+  .chip{height:72px}
+  .lbl{padding:8px 10px;display:flex;justify-content:space-between;align-items:baseline;font-size:11px;color:var(--fg-2);background:#FFFFFF}
+  .name{font-weight:500;color:var(--fg-1);font-size:12px}
+  .hex{font-family:ui-monospace,Menlo,monospace;font-size:10.5px;color:var(--fg-3);letter-spacing:.02em}
+  .note{margin-top:14px;font-size:11px;color:var(--fg-3);letter-spacing:.04em;font-family:var(--font-display);font-style:italic}
+</style></head>
+<body>
+<div class="row">
+  <div class="sw"><div class="chip" style="background:#F1F3EF"></div><div class="lbl"><span class="name">bg</span><span class="hex">#F1F3EF</span></div></div>
+  <div class="sw"><div class="chip" style="background:#FAFBF8"></div><div class="lbl"><span class="name">surface</span><span class="hex">#FAFBF8</span></div></div>
+  <div class="sw"><div class="chip" style="background:#E8EDE7"></div><div class="lbl"><span class="name">surface-tint</span><span class="hex">#E8EDE7</span></div></div>
+  <div class="sw"><div class="chip" style="background:#D6DDD7"></div><div class="lbl"><span class="name">border</span><span class="hex">#D6DDD7</span></div></div>
+</div>
+<div class="note">one sage-neutral family · step ≈ 4–6 L* · no temperature shift between values</div>
+</body></html>

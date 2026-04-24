@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body{margin:0;background:var(--color-bg);padding:24px;font-family:var(--font-sans)}
+  .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;justify-content:center;padding:14px 22px;border-radius:999px;font-size:14px;font-weight:500;font-family:var(--font-sans);cursor:pointer;border:1px solid transparent;text-decoration:none;transition:all 260ms cubic-bezier(0.16,1,0.3,1)}
+  .primary{background:var(--color-accent);color:#fff;box-shadow:0 8px 20px rgba(45,106,106,.18)}
+  .primary:hover{background:var(--color-accent-hover);transform:translateY(-1px)}
+  .secondary{background:transparent;color:var(--fg-1);border-color:var(--color-border)}
+  .secondary:hover{border-color:var(--color-accent);color:var(--color-accent)}
+  .ghost{background:transparent;color:var(--color-accent);padding:10px 14px}
+  .ghost:hover{text-decoration:underline;text-underline-offset:4px}
+  .link{color:var(--color-accent);font-weight:600;font-size:14px;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+</style></head>
+<body>
+<div class="row">
+  <a class="btn primary">최신 기사 보기</a>
+  <a class="btn secondary">아카이브 보기</a>
+  <a class="btn ghost">독자 안내</a>
+  <a class="link">글 읽기 <span>→</span></a>
+</div>
+</body></html>

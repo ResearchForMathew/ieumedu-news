@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>이음교육저널 · 디자인 리뷰</title>
+  <link rel="stylesheet" href="colors_and_type.css">
+  <style>
+    body{margin:0;font-family:var(--font-sans);background:var(--color-bg);color:var(--fg-1)}
+    .page{max-width:1120px;margin:0 auto;padding:72px 32px 120px}
+    .masthead{border-bottom:.5px solid var(--color-border);padding-bottom:40px;margin-bottom:48px}
+    .masthead .kicker{font-family:var(--font-display);font-style:italic;font-size:12px;letter-spacing:.18em;color:var(--color-accent);text-transform:lowercase;margin-bottom:12px;display:block}
+    .masthead h1{font-family:var(--font-serif);font-weight:600;font-size:clamp(2rem,4vw,3rem);line-height:1.15;letter-spacing:-.03em;margin:0 0 16px;max-width:20ch}
+    .masthead p{font-family:var(--font-serif);font-style:italic;font-size:16px;line-height:1.65;color:var(--fg-2);max-width:58ch;margin:0}
+    .toc{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:40px 0 64px;padding:20px;border:.5px solid var(--color-border);border-radius:12px;background:var(--color-surface)}
+    .toc a{text-decoration:none;color:var(--fg-2);font-size:13px;padding:8px 12px;border-radius:6px;transition:background .15s,color .15s;display:flex;align-items:baseline;gap:8px}
+    .toc a:hover{background:var(--color-surface-tint);color:var(--color-accent)}
+    .toc a .num{font-family:var(--font-serif);font-style:italic;color:var(--color-accent);font-size:12px}
+    section.phase{margin:72px 0}
+    .phase-head{display:flex;align-items:baseline;gap:16px;margin-bottom:24px;padding-bottom:14px;border-bottom:.5px solid var(--color-border)}
+    .phase-head .num{font-family:var(--font-serif);font-style:italic;color:var(--color-accent);font-size:20px;font-weight:500}
+    .phase-head h2{font-family:var(--font-serif);font-weight:600;font-size:24px;letter-spacing:-.02em;margin:0;flex:1}
+    .phase-head .meta{font-family:var(--font-display);font-style:italic;font-size:11px;letter-spacing:.12em;color:var(--fg-3);text-transform:lowercase}
+    .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}
+    .card{border:.5px solid var(--color-border);border-radius:12px;overflow:hidden;background:var(--color-surface);transition:box-shadow .2s,transform .2s;display:flex;flex-direction:column}
+    .card:hover{transform:translateY(-2px);box-shadow:0 20px 40px -24px rgba(13,61,61,.25)}
+    .card .thumb{aspect-ratio:16/10;border-bottom:.5px solid var(--color-border);background:var(--color-surface-tint);overflow:hidden;position:relative}
+    .card .thumb iframe{width:300%;height:300%;border:0;transform:scale(.333);transform-origin:0 0;pointer-events:none}
+    .card .thumb.solo{display:flex;align-items:center;justify-content:center;font-family:var(--font-serif);font-weight:600;font-size:32px;letter-spacing:-.02em;color:var(--color-accent)}
+    .card .body{padding:18px 20px 20px}
+    .card h3{font-family:var(--font-serif);font-size:17px;font-weight:600;letter-spacing:-.015em;margin:0 0 6px}
+    .card p{font-size:13px;line-height:1.55;color:var(--fg-2);margin:0 0 14px}
+    .card .actions{display:flex;gap:8px;flex-wrap:wrap}
+    .card a.btn{font-size:12px;padding:7px 12px;border-radius:999px;text-decoration:none;font-family:var(--font-sans);letter-spacing:-.005em;transition:background .15s}
+    .btn-primary{background:var(--color-accent);color:#fff}
+    .btn-primary:hover{background:#0A2E2E}
+    .btn-ghost{border:.5px solid var(--color-border);color:var(--fg-2);background:transparent}
+    .btn-ghost:hover{background:var(--color-surface-tint);color:var(--color-accent)}
+    .deploy{margin-top:96px;padding:32px 36px;border:.5px solid var(--color-accent);border-radius:14px;background:var(--color-accent-surface)}
+    .deploy h2{font-family:var(--font-serif);font-size:22px;font-weight:600;margin:0 0 10px;letter-spacing:-.02em}
+    .deploy p{font-size:14px;line-height:1.7;color:var(--fg-2);margin:0 0 16px;max-width:62ch}
+    .deploy ul{font-size:13px;line-height:1.75;color:var(--fg-2);padding-left:20px;margin:10px 0 0}
+    .deploy code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;background:var(--color-surface);padding:2px 6px;border-radius:4px;border:.5px solid var(--color-border)}
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <header class="masthead">
+      <span class="kicker">design review · 배포 준비</span>
+      <h1>이음교육저널 디자인 산출물</h1>
+      <p>news.ieumedu.kr에 적용·배포할 디자인 시스템, UI 키트, 세부 페이지를 한 화면에서 확인하고 파일 단위로 내려받을 수 있습니다.</p>
+    </header>
+
+    <nav class="toc" aria-label="목차">
+      <a href="#foundations"><span class="num">01</span> 디자인 파운데이션</a>
+      <a href="#ui-kit"><span class="num">02</span> UI 키트 · 홈</a>
+      <a href="#pages"><span class="num">03</span> 세부 페이지</a>
+      <a href="#docs"><span class="num">04</span> 문서 & 토큰</a>
+      <a href="#deploy"><span class="num">05</span> 배포 안내</a>
+    </nav>
+
+    <!-- 01 Foundations -->
+    <section class="phase" id="foundations">
+      <div class="phase-head">
+        <span class="num">01</span>
+        <h2>디자인 파운데이션</h2>
+        <span class="meta">colors · type · spacing · brand</span>
+      </div>
+      <div class="card-grid">
+        <div class="card"><div class="thumb"><iframe src="preview/colors-neutrals.html"></iframe></div><div class="body"><h3>Neutrals</h3><p>쿨 세이지 계열 4단계 — bg / surface / surface-tint / border</p><div class="actions"><a class="btn btn-primary" href="preview/colors-neutrals.html">열기</a></div></div></div>
+        <div class="card"><div class="thumb"><iframe src="preview/colors-accent.html"></iframe></div><div class="body"><h3>Accent · Pintail</h3><p>딥 핀틸 티얼 + accent-surface 페어</p><div class="actions"><a class="btn btn-primary" href="preview/colors-accent.html">열기</a></div></div></div>
+        <div class="card"><div class="thumb"><iframe src="preview/colors-text.html"></iframe></div><div class="body"><h3>Text roles</h3><p>배경별 텍스트 가독성 샘플 — fg-1/2/3, on-accent</p><div class="actions"><a class="btn btn-primary" href="preview/colors-text.html">열기</a></div></div></div>
+        <div class="card"><div class="thumb"><iframe src="preview/type-display.html"></iframe></div><div class="body"><h3>Display · Noto Serif KR</h3><p>기사 제목·마스트헤드용 큰 세리프</p><div class="actions"><a class="btn btn-primary" href="preview/type-display.html">열기</a></div></div></div>
+        <div class="card"><div class="thumb"><iframe src="preview/type-scale.html"></iframe></div><div class="body"><h3>Type scale</h3><p>H1~caption 레이어된 타이포그래피 스케일</p><div class="actions"><a class="btn btn-primary" href="preview/type-scale.html">열기</a></div></div></div>
+        <div class="card"><div class="thumb"><iframe src="preview/type-kickers.html"></iframe></div><div class="body"><h3>Kickers</h3><p>italic display 키커 — 섹션 도입부</p><div class="actions"><a class="btn btn-primary" href="preview/type-kickers.html">열기</a></div></div></div>
+        <div class="card"><div class="thumb"><iframe src="preview/type-numerals.html"></iframe></div><div class="body"><h3>Numerals</h3><p>날짜·페이지·통계용 lining figures</p><div class="actions"><a class="btn btn-primary" href="preview/type-numerals.html">열기</a></div></div></div>
+        <div class="card"><div class="thumb"><iframe src="preview/spacing-scale.html"></iframe></div><div class="body"><h3>Spacing scale</h3><p>8pt 기반 간격 토큰</p><div class="actions"><a class="btn btn-primary" href="preview/spacing-scale.html">열기</a></div></div></div>
+        <div class="card"><div class="thumb"><iframe src="preview/spacing-radii.html"></iframe></div><div class="body"><h3>Radii</h3><p>sm · md · lg · pill</p><div class="actions"><a class="btn btn-primary" href="preview/spacing-radii.html">열기</a></div></div></div>
+        <div class="card"><div class="thumb"><iframe src="preview/spacing-shadows.html"></iframe></div><div class="body"><h3>Shadows</h3><p>은은한 리프트용 그림자 3단계</p><div class="actions"><a class="btn btn-primary" href="preview/spacing-shadows.html">열기</a></div></div></div>
+        <div class="card"><div class="thumb"><iframe src="preview/brand-wordmark.html"></iframe></div><div class="body"><h3>Wordmark · em monogram</h3><p>이음교육저널 / education & mind</p><div class="actions"><a class="btn btn-primary" href="preview/brand-wordmark.html">열기</a></div></div></div>
+        <div class="card"><div class="thumb"><iframe src="preview/brand-hero-bg.html"></iframe></div><div class="body"><h3>Hero 배경</h3><p>드리프팅 서클 + 인터랙티브 닷필드</p><div class="actions"><a class="btn btn-primary" href="preview/brand-hero-bg.html">열기</a></div></div></div>
+        <div class="card"><div class="thumb"><iframe src="preview/brand-imagery.html"></iframe></div><div class="body"><h3>Imagery 규칙</h3><p>사진·일러스트 처리 가이드</p><div class="actions"><a class="btn btn-primary" href="preview/brand-imagery.html">열기</a></div></div></div>
+      </div>
+    </section>
+
+    <!-- 02 UI kit -->
+    <section class="phase" id="ui-kit">
+      <div class="phase-head">
+        <span class="num">02</span>
+        <h2>UI 키트 · 홈페이지</h2>
+        <span class="meta">news-journal kit</span>
+      </div>
+      <div class="card-grid">
+        <div class="card"><div class="thumb"><iframe src="ui_kits/news-journal/index.html"></iframe></div><div class="body"><h3>홈페이지 전체</h3><p>헤더 · 히어로(인터랙티브 닷필드) · 최신 해설 · 칼럼 · 원칙 · 푸터</p><div class="actions"><a class="btn btn-primary" href="ui_kits/news-journal/index.html">전체 보기</a></div></div></div>
+        <div class="card"><div class="thumb"><iframe src="preview/components-header.html"></iframe></div><div class="body"><h3>Header</h3><p>em 모노그램 + 본지 네비게이션</p><div class="actions"><a class="btn btn-primary" href="preview/components-header.html">열기</a></div></div></div>
+        <div class="card"><div class="thumb"><iframe src="preview/components-footer.html"></iframe></div><div class="body"><h3>Footer</h3><p>다크 세이지, 모노그램·태그라인</p><div class="actions"><a class="btn btn-primary" href="preview/components-footer.html">열기</a></div></div></div>
+        <div class="card"><div class="thumb"><iframe src="preview/components-article-card.html"></iframe></div><div class="body"><h3>Article card</h3><p>썸네일 · 카테고리 · 제목 · 요약 · 메타</p><div class="actions"><a class="btn btn-primary" href="preview/components-article-card.html">열기</a></div></div></div>
+        <div class="card"><div class="thumb"><iframe src="preview/components-section-head.html"></iframe></div><div class="body"><h3>Section head</h3><p>키커 + 제목 + 우측 링크</p><div class="actions"><a class="btn btn-primary" href="preview/components-section-head.html">열기</a></div></div></div>
+        <div class="card"><div class="thumb"><iframe src="preview/components-principles.html"></iframe></div><div class="body"><h3>Principles card</h3><p>편집 원칙 4종 그리드</p><div class="actions"><a class="btn btn-primary" href="preview/components-principles.html">열기</a></div></div></div>
+        <div class="card"><div class="thumb"><iframe src="preview/components-buttons.html"></iframe></div><div class="body"><h3>Buttons</h3><p>primary · ghost · inline link</p><div class="actions"><a class="btn btn-primary" href="preview/components-buttons.html">열기</a></div></div></div>
+        <div class="card"><div class="thumb"><iframe src="preview/components-chips.html"></iframe></div><div class="body"><h3>Chips · Kickers</h3><p>카테고리 칩, italic 키커</p><div class="actions"><a class="btn btn-primary" href="preview/components-chips.html">열기</a></div></div></div>
+      </div>
+    </section>
+
+    <!-- 03 Detail pages -->
+    <section class="phase" id="pages">
+      <div class="phase-head">
+        <span class="num">03</span>
+        <h2>세부 페이지</h2>
+        <span class="meta">article · column · archive</span>
+      </div>
+      <div class="card-grid">
+        <div class="card"><div class="thumb"><iframe src="ui_kits/news-journal/article-detail.html"></iframe></div><div class="body"><h3>Article detail</h3><p>해설 기사 상세 — breadcrumb · 카테고리 칩 · 한 줄 바이라인 · 본문 + 우측 리딩 레일(진행률·TOC·공유·저자)</p><div class="actions"><a class="btn btn-primary" href="ui_kits/news-journal/article-detail.html">열기</a></div></div></div>
+        <div class="card"><div class="thumb"><iframe src="ui_kits/news-journal/column-detail.html"></iframe></div><div class="body"><h3>Column detail</h3><p>에세이 칼럼 — 중앙정렬 마스트헤드 · 21:9 hero 이미지 · 58ch 리딩 칼럼 · 중간 figure · 필자 풋터</p><div class="actions"><a class="btn btn-primary" href="ui_kits/news-journal/column-detail.html">열기</a></div></div></div>
+        <div class="card"><div class="thumb"><iframe src="ui_kits/news-journal/archive-index.html"></iframe></div><div class="body"><h3>Archive index</h3><p>연구 기록 — 저서 11권 / 논문 / 언론보도. 통일된 archive-row 레이아웃</p><div class="actions"><a class="btn btn-primary" href="ui_kits/news-journal/archive-index.html">열기</a></div></div></div>
+      </div>
+    </section>
+
+    <!-- 04 Docs -->
+    <section class="phase" id="docs">
+      <div class="phase-head">
+        <span class="num">04</span>
+        <h2>문서 & 토큰</h2>
+        <span class="meta">handoff ready</span>
+      </div>
+      <div class="card-grid">
+        <div class="card"><div class="thumb solo">README</div><div class="body"><h3>프로젝트 README</h3><p>디자인 원칙, 컬러·타입·스페이싱 토큰 스펙, 파일 가이드</p><div class="actions"><a class="btn btn-primary" href="README.md">열기</a></div></div></div>
+        <div class="card"><div class="thumb solo">CSS</div><div class="body"><h3>colors_and_type.css</h3><p>파운데이션 CSS 변수 — 모든 페이지가 import</p><div class="actions"><a class="btn btn-primary" href="colors_and_type.css">열기</a></div></div></div>
+        <div class="card"><div class="thumb solo">CSS</div><div class="body"><h3>ui_kits/news-journal/kit.css</h3><p>홈페이지 컴포넌트 스타일</p><div class="actions"><a class="btn btn-primary" href="ui_kits/news-journal/kit.css">열기</a></div></div></div>
+        <div class="card"><div class="thumb solo">CSS</div><div class="body"><h3>ui_kits/news-journal/detail.css</h3><p>기사·칼럼·아카이브 공용 스타일</p><div class="actions"><a class="btn btn-primary" href="ui_kits/news-journal/detail.css">열기</a></div></div></div>
+        <div class="card"><div class="thumb solo">MD</div><div class="body"><h3>SKILL.md</h3><p>디자인 시스템 사용법</p><div class="actions"><a class="btn btn-primary" href="SKILL.md">열기</a></div></div></div>
+      </div>
+    </section>
+
+    <!-- 05 Deploy -->
+    <aside class="deploy" id="deploy">
+      <h2>다운로드 & 배포 안내</h2>
+      <p>상단에서 "프로젝트 전체를 zip으로 다운로드" 카드를 통해 모든 파일을 내려받을 수 있습니다. 압축을 풀면 news.ieumedu.kr 사이트 루트에 그대로 올릴 수 있는 구조로 정리되어 있습니다.</p>
+      <ul>
+        <li><code>colors_and_type.css</code> — 모든 페이지가 공유하는 토큰. 루트에 둡니다.</li>
+        <li><code>ui_kits/news-journal/kit.css</code>, <code>detail.css</code> — 사이트용 스타일. 루트의 <code>styles/</code>로 옮겨도 됩니다.</li>
+        <li><code>ui_kits/news-journal/*.html</code> — 홈·기사·칼럼·아카이브 템플릿. 각 파일의 <code>&lt;link&gt;</code> 경로를 실제 배치에 맞춰 조정합니다.</li>
+        <li><code>assets/</code> — 기사·칼럼 이미지. 배포 시 CDN 또는 <code>/assets/</code>로 올립니다.</li>
+        <li>폰트는 Google Fonts CDN (<code>Noto Serif KR</code>, <code>Noto Sans KR</code>, <code>Playfair Display</code>)를 사용하므로 별도 업로드 불필요.</li>
+      </ul>
+    </aside>
+
+  </div>
+</body>
+</html>

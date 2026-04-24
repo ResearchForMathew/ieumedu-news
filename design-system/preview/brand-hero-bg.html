@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body{margin:0;background:var(--color-bg);padding:0;font-family:var(--font-sans)}
+  .hero{position:relative;overflow:hidden;background:var(--hero-bg);padding:36px 28px;height:220px;display:flex;align-items:center}
+  .c{position:absolute;border-radius:50%;pointer-events:none}
+  .c1{width:140px;height:140px;border:1px solid var(--hero-circle-stroke);top:-30px;right:8%;animation:fa 8s cubic-bezier(0.16,1,0.3,1) infinite}
+  .c2{width:70px;height:70px;border:1px solid var(--hero-circle-stroke);bottom:10px;right:22%;animation:fb 6s cubic-bezier(0.16,1,0.3,1) infinite 1.2s}
+  .c3{width:220px;height:220px;border:.5px solid var(--hero-circle-stroke);top:-10px;right:-4%;animation:fa 12s cubic-bezier(0.16,1,0.3,1) infinite 2.5s}
+  .c4{width:30px;height:30px;background:var(--hero-circle-fill);bottom:30px;left:22%;animation:fc 7s cubic-bezier(0.16,1,0.3,1) infinite .8s}
+  .c5{width:14px;height:14px;background:var(--color-accent);opacity:.14;top:40px;left:54%;animation:fb 6s cubic-bezier(0.16,1,0.3,1) infinite 3s}
+  .c6{width:96px;height:96px;border:.5px solid var(--hero-circle-stroke);bottom:-20px;left:12%;animation:fc 9s cubic-bezier(0.16,1,0.3,1) infinite 1s}
+  @keyframes fa{0%,100%{transform:translateY(0) translateX(0) rotate(0);opacity:.13}33%{transform:translateY(-18px) translateX(8px) rotate(70deg);opacity:.20}66%{transform:translateY(8px) translateX(-10px) rotate(-40deg);opacity:.08}}
+  @keyframes fb{0%,100%{transform:translateY(0) rotate(0);opacity:.08}50%{transform:translateY(-22px) rotate(180deg);opacity:.17}}
+  @keyframes fc{0%,100%{transform:translateY(0) translateX(0);opacity:.06}40%{transform:translateY(-10px) translateX(14px);opacity:.14}80%{transform:translateY(12px) translateX(-6px);opacity:.07}}
+  .inner{position:relative;z-index:1;max-width:520px}
+  .k{font-family:var(--font-display);font-style:italic;font-size:12px;letter-spacing:.18em;color:var(--color-accent);text-transform:lowercase;display:block;margin-bottom:10px}
+  h1{font-family:var(--font-serif);font-weight:600;font-size:26px;line-height:1.2;letter-spacing:-.028em;margin:0;color:var(--hero-text-deep)}
+</style></head>
+<body>
+<div class="hero">
+  <span class="c c1"></span><span class="c c2"></span><span class="c c3"></span>
+  <span class="c c4"></span><span class="c c5"></span><span class="c c6"></span>
+  <div class="inner">
+    <span class="k">editor's note</span>
+    <h1>밤의 감정과 낮의 교육을 한 지면에서 읽는다</h1>
+  </div>
+</div>
+</body></html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>잠들기 어려운 아이의 밤 · 이음교육저널</title>
+  <link rel="stylesheet" href="../../colors_and_type.css">
+  <link rel="stylesheet" href="./kit.css">
+  <link rel="stylesheet" href="./detail.css">
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="./Header.jsx"></script>
+<script type="text/babel" src="./Footer.jsx"></script>
+<script type="text/babel" src="./ArticleCard.jsx"></script>
+<script type="text/babel" src="./SectionHead.jsx"></script>
+
+<script type="text/babel">
+const { useEffect, useState } = React;
+
+function ReadingProgress(){
+  const [pct, setPct] = useState(0);
+  useEffect(()=>{
+    const onScroll = () => {
+      const h = document.documentElement;
+      const total = h.scrollHeight - h.clientHeight;
+      setPct(total ? Math.max(0, Math.min(100, (h.scrollTop / total) * 100)) : 0);
+    };
+    window.addEventListener('scroll', onScroll, { passive:true });
+    onScroll();
+    return ()=>window.removeEventListener('scroll', onScroll);
+  },[]);
+  return (
+    <div className="rail-block">
+      <span className="rail-label">reading</span>
+      <div className="rail-progress"><div className="rail-progress__fill" style={{width:`${pct}%`}} /></div>
+      <div className="rail-progress__label">{Math.round(pct)}% · 읽기 4분</div>
+    </div>
+  );
+}
+
+function ArticlePage(){
+  const related = [
+    { href:'#', img:'../../assets/articles/youth-sleep.jpg', alt:'푸른 나무와 달빛', category:'청소년 리듬', title:'청소년이 늦게 잠드는 이유, 게으름보다 먼저 봐야 할 리듬 변화', desc:'늦게 잠드는 청소년의 밤을 생체리듬과 사회적 압박의 충돌로 설명합니다.' },
+    { href:'#', img:'../../assets/articles/development-delay.png', alt:'놀이 도구 앞의 아이', category:'발달 현장', title:'발달지연 조기 발견이 중요한 이유, 함께 보는 신호', desc:'발달지연 조기 발견의 중요성과 가정, 어린이집이 함께 보는 신호를 짚습니다.' },
+    { href:'#', img:'../../assets/articles/recovery-daily-life.png', alt:'따뜻한 밤거리', category:'회복', title:'회복은 일상에서 시작된다', desc:'회복은 특별한 밤이 아니라 낮의 작은 멈춤과 조정에서 시작된다고 말합니다.' },
+  ];
+
+  return (
+    <>
+      <Header />
+      <main id="main">
+        <article className="article-bleed">
+          <div className="article-shell">
+
+            <div className="hd">
+              <nav className="hd-crumbs" aria-label="breadcrumb">
+                <a href="../../ui_kits/news-journal/index.html">이음교육저널</a>
+                <span aria-hidden="true">›</span>
+                <a href="#">최신 기사</a>
+                <span aria-hidden="true">›</span>
+                <span className="hd-crumbs__here">아동·가족 해설</span>
+              </nav>
+
+              <div className="hd-category">
+                <span className="hd-category__kicker">explainer</span>
+                <span className="hd-category__sep" />
+                <span className="hd-category__label">아동·가족 해설</span>
+              </div>
+
+              <h1 className="hd-title">잠들기 어려운 아이의 밤, 훈련보다 <em>공동조절</em>이 먼저라는 이유</h1>
+
+              <p className="hd-lede">
+                영유아기의 수면은 습관 교정의 문제가 아니라, 애착과 공동조절이 형성되는 발달 과정으로 보는 편이 더 정확하다.
+              </p>
+
+              <div className="hd-meta">
+                <div className="hd-meta__author">
+                  <div className="byline-avatar">선</div>
+                  <span className="hd-meta__name">선애순<span className="hd-meta__role"> · 편집장</span></span>
+                </div>
+                <span className="hd-meta__divider" />
+                <span className="hd-meta__date">2026.04.23 · 읽기 4분</span>
+              </div>
+            </div>
+
+            <figure className="article-hero-figure">
+              <img src="../../assets/articles/infant-sleep.jpg" alt="아기 침대와 은은한 조명이 있는 영유아 수면 기사 대표 이미지" />
+              <figcaption>잠드는 시간은 아이가 혼자 버티는 시간이 아니라 보호자와 리듬을 맞춰 가는 시간에 가깝다.</figcaption>
+            </figure>
+
+            <div className="article-columns">
+              <div>
+                <div className="article-summary">
+                  <span className="article-summary__label">핵심 요약</span>
+                  <ul>
+                    <li>영유아기의 수면은 단순한 습관 교정보다 발달과 애착의 과정으로 읽는 편이 더 정확하다.</li>
+                    <li>잠드는 시간은 아이가 혼자 버티는 시간이 아니라 보호자와 함께 리듬을 맞춰 가는 시간에 가깝다.</li>
+                  </ul>
+                </div>
+
+                <div className="article-body">
+                  <p>아이가 쉽게 잠들지 못하거나 밤중에 자주 깨면 보호자는 금세 수면 습관부터 떠올리게 된다. 몇 시에 재워야 하는지, 혼자 잠드는 훈련을 해야 하는지, 울음을 어느 정도 기다려야 하는지 같은 질문이 먼저 나온다. 그러나 영유아기의 잠을 발달의 관점에서 보면, 이 시기의 밤은 단순히 재우는 기술의 문제가 아니다. 아직 스스로 각성과 긴장을 조절하기 어려운 아이가 보호자와 함께 리듬을 맞춰 가는 시간에 더 가깝다.</p>
+
+                  <h2 id="signal">버릇이 아니라 도움을 요청하는 신호</h2>
+                  <p>영유아는 생리적으로도 정서적으로도 미성숙하다. 잠들기 전 울거나 몸을 긴장시키거나 계속해서 확인을 요구하는 행동은 버릇이 아니라, 스스로를 진정시키지 못해 외부의 조율을 요청하는 신호일 수 있다.</p>
+                  <p>보호자의 목소리, 반복되는 취침 루틴, 예측 가능한 반응은 아이의 신경계를 안정시키고, 그 반복은 차츰 자기조절 능력의 바탕이 된다.</p>
+
+                  <h2 id="safe">수면은 안전한 의존을 배우는 시간</h2>
+                  <aside className="pull-quote">영유아기의 잠은 독립의 완성 여부를 시험하는 시간이 아니다.</aside>
+                  <p>애착 역시 밤과 분리되지 않는다. 밤중에 깼을 때 누가 어떻게 반응하는지, 잠자리에 드는 시간이 아이에게 얼마나 안전한 경험으로 기억되는지는 "필요할 때 도움을 받을 수 있다"는 기본 신뢰를 쌓는 데 영향을 준다.</p>
+                  <p>그래서 영유아기의 잠을 무조건 독립 훈련의 문제로만 다루면, 정작 중요한 정서적 안전감의 축적을 놓치기 쉽다.</p>
+
+                  <h2 id="ask">먼저 물어야 할 것은 훈련이 아니라 조절</h2>
+                  <p>물론 모든 각성이 같은 의미를 갖는 것은 아니다. 수면 환경이 지나치게 흔들리거나, 낮 동안 자극이 과도했거나, 보호자 역시 지쳐 일관된 반응을 유지하기 어려운 상황이라면 아이의 밤은 더 불안해질 수 있다. 이럴 때 필요한 것은 누가 잘못했는지를 가리는 판단보다, 아이가 지금 어떤 조절의 도움을 필요로 하는지 읽어내는 태도다.</p>
+                  <p>영유아기의 잠은 독립의 완성 여부를 시험하는 시간이 아니다. 오히려 안전하게 의존하는 경험을 통해 조절 능력을 쌓는 단계에 가깝다. 잠들기 어려운 아이의 밤을 훈련의 실패로만 보기보다, 공동조절이 얼마나 안정적으로 작동하고 있는지를 묻는 쪽이 더 정확하다.</p>
+                </div>
+
+                <div className="article-tags">
+                  <a className="tag" href="#">영유아 수면</a>
+                  <a className="tag" href="#">공동조절</a>
+                  <a className="tag" href="#">애착</a>
+                  <a className="tag" href="#">발달심리</a>
+                </div>
+
+                <div className="article-end">
+                  <span className="article-end__mark">— end —</span>
+                  <span className="article-end__copyright">© 이음교육저널 · 무단 전재 및 재배포 금지</span>
+                </div>
+              </div>
+
+              <aside className="reading-rail" aria-label="읽기 보조">
+                <ReadingProgress />
+                <div className="rail-block">
+                  <span className="rail-label">in this article</span>
+                  <ul className="rail-toc">
+                    <li><a href="#signal" className="is-active">버릇이 아니라 신호</a></li>
+                    <li><a href="#safe">안전한 의존을 배우는 시간</a></li>
+                    <li><a href="#ask">훈련이 아니라 조절</a></li>
+                  </ul>
+                </div>
+                <div className="rail-block">
+                  <span className="rail-label">share</span>
+                  <div className="rail-share">
+                    <button>copy link</button>
+                    <button>email</button>
+                    <button>print</button>
+                  </div>
+                </div>
+                <div className="rail-block">
+                  <span className="rail-label">author</span>
+                  <div className="rail-author">
+                    <div className="rail-author__avatar">선</div>
+                    <div className="rail-author__name">선애순</div>
+                  </div>
+                  <p className="rail-bio">이음통합평생교육원 대표. 수면·발달·애착을 중심으로 해설 기사와 칼럼을 씁니다.</p>
+                </div>
+              </aside>
+            </div>
+          </div>
+        </article>
+
+        <section className="related-section">
+          <div className="container">
+            <div className="related-header">
+              <div>
+                <span className="kicker">read next</span>
+                <h2>이어서 읽기</h2>
+              </div>
+              <a className="inline-link" href="#">더 보기 <span aria-hidden="true">→</span></a>
+            </div>
+            <div className="card-grid">
+              {related.map((a,i)=><ArticleCard key={i} {...a} />)}
+            </div>
+          </div>
+        </section>
+      </main>
+      <Footer />
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<ArticlePage />);
+</script>
+</body>
+</html>
