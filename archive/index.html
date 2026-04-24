@@ -5,36 +5,463 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>저서 · 연구 · 언론보도 아카이브 · 이음교육저널</title>
   <meta name="description" content="이음교육저널과 이음통합평생교육원의 저서, 논문, 학위, 공공교육, 언론보도 기록을 한곳에서 확인합니다.">
-  <link rel="stylesheet" href="/assets/css/colors_and_type.css">
-  <link rel="stylesheet" href="/assets/css/kit.css">
-  <link rel="stylesheet" href="/assets/css/detail.css">
+  <link rel="stylesheet" href="../assets/css/colors_and_type.css">
+  <link rel="stylesheet" href="../assets/css/kit.css">
+  <link rel="stylesheet" href="../assets/css/page.css">
+  <style>
+    /* ── Mobile nav ──────────────────────────────────────────── */
+    .mobile-menu-btn { display:none; flex-direction:column; gap:5px; padding:8px; background:none; border:none; cursor:pointer; border-radius:var(--radius-md); }
+    .mobile-menu-btn span { display:block; width:22px; height:1.5px; background:var(--fg-1); transition:transform var(--dur-base) var(--ease-out), opacity var(--dur-base) var(--ease-out); transform-origin:center; }
+    .mobile-menu-btn.is-open span:nth-child(1) { transform:translateY(6.5px) rotate(45deg); }
+    .mobile-menu-btn.is-open span:nth-child(2) { opacity:0; }
+    .mobile-menu-btn.is-open span:nth-child(3) { transform:translateY(-6.5px) rotate(-45deg); }
+    .mobile-nav { display:none; flex-direction:column; position:fixed; top:0; left:0; right:0; bottom:0; background:var(--color-bg); z-index:49; padding:96px var(--container-pad) 48px; overflow-y:auto; }
+    .mobile-nav.is-open { display:flex; }
+    .mobile-nav a { font-family:var(--font-serif); font-size:clamp(1.5rem,4vw,2rem); font-weight:500; color:var(--fg-1); padding:18px 0; border-bottom:0.5px solid var(--color-border); display:flex; align-items:center; justify-content:space-between; transition:color var(--dur-base) var(--ease-out); }
+    .mobile-nav a:hover { color:var(--color-accent); }
+    .mobile-nav a::after { content:"→"; font-family:var(--font-sans); font-size:1rem; color:var(--fg-3); }
+    .mobile-nav-foot { margin-top:32px; font-family:var(--font-display); font-style:italic; font-size:13px; color:var(--fg-3); letter-spacing:0.1em; }
+    @media (max-width:1040px) { .mobile-menu-btn { display:flex; } .main-nav { display:none !important; } }
+
+    /* ── Archive masthead ─────────────────────────────────────── */
+    .archive-masthead {
+      background: linear-gradient(155deg,#E4F0EC 0%,#ECF2EE 55%,#EEF2EF 100%);
+      padding: clamp(4.5rem,9vw,7rem) 0 clamp(3rem,5vw,4.5rem);
+      border-bottom: 0.5px solid var(--color-border);
+      position: relative;
+      overflow: hidden;
+    }
+    .archive-masthead::before {
+      content: "";
+      position: absolute;
+      right: -80px; top: -80px;
+      width: 400px; height: 400px;
+      border-radius: 50%;
+      border: 0.5px solid rgba(45,106,106,0.15);
+      pointer-events: none;
+    }
+    .archive-masthead::after {
+      content: "";
+      position: absolute;
+      right: 60px; top: 40px;
+      width: 160px; height: 160px;
+      border-radius: 50%;
+      border: 0.5px solid rgba(45,106,106,0.12);
+      pointer-events: none;
+    }
+    .archive-masthead__inner { max-width: 760px; }
+    .archive-masthead h1 {
+      font-family: var(--font-serif);
+      font-weight: 600;
+      font-size: clamp(2.2rem,5.5vw,3.6rem);
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+      color: var(--hero-text-deep);
+      margin: 16px 0 22px;
+      text-wrap: balance;
+    }
+    .archive-masthead__lede {
+      font-size: 16px;
+      line-height: 1.75;
+      color: var(--fg-2);
+      margin: 0 0 36px;
+      max-width: 52ch;
+    }
+    .archive-stats-row {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .archive-stat-item {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+    .archive-stat-item__num {
+      font-family: var(--font-serif);
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--color-accent);
+      letter-spacing: var(--ls-tight);
+      line-height: 1;
+    }
+    .archive-stat-item__label {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 13px;
+      color: var(--fg-3);
+      letter-spacing: 0.06em;
+    }
+    .archive-stat-divider { width: 1px; height: 28px; background: var(--color-border); align-self: center; }
+
+    /* ── Search & filter ─────────────────────────────────────── */
+    .archive-tools {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      padding: 20px 0;
+      border-bottom: 0.5px solid var(--color-border);
+      margin-bottom: 0;
+      background: var(--color-bg);
+      position: sticky;
+      top: 68px;
+      z-index: 20;
+    }
+    .archive-search {
+      flex: 1;
+      min-width: 200px;
+      max-width: 340px;
+      position: relative;
+    }
+    .archive-search__icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+    .archive-search__icon svg { width:14px; height:14px; stroke:var(--fg-3); fill:none; stroke-width:1.5; stroke-linecap:round; }
+    .archive-search input {
+      width: 100%;
+      padding: 10px 14px 10px 38px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-pill);
+      background: var(--color-surface);
+      font-family: var(--font-sans);
+      font-size: 13.5px;
+      color: var(--fg-1);
+      outline: none;
+      transition: border-color var(--dur-base) var(--ease-out);
+    }
+    .archive-search input:focus { border-color: var(--color-accent); }
+    .archive-search input::placeholder { color: var(--fg-3); }
+    .archive-filter {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .archive-filter button {
+      padding: 8px 16px;
+      border-radius: var(--radius-pill);
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      border: 1px solid var(--color-border);
+      background: var(--color-surface);
+      color: var(--fg-2);
+      cursor: pointer;
+      transition: all var(--dur-base) var(--ease-out);
+    }
+    .archive-filter button:hover { border-color: var(--color-accent); color: var(--color-accent); }
+    .archive-filter button.is-active { background: var(--color-accent); border-color: var(--color-accent); color: #fff; }
+
+    /* ── Archive body layout ─────────────────────────────────── */
+    .archive-body {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 0 56px;
+      padding: clamp(2.5rem,5vw,4rem) 0 clamp(4rem,8vw,6rem);
+    }
+    @media (max-width: 860px) {
+      .archive-body { grid-template-columns: 1fr; }
+      .archive-toc { display: none; }
+    }
+
+    /* ── Sticky TOC ──────────────────────────────────────────── */
+    .archive-toc {
+      position: sticky;
+      top: 130px;
+      height: fit-content;
+    }
+    .archive-toc-label {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      color: var(--fg-3);
+      text-transform: lowercase;
+      display: block;
+      margin-bottom: 14px;
+    }
+    .archive-toc a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 0;
+      font-size: 13.5px;
+      color: var(--fg-2);
+      border-bottom: 0.5px solid var(--color-border-soft);
+      transition: color var(--dur-base) var(--ease-out);
+    }
+    .archive-toc a:hover, .archive-toc a.is-active { color: var(--color-accent); }
+    .archive-toc a span {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 11px;
+      color: var(--fg-3);
+      letter-spacing: 0.06em;
+    }
+
+    /* ── Archive sections ────────────────────────────────────── */
+    .archive-content { min-width: 0; }
+    .archive-section {
+      padding: 0 0 clamp(3rem,6vw,5rem);
+      border-bottom: 0.5px solid var(--color-border);
+      margin-bottom: clamp(3rem,6vw,5rem);
+    }
+    .archive-section:last-child { border-bottom: none; margin-bottom: 0; }
+    .archive-section__head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+    .archive-section__label {
+      font-family: var(--font-serif);
+      font-weight: 600;
+      font-size: clamp(1.5rem,3vw,2rem);
+      letter-spacing: var(--ls-tight);
+      color: var(--fg-1);
+      margin: 0;
+    }
+    .archive-section__label em {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 0.6em;
+      color: var(--color-accent);
+      margin-left: 10px;
+      letter-spacing: 0.1em;
+    }
+    .archive-section__count {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 12px;
+      color: var(--fg-3);
+      letter-spacing: 0.08em;
+    }
+
+    /* ── Book grid ───────────────────────────────────────────── */
+    .book-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 28px 20px;
+    }
+    .book-card { display: flex; flex-direction: column; gap: 12px; }
+    .book-card__cover {
+      aspect-ratio: 3/4;
+      overflow: hidden;
+      border-radius: var(--radius-md);
+      background: var(--color-surface-soft);
+      box-shadow: 0 1px 0 rgba(0,0,0,0.04), 0 12px 24px -12px rgba(13,31,31,0.28);
+      transition: transform var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out);
+      position: relative;
+    }
+    .book-card__cover img { width:100%; height:100%; object-fit:cover; display:block; transition:transform var(--dur-slow) var(--ease-out); }
+    .book-card:hover .book-card__cover { transform:translateY(-4px); box-shadow:0 1px 0 rgba(0,0,0,0.04), 0 22px 36px -16px rgba(13,31,31,0.38); }
+    .book-card:hover .book-card__cover img { transform:scale(1.03); }
+    .book-card__year {
+      position: absolute;
+      top: 8px; left: 8px;
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(6px);
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 10.5px;
+      letter-spacing: 0.08em;
+      color: var(--color-accent-dark);
+      padding: 4px 9px;
+      border-radius: var(--radius-pill);
+    }
+    .book-card__title {
+      font-family: var(--font-serif);
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 1.4;
+      letter-spacing: -0.01em;
+      color: var(--fg-1);
+      margin: 0;
+    }
+    .book-card__meta {
+      font-size: 12px;
+      color: var(--fg-3);
+      font-family: var(--font-display);
+      letter-spacing: 0.03em;
+      margin: 0;
+    }
+
+    /* ── Entry list (papers, media) ──────────────────────────── */
+    .entry-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      border-top: 0.5px solid var(--color-border);
+    }
+    .entry-list li { border-bottom: 0.5px solid var(--color-border); }
+    .entry-row {
+      display: grid;
+      grid-template-columns: 72px auto 1fr auto;
+      gap: 0 20px;
+      align-items: center;
+      padding: 20px 8px;
+      transition: background var(--dur-fast) var(--ease-out);
+    }
+    .entry-row:hover { background: rgba(45,106,106,0.03); }
+    .entry-row__year {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 13px;
+      color: var(--color-accent);
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+    .entry-row__tag {
+      padding: 3px 10px;
+      border-radius: var(--radius-pill);
+      background: var(--color-accent-surface);
+      color: var(--color-accent-dark);
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 10.5px;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+    }
+    .entry-row__body { min-width: 0; }
+    .entry-row__title {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 1.45;
+      letter-spacing: -0.015em;
+      color: var(--fg-1);
+      margin: 0 0 3px;
+    }
+    .entry-row__meta { font-size: 12.5px; color: var(--fg-3); margin: 0; }
+    .entry-row__source {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 11px;
+      color: var(--fg-3);
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+      padding-left: 8px;
+    }
+    @media (max-width: 640px) {
+      .entry-row { grid-template-columns: 60px 1fr; gap: 4px 12px; }
+      .entry-row__tag { grid-column: 2; }
+      .entry-row__body { grid-column: 1 / -1; }
+      .entry-row__source { grid-column: 1 / -1; padding-left: 0; }
+    }
+
+    /* ── Empty state ─────────────────────────────────────────── */
+    .archive-empty {
+      display: none;
+      text-align: center;
+      padding: 64px 0;
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 18px;
+      color: var(--fg-3);
+    }
+    .archive-empty.is-visible { display: block; }
+
+    /* ── Reveal ──────────────────────────────────────────────── */
+    .reveal { opacity:0; transform:translateY(14px); transition:opacity 500ms var(--ease-out), transform 500ms var(--ease-out); }
+    .reveal.is-visible { opacity:1; transform:translateY(0); }
+
+    @keyframes page-in { from { opacity: 0; } to { opacity: 1; } }
+    body { animation: page-in 300ms var(--ease-out) both; }
+  </style>
 </head>
 <body>
   <a class="skip-link" href="#main">본문으로 바로가기</a>
-  <div id="site-header"></div>
+
+  <header class="site-header" id="hdr">
+    <div class="container header-inner">
+      <a class="brand-wrap" href="../index.html">
+        <div class="brand-mark" aria-hidden="true">em</div>
+        <div class="brand-text">
+          <div class="brand-name">이음교육저널</div>
+          <div class="brand-tag">em · education &amp; mind journal</div>
+        </div>
+      </a>
+      <nav class="main-nav" aria-label="주요 메뉴">
+        <a href="../index.html#articles">최신 기사</a>
+        <a href="../index.html#columns">칼럼</a>
+        <a href="../archive/index.html" aria-current="page">아카이브</a>
+        <a href="../index.html#topics">주제</a>
+        <a href="../newsroom-about.html">소개</a>
+      </nav>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <a class="outbound-link" href="https://www.ieumedu.kr/" style="display:inline-flex;">이음통합평생교육원 <span style="margin-left:4px;" aria-hidden="true">↗</span></a>
+        <button class="mobile-menu-btn" id="menu-toggle" aria-label="메뉴 열기" aria-expanded="false" aria-controls="mobile-nav">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="mobile-nav" id="mobile-nav" aria-label="모바일 메뉴">
+    <a href="../index.html#articles">최신 기사</a>
+    <a href="../index.html#columns">칼럼</a>
+    <a href="../archive/index.html">아카이브</a>
+    <a href="../index.html#topics">주제</a>
+    <a href="../newsroom-about.html">소개</a>
+    <a href="https://www.ieumedu.kr/">이음통합평생교육원 ↗</a>
+    <p class="mobile-nav-foot">em · education &amp; mind journal</p>
+  </nav>
 
   <main id="main">
-    <section class="archive-bleed">
-      <header class="archive-masthead">
-        <div>
-          <nav class="hd-crumbs" aria-label="breadcrumb">
-            <a href="/">이음교육저널</a>
-            <span aria-hidden="true">›</span>
-            <span class="hd-crumbs__here">아카이브</span>
-          </nav>
+    <!-- Masthead -->
+    <section class="archive-masthead">
+      <div class="container archive-masthead__inner">
+        <nav class="page-crumbs" aria-label="breadcrumb">
+          <a href="../index.html">이음교육저널</a>
+          <span aria-hidden="true">›</span>
+          <span class="page-crumbs__here">아카이브</span>
+        </nav>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+          <div style="width:32px;height:1px;background:var(--color-accent);" aria-hidden="true"></div>
           <span class="kicker">archive</span>
-          <h1 class="archive-title">저서 · 연구 · 언론보도<br>아카이브</h1>
         </div>
-        <p class="archive-lede">
-          저서, 논문, 학위, 공공교육, 외부 보도 기록을 한곳에서 확인할 수 있습니다.
-          수면, 발달, 애착, 통합교육을 중심으로 이어지는 작업의 기록입니다.
-        </p>
-      </header>
+        <h1>저서 · 연구 · 언론보도<br>아카이브</h1>
+        <p class="archive-masthead__lede">저서, 논문, 학위, 공공교육, 외부 보도 기록을 한곳에서 확인할 수 있습니다. 수면, 발달, 애착, 통합교육을 중심으로 이어지는 작업의 기록입니다.</p>
+        <div class="archive-stats-row">
+          <div class="archive-stat-item">
+            <span class="archive-stat-item__num">9</span>
+            <span class="archive-stat-item__label">저서</span>
+          </div>
+          <div class="archive-stat-divider"></div>
+          <div class="archive-stat-item">
+            <span class="archive-stat-item__num">6</span>
+            <span class="archive-stat-item__label">논문 · 학위</span>
+          </div>
+          <div class="archive-stat-divider"></div>
+          <div class="archive-stat-item">
+            <span class="archive-stat-item__num">3</span>
+            <span class="archive-stat-item__label">공공교육</span>
+          </div>
+          <div class="archive-stat-divider"></div>
+          <div class="archive-stat-item">
+            <span class="archive-stat-item__num">2</span>
+            <span class="archive-stat-item__label">언론보도</span>
+          </div>
+        </div>
+      </div>
+    </section>
 
+    <!-- Search + Filter -->
+    <div class="container">
       <div class="archive-tools">
         <label class="archive-search">
           <span class="sr-only">아카이브 검색</span>
-          <input id="archive-search" type="search" placeholder="연도, 제목, 저자, 매체로 검색">
+          <span class="archive-search__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </span>
+          <input id="archive-search" type="search" placeholder="연도, 제목, 저자, 매체로 검색…">
         </label>
         <div class="archive-filter" aria-label="아카이브 분류">
           <button type="button" class="is-active" data-filter="all">all</button>
@@ -43,111 +470,381 @@
           <button type="button" data-filter="media">media</button>
         </div>
       </div>
+    </div>
 
+    <!-- Body -->
+    <div class="container">
       <div class="archive-body">
+
+        <!-- Sticky TOC -->
         <nav class="archive-toc" aria-label="섹션 바로가기">
           <span class="archive-toc-label">sections</span>
-          <a href="#books">저서 <span>9</span></a>
-          <a href="#research">논문 · 학위 <span>6</span></a>
-          <a href="#public">공공교육 <span>3</span></a>
-          <a href="#media">언론보도 <span>2</span></a>
+          <a href="#books" id="toc-books">저서 <span>9</span></a>
+          <a href="#research" id="toc-research">논문 · 학위 <span>6</span></a>
+          <a href="#public" id="toc-public">공공교육 <span>3</span></a>
+          <a href="#media" id="toc-media">언론보도 <span>2</span></a>
         </nav>
 
         <div class="archive-content">
-          <section class="archive-section" id="books" data-group="books">
+          <!-- Empty state -->
+          <p class="archive-empty" id="archive-empty">검색 결과가 없습니다.</p>
+
+          <!-- ── 저서 ─────────────────────────────────────── -->
+          <section class="archive-section reveal" id="books" data-group="books">
             <div class="archive-section__head">
-              <h2 class="archive-section__label">저서</h2>
+              <h2 class="archive-section__label">저서 <em>books</em></h2>
               <span class="archive-section__count">9 entries</span>
             </div>
-            <ul class="archive-list">
-              <li><div class="archive-row" data-text="2025 모래놀이심리상담의 이해와 적용 김동례 선애순 한재금 인맥스디자인"><span class="archive-row__year">2025</span><span class="archive-row__tag">공동저자</span><div><h3 class="archive-row__title">모래놀이심리상담의 이해와 적용</h3><p class="archive-row__meta">김동례 · 선애순 · 한재금 지음</p></div><span class="archive-row__source">인맥스디자인</span></div></li>
-              <li><div class="archive-row" data-text="2022 도형심리 상담 이해와 분석 고재윤 선애순 윤동화 양성원"><span class="archive-row__year">2022</span><span class="archive-row__tag">공동저자</span><div><h3 class="archive-row__title">도형심리 상담 이해와 분석</h3><p class="archive-row__meta">고재윤 · 선애순 · 윤동화 공저</p></div><span class="archive-row__source">양성원</span></div></li>
-              <li><div class="archive-row" data-text="2021 영유아생활지도 및 상담 박순길 김동례 선애순 공동체"><span class="archive-row__year">2021</span><span class="archive-row__tag">공동저자</span><div><h3 class="archive-row__title">영유아생활지도 및 상담</h3><p class="archive-row__meta">박순길 · 김동례 · 선애순 공저</p></div><span class="archive-row__source">공동체</span></div></li>
-              <li><div class="archive-row" data-text="2020 그림을 통한 아동심리 진단 및 해석 김동례 선애순 공동체"><span class="archive-row__year">2020</span><span class="archive-row__tag">공동저자</span><div><h3 class="archive-row__title">그림을 통한 아동심리 진단 및 해석</h3><p class="archive-row__meta">김동례 · 선애순 공저</p></div><span class="archive-row__source">공동체</span></div></li>
-              <li><div class="archive-row" data-text="2018 아동문학 김동례 권순황 선애순 공동체"><span class="archive-row__year">2018</span><span class="archive-row__tag">공동저자</span><div><h3 class="archive-row__title">아동문학</h3><p class="archive-row__meta">김동례 · 권순황 · 선애순 공저</p></div><span class="archive-row__source">공동체</span></div></li>
-              <li><div class="archive-row" data-text="2018 영유아발달 김영애 선애순 정효정 양서원"><span class="archive-row__year">2018</span><span class="archive-row__tag">공동저자</span><div><h3 class="archive-row__title">영유아발달</h3><p class="archive-row__meta">김영애 · 선애순 · 정효정 공저</p></div><span class="archive-row__source">양서원</span></div></li>
-              <li><div class="archive-row" data-text="2017 아동상담 박순길 권순황 김현진 선애순 한재금 양서원"><span class="archive-row__year">2017</span><span class="archive-row__tag">공동저자</span><div><h3 class="archive-row__title">아동상담</h3><p class="archive-row__meta">박순길 · 권순황 · 김현진 · 선애순 · 한재금 공저</p></div><span class="archive-row__source">양서원</span></div></li>
-              <li><div class="archive-row" data-text="2015 영아발달 권순황 선애순 이형선 양서원"><span class="archive-row__year">2015</span><span class="archive-row__tag">공동저자</span><div><h3 class="archive-row__title">영아발달</h3><p class="archive-row__meta">권순황 · 선애순 · 이형선 공저</p></div><span class="archive-row__source">양서원</span></div></li>
-              <li><div class="archive-row" data-text="2010 아동 독서치료 이론과 실제 선애순 이형선 양서원"><span class="archive-row__year">2010</span><span class="archive-row__tag">공동저자</span><div><h3 class="archive-row__title">아동 독서치료 : 이론과 실제</h3><p class="archive-row__meta">선애순 · 이형선 공저</p></div><span class="archive-row__source">양서원</span></div></li>
-            </ul>
+            <div class="book-grid">
+              <div class="book-card" data-text="2025 모래놀이심리상담의 이해와 적용 김동례 선애순 한재금 인맥스디자인">
+                <div class="book-card__cover">
+                  <img src="../assets/books/sand-play-counseling.jpeg" alt="모래놀이심리상담의 이해와 적용 표지" loading="lazy">
+                  <span class="book-card__year">2025</span>
+                </div>
+                <h3 class="book-card__title">모래놀이심리상담의 이해와 적용</h3>
+                <p class="book-card__meta">김동례 · 선애순 · 한재금 · 인맥스디자인</p>
+              </div>
+              <div class="book-card" data-text="2022 도형심리 상담 이해와 분석 고재윤 선애순 윤동화 양성원">
+                <div class="book-card__cover">
+                  <img src="../assets/books/figure-psychology-counseling.jpeg" alt="도형심리 상담 이해와 분석 표지" loading="lazy">
+                  <span class="book-card__year">2022</span>
+                </div>
+                <h3 class="book-card__title">도형심리 상담 이해와 분석</h3>
+                <p class="book-card__meta">고재윤 · 선애순 · 윤동화 · 양성원</p>
+              </div>
+              <div class="book-card" data-text="2021 영유아생활지도 및 상담 박순길 김동례 선애순 공동체">
+                <div class="book-card__cover">
+                  <img src="../assets/books/early-childhood-guidance.jpeg" alt="영유아생활지도 및 상담 표지" loading="lazy">
+                  <span class="book-card__year">2021</span>
+                </div>
+                <h3 class="book-card__title">영유아생활지도 및 상담</h3>
+                <p class="book-card__meta">박순길 · 김동례 · 선애순 · 공동체</p>
+              </div>
+              <div class="book-card" data-text="2020 그림을 통한 아동심리 진단 및 해석 김동례 선애순 공동체">
+                <div class="book-card__cover">
+                  <img src="../assets/books/drawing-child-psychology.jpeg" alt="그림을 통한 아동심리 진단 및 해석 표지" loading="lazy">
+                  <span class="book-card__year">2020</span>
+                </div>
+                <h3 class="book-card__title">그림을 통한 아동심리 진단 및 해석</h3>
+                <p class="book-card__meta">김동례 · 선애순 · 공동체</p>
+              </div>
+              <div class="book-card" data-text="2018 아동문학 김동례 권순황 선애순 공동체">
+                <div class="book-card__cover">
+                  <img src="../assets/books/child-literature.jpeg" alt="아동문학 표지" loading="lazy">
+                  <span class="book-card__year">2018</span>
+                </div>
+                <h3 class="book-card__title">아동문학</h3>
+                <p class="book-card__meta">김동례 · 권순황 · 선애순 · 공동체</p>
+              </div>
+              <div class="book-card" data-text="2018 영유아발달 김영애 선애순 정효정 양서원">
+                <div class="book-card__cover">
+                  <img src="../assets/books/infant-young-development.jpeg" alt="영유아발달 표지" loading="lazy">
+                  <span class="book-card__year">2018</span>
+                </div>
+                <h3 class="book-card__title">영유아발달</h3>
+                <p class="book-card__meta">김영애 · 선애순 · 정효정 · 양서원</p>
+              </div>
+              <div class="book-card" data-text="2017 아동상담 박순길 권순황 김현진 선애순 한재금 양서원">
+                <div class="book-card__cover">
+                  <img src="../assets/books/child-counseling.jpeg" alt="아동상담 표지" loading="lazy">
+                  <span class="book-card__year">2017</span>
+                </div>
+                <h3 class="book-card__title">아동상담</h3>
+                <p class="book-card__meta">박순길 외 · 양서원</p>
+              </div>
+              <div class="book-card" data-text="2015 영아발달 권순황 선애순 이형선 양서원">
+                <div class="book-card__cover">
+                  <img src="../assets/books/infant-development.jpeg" alt="영아발달 표지" loading="lazy">
+                  <span class="book-card__year">2015</span>
+                </div>
+                <h3 class="book-card__title">영아발달</h3>
+                <p class="book-card__meta">권순황 · 선애순 · 이형선 · 양서원</p>
+              </div>
+              <div class="book-card" data-text="2010 아동 독서치료 이론과 실제 선애순 이형선 양서원">
+                <div class="book-card__cover">
+                  <img src="../assets/books/child-bibliotherapy.jpeg" alt="아동 독서치료 표지" loading="lazy">
+                  <span class="book-card__year">2010</span>
+                </div>
+                <h3 class="book-card__title">아동 독서치료 : 이론과 실제</h3>
+                <p class="book-card__meta">선애순 · 이형선 · 양서원</p>
+              </div>
+            </div>
           </section>
 
-          <section class="archive-section" id="research" data-group="research">
+          <!-- ── 논문·학위 ──────────────────────────────────── -->
+          <section class="archive-section reveal" id="research" data-group="research">
             <div class="archive-section__head">
-              <h2 class="archive-section__label">논문 · 학위</h2>
+              <h2 class="archive-section__label">논문 · 학위 <em>research</em></h2>
               <span class="archive-section__count">6 entries</span>
             </div>
-            <ul class="archive-list">
-              <li><div class="archive-row" data-text="2013 아동의 모래상자치료에서 상징물 관계성 심리적 표현 및 개성화 과정에 관한 연구 학위"><span class="archive-row__year">2013</span><span class="archive-row__tag">degree</span><div><h3 class="archive-row__title">아동의 모래상자치료에서 상징물, 관계성, 심리적 표현 및 개성화 과정에 관한 연구</h3><p class="archive-row__meta">학위 연구</p></div><span class="archive-row__source">학위</span></div></li>
-              <li><div class="archive-row" data-text="2012 다문화가정 아동의 가족기능과 사회적 능력과의 관계 논문"><span class="archive-row__year">2012</span><span class="archive-row__tag">journal</span><div><h3 class="archive-row__title">다문화가정 아동의 가족기능과 사회적 능력과의 관계</h3><p class="archive-row__meta">아동 · 가족 연구</p></div><span class="archive-row__source">논문</span></div></li>
-              <li><div class="archive-row" data-text="2011 다문화가정 수줍음 아동의 독서치료 프로그램 효과 논문"><span class="archive-row__year">2011</span><span class="archive-row__tag">journal</span><div><h3 class="archive-row__title">다문화가정 수줍음 아동의 독서치료 프로그램 효과</h3><p class="archive-row__meta">독서치료 프로그램 연구</p></div><span class="archive-row__source">논문</span></div></li>
-              <li><div class="archive-row" data-text="2010 그림동화책 읽어주기가 다문화가정 아동의 언어능력 향상에 미치는 효과 학위 논문"><span class="archive-row__year">2010</span><span class="archive-row__tag">degree</span><div><h3 class="archive-row__title">그림동화책 읽어주기가 다문화가정 아동의 언어능력 향상에 미치는 효과</h3><p class="archive-row__meta">학위 · 논문 기록</p></div><span class="archive-row__source">학위</span></div></li>
-              <li><div class="archive-row" data-text="2010 이혼가정 아동의 정서적 행동 변화를 위한 모래상자치료 사례연구 논문"><span class="archive-row__year">2010</span><span class="archive-row__tag">case</span><div><h3 class="archive-row__title">이혼가정 아동의 정서적 행동 변화를 위한 모래상자치료 사례연구</h3><p class="archive-row__meta">상담 사례 연구</p></div><span class="archive-row__source">논문</span></div></li>
-              <li><div class="archive-row" data-text="연구 수면 발달 애착 통합교육 이음교육저널"><span class="archive-row__year">ongoing</span><span class="archive-row__tag">record</span><div><h3 class="archive-row__title">수면 · 발달 · 애착 · 통합교육 기록</h3><p class="archive-row__meta">이음교육저널 기사와 칼럼으로 이어지는 연구 기록</p></div><span class="archive-row__source">저널</span></div></li>
+            <ul class="entry-list">
+              <li data-text="2013 아동의 모래상자치료에서 상징물 관계성 심리적 표현 및 개성화 과정에 관한 연구 학위">
+                <div class="entry-row">
+                  <span class="entry-row__year">2013</span>
+                  <span class="entry-row__tag">degree</span>
+                  <div class="entry-row__body">
+                    <h3 class="entry-row__title">아동의 모래상자치료에서 상징물, 관계성, 심리적 표현 및 개성화 과정에 관한 연구</h3>
+                    <p class="entry-row__meta">학위 연구</p>
+                  </div>
+                  <span class="entry-row__source">학위</span>
+                </div>
+              </li>
+              <li data-text="2012 다문화가정 아동의 가족기능과 사회적 능력과의 관계 논문">
+                <div class="entry-row">
+                  <span class="entry-row__year">2012</span>
+                  <span class="entry-row__tag">journal</span>
+                  <div class="entry-row__body">
+                    <h3 class="entry-row__title">다문화가정 아동의 가족기능과 사회적 능력과의 관계</h3>
+                    <p class="entry-row__meta">아동 · 가족 연구</p>
+                  </div>
+                  <span class="entry-row__source">논문</span>
+                </div>
+              </li>
+              <li data-text="2011 다문화가정 수줍음 아동의 독서치료 프로그램 효과 논문">
+                <div class="entry-row">
+                  <span class="entry-row__year">2011</span>
+                  <span class="entry-row__tag">journal</span>
+                  <div class="entry-row__body">
+                    <h3 class="entry-row__title">다문화가정 수줍음 아동의 독서치료 프로그램 효과</h3>
+                    <p class="entry-row__meta">독서치료 프로그램 연구</p>
+                  </div>
+                  <span class="entry-row__source">논문</span>
+                </div>
+              </li>
+              <li data-text="2010 그림동화책 읽어주기가 다문화가정 아동의 언어능력 향상에 미치는 효과 학위 논문">
+                <div class="entry-row">
+                  <span class="entry-row__year">2010</span>
+                  <span class="entry-row__tag">degree</span>
+                  <div class="entry-row__body">
+                    <h3 class="entry-row__title">그림동화책 읽어주기가 다문화가정 아동의 언어능력 향상에 미치는 효과</h3>
+                    <p class="entry-row__meta">학위 · 논문 기록</p>
+                  </div>
+                  <span class="entry-row__source">학위</span>
+                </div>
+              </li>
+              <li data-text="2010 이혼가정 아동의 정서적 행동 변화를 위한 모래상자치료 사례연구 논문">
+                <div class="entry-row">
+                  <span class="entry-row__year">2010</span>
+                  <span class="entry-row__tag">case</span>
+                  <div class="entry-row__body">
+                    <h3 class="entry-row__title">이혼가정 아동의 정서적 행동 변화를 위한 모래상자치료 사례연구</h3>
+                    <p class="entry-row__meta">상담 사례 연구</p>
+                  </div>
+                  <span class="entry-row__source">논문</span>
+                </div>
+              </li>
+              <li data-text="연구 수면 발달 애착 통합교육 이음교육저널">
+                <div class="entry-row">
+                  <span class="entry-row__year">ongoing</span>
+                  <span class="entry-row__tag">record</span>
+                  <div class="entry-row__body">
+                    <h3 class="entry-row__title">수면 · 발달 · 애착 · 통합교육 기록</h3>
+                    <p class="entry-row__meta">이음교육저널 기사와 칼럼으로 이어지는 연구 기록</p>
+                  </div>
+                  <span class="entry-row__source">저널</span>
+                </div>
+              </li>
             </ul>
           </section>
 
-          <section class="archive-section" id="public" data-group="research">
+          <!-- ── 공공교육 ───────────────────────────────────── -->
+          <section class="archive-section reveal" id="public" data-group="research">
             <div class="archive-section__head">
-              <h2 class="archive-section__label">공공교육</h2>
+              <h2 class="archive-section__label">공공교육 <em>public</em></h2>
               <span class="archive-section__count">3 entries</span>
             </div>
-            <ul class="archive-list">
-              <li><div class="archive-row" data-text="2022 고창교육지원청 위 Wee 센터 교원연수"><span class="archive-row__year">2022</span><span class="archive-row__tag">training</span><div><h3 class="archive-row__title">고창교육지원청 위(Wee)센터 교원연수 실시</h3><p class="archive-row__meta">상담 · 교육 현장 연수</p></div><span class="archive-row__source">공공교육</span></div></li>
-              <li><div class="archive-row" data-text="2020 돌봄전담사 역량강화 연수"><span class="archive-row__year">2020</span><span class="archive-row__tag">training</span><div><h3 class="archive-row__title">돌봄전담사 역량강화 연수 실시</h3><p class="archive-row__meta">교육 현장 역량강화</p></div><span class="archive-row__source">공공교육</span></div></li>
-              <li><div class="archive-row" data-text="2019 부모교육 아빠와 함께 책 놀이터 프로그램"><span class="archive-row__year">2019</span><span class="archive-row__tag">program</span><div><h3 class="archive-row__title">부모교육 · 아빠와 함께 책 놀이터 프로그램</h3><p class="archive-row__meta">가족 · 독서 프로그램</p></div><span class="archive-row__source">공공교육</span></div></li>
+            <ul class="entry-list">
+              <li data-text="2022 고창교육지원청 위 Wee 센터 교원연수">
+                <div class="entry-row">
+                  <span class="entry-row__year">2022</span>
+                  <span class="entry-row__tag">training</span>
+                  <div class="entry-row__body">
+                    <h3 class="entry-row__title">고창교육지원청 위(Wee)센터 교원연수 실시</h3>
+                    <p class="entry-row__meta">상담 · 교육 현장 연수</p>
+                  </div>
+                  <span class="entry-row__source">공공교육</span>
+                </div>
+              </li>
+              <li data-text="2020 돌봄전담사 역량강화 연수">
+                <div class="entry-row">
+                  <span class="entry-row__year">2020</span>
+                  <span class="entry-row__tag">training</span>
+                  <div class="entry-row__body">
+                    <h3 class="entry-row__title">돌봄전담사 역량강화 연수 실시</h3>
+                    <p class="entry-row__meta">교육 현장 역량강화</p>
+                  </div>
+                  <span class="entry-row__source">공공교육</span>
+                </div>
+              </li>
+              <li data-text="2019 부모교육 아빠와 함께 책 놀이터 프로그램">
+                <div class="entry-row">
+                  <span class="entry-row__year">2019</span>
+                  <span class="entry-row__tag">program</span>
+                  <div class="entry-row__body">
+                    <h3 class="entry-row__title">부모교육 · 아빠와 함께 책 놀이터 프로그램</h3>
+                    <p class="entry-row__meta">가족 · 독서 프로그램</p>
+                  </div>
+                  <span class="entry-row__source">공공교육</span>
+                </div>
+              </li>
             </ul>
           </section>
 
-          <section class="archive-section" id="media" data-group="media">
+          <!-- ── 언론보도 ───────────────────────────────────── -->
+          <section class="archive-section reveal" id="media" data-group="media">
             <div class="archive-section__head">
-              <h2 class="archive-section__label">언론보도</h2>
+              <h2 class="archive-section__label">언론보도 <em>media</em></h2>
               <span class="archive-section__count">2 entries</span>
             </div>
-            <ul class="archive-list">
-              <li><div class="archive-row" data-text="2024 광주100인의 아빠단 멘토링 체험 성료 언론보도"><span class="archive-row__year">2024</span><span class="archive-row__tag">media</span><div><h3 class="archive-row__title">광주100인의 아빠단 멘토링 체험 성료</h3><p class="archive-row__meta">외부 기사 기록</p></div><span class="archive-row__source">보도</span></div></li>
-              <li><div class="archive-row" data-text="2010 완도군 건강가정지원센터장 가족 방문상담 활동 소개 언론보도"><span class="archive-row__year">2010</span><span class="archive-row__tag">media</span><div><h3 class="archive-row__title">완도군 건강가정지원센터장으로 가족 방문상담 활동 소개</h3><p class="archive-row__meta">외부 기사 기록</p></div><span class="archive-row__source">보도</span></div></li>
+            <ul class="entry-list">
+              <li data-text="2024 광주100인의 아빠단 멘토링 체험 성료 언론보도">
+                <div class="entry-row">
+                  <span class="entry-row__year">2024</span>
+                  <span class="entry-row__tag">media</span>
+                  <div class="entry-row__body">
+                    <h3 class="entry-row__title">광주100인의 아빠단 멘토링 체험 성료</h3>
+                    <p class="entry-row__meta">외부 기사 기록</p>
+                  </div>
+                  <span class="entry-row__source">보도</span>
+                </div>
+              </li>
+              <li data-text="2010 완도군 건강가정지원센터장 가족 방문상담 활동 소개 언론보도">
+                <div class="entry-row">
+                  <span class="entry-row__year">2010</span>
+                  <span class="entry-row__tag">media</span>
+                  <div class="entry-row__body">
+                    <h3 class="entry-row__title">완도군 건강가정지원센터장으로 가족 방문상담 활동 소개</h3>
+                    <p class="entry-row__meta">외부 기사 기록</p>
+                  </div>
+                  <span class="entry-row__source">보도</span>
+                </div>
+              </li>
             </ul>
           </section>
         </div>
       </div>
-    </section>
+    </div>
   </main>
 
-  <div id="site-footer"></div>
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-panel">
+        <div class="footer-brand-row">
+          <div class="brand-mark brand-mark--on-dark" aria-hidden="true">em</div>
+          <h3 class="footer-brand">이음교육저널</h3>
+        </div>
+        <p class="footer-tag">em · education &amp; mind journal</p>
+        <p class="footer-body">수면, 발달, 교육현장을 중심으로 기사와 칼럼을 싣습니다.</p>
+      </div>
+      <div class="footer-panel">
+        <span class="footer-kicker">operating body</span>
+        <p class="footer-body">발행: 이음통합평생교육원</p>
+        <p class="footer-body">대표: 선애순</p>
+        <p class="footer-body">광주시 서구 회재로 859, 3층</p>
+      </div>
+      <div class="footer-panel">
+        <span class="footer-kicker">policy</span>
+        <ul class="footer-links">
+          <li><a href="../newsroom-about.html">신문 소개</a></li>
+          <li><a href="../rights-and-corrections.html">정정 · 반론 · 권리구제</a></li>
+          <li><a href="../privacy-policy.html">개인정보처리방침</a></li>
+          <li><a href="../terms.html">이용약관</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <span>© 2026 이음교육저널</span>
+      <span>사업자등록번호 296-05-03812</span>
+    </div>
+  </footer>
 
-  <script src="/assets/js/partials.js"></script>
   <script>
+    // Sticky header
+    (function(){
+      const hdr = document.getElementById('hdr');
+      const onScroll = () => hdr.classList.toggle('site-header--scrolled', window.scrollY > 24);
+      window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+    })();
+
+    // Mobile menu
+    (function(){
+      const btn = document.getElementById('menu-toggle');
+      const nav = document.getElementById('mobile-nav');
+      btn.addEventListener('click', () => {
+        const open = nav.classList.toggle('is-open');
+        btn.classList.toggle('is-open', open);
+        btn.setAttribute('aria-expanded', open);
+        document.body.style.overflow = open ? 'hidden' : '';
+      });
+      nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+        nav.classList.remove('is-open'); btn.classList.remove('is-open');
+        btn.setAttribute('aria-expanded', 'false'); document.body.style.overflow = '';
+      }));
+    })();
+
+    // Filter + search
     (function(){
       const input = document.getElementById('archive-search');
       const buttons = document.querySelectorAll('.archive-filter button');
       const sections = document.querySelectorAll('.archive-section');
+      const empty = document.getElementById('archive-empty');
       let active = 'all';
 
       function applyFilter(){
         const query = (input.value || '').trim().toLowerCase();
+        let totalVisible = 0;
         sections.forEach(section => {
           const groupMatch = active === 'all' || section.dataset.group === active;
           let visibleRows = 0;
+          // Book grid items
+          section.querySelectorAll('.book-card').forEach(item => {
+            const text = (item.dataset.text || item.textContent).toLowerCase();
+            const show = groupMatch && (!query || text.includes(query));
+            item.style.display = show ? '' : 'none';
+            if(show) visibleRows++;
+          });
+          // Entry list items
           section.querySelectorAll('li').forEach(item => {
-            const row = item.querySelector('.archive-row');
-            const text = (row.dataset.text || row.textContent).toLowerCase();
+            const text = (item.dataset.text || item.textContent).toLowerCase();
             const show = groupMatch && (!query || text.includes(query));
             item.hidden = !show;
-            if(show) visibleRows += 1;
+            if(show) visibleRows++;
           });
           section.hidden = visibleRows === 0;
+          if(visibleRows > 0) totalVisible++;
         });
+        empty.classList.toggle('is-visible', totalVisible === 0);
       }
 
-      buttons.forEach(button => {
-        button.addEventListener('click', () => {
-          active = button.dataset.filter;
-          buttons.forEach(b => b.classList.toggle('is-active', b === button));
-          applyFilter();
-        });
-      });
+      buttons.forEach(btn => btn.addEventListener('click', () => {
+        active = btn.dataset.filter;
+        buttons.forEach(b => b.classList.toggle('is-active', b === btn));
+        applyFilter();
+      }));
       input.addEventListener('input', applyFilter);
+    })();
+
+    // TOC active state
+    (function(){
+      const links = document.querySelectorAll('.archive-toc a');
+      const sections = document.querySelectorAll('.archive-section');
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if(e.isIntersecting){
+            links.forEach(l => l.classList.toggle('is-active', l.getAttribute('href') === '#'+e.target.id));
+          }
+        });
+      }, { rootMargin: '-20% 0px -70% 0px' });
+      sections.forEach(s => io.observe(s));
+    })();
+
+    // Scroll reveal
+    (function(){
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('is-visible'); io.unobserve(e.target); }});
+      }, { threshold: 0.05 });
+      document.querySelectorAll('.reveal').forEach(el => io.observe(el));
     })();
   </script>
 </body>

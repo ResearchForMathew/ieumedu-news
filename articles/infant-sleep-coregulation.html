@@ -5,186 +5,413 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>잠들기 어려운 아이의 밤, 훈련보다 공동조절이 먼저라는 이유 · 이음교육저널</title>
   <meta name="description" content="영유아기의 수면은 습관 교정보다 애착과 공동조절이 형성되는 발달 과정으로 읽는 편이 더 정확하다는 해설 기사입니다.">
-  <link rel="stylesheet" href="/assets/css/colors_and_type.css">
-  <link rel="stylesheet" href="/assets/css/kit.css">
-  <link rel="stylesheet" href="/assets/css/detail.css">
+  <meta property="og:title" content="잠들기 어려운 아이의 밤, 훈련보다 공동조절이 먼저라는 이유 · 이음교육저널">
+  <meta property="og:type" content="article">
+  <link rel="stylesheet" href="../assets/css/colors_and_type.css">
+  <link rel="stylesheet" href="../assets/css/kit.css">
+  <link rel="stylesheet" href="../assets/css/detail.css">
+  <style>
+    /* ── Mobile nav ──────────────────────────────────────────── */
+    .mobile-menu-btn { display:none; flex-direction:column; gap:5px; padding:8px; background:none; border:none; cursor:pointer; border-radius:var(--radius-md); }
+    .mobile-menu-btn span { display:block; width:22px; height:1.5px; background:var(--fg-1); transition:transform var(--dur-base) var(--ease-out), opacity var(--dur-base) var(--ease-out); transform-origin:center; }
+    .mobile-menu-btn.is-open span:nth-child(1) { transform:translateY(6.5px) rotate(45deg); }
+    .mobile-menu-btn.is-open span:nth-child(2) { opacity:0; }
+    .mobile-menu-btn.is-open span:nth-child(3) { transform:translateY(-6.5px) rotate(-45deg); }
+    .mobile-nav { display:none; flex-direction:column; position:fixed; top:0; left:0; right:0; bottom:0; background:var(--color-bg); z-index:49; padding:96px var(--container-pad) 48px; overflow-y:auto; }
+    .mobile-nav.is-open { display:flex; }
+    .mobile-nav a { font-family:var(--font-serif); font-size:clamp(1.5rem,4vw,2rem); font-weight:500; color:var(--fg-1); padding:18px 0; border-bottom:0.5px solid var(--color-border); display:flex; align-items:center; justify-content:space-between; }
+    .mobile-nav a::after { content:"→"; font-family:var(--font-sans); font-size:1rem; color:var(--fg-3); }
+    .mobile-nav-foot { margin-top:32px; font-family:var(--font-display); font-style:italic; font-size:13px; color:var(--fg-3); letter-spacing:0.1em; }
+    @media (max-width:1040px) { .mobile-menu-btn { display:flex; } .main-nav { display:none !important; } }
+
+    /* ── Mobile reading rail hide ─────────────────────────────── */
+    @media (max-width:980px) {
+      .article-columns { grid-template-columns: 1fr !important; }
+      .reading-rail { display: none; }
+      .mobile-rail { display: block; }
+    }
+    .mobile-rail { display: none; }
+    .mobile-rail-progress {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--color-border-soft);
+      z-index: 200;
+    }
+    .mobile-rail-progress__fill {
+      height: 100%;
+      background: var(--color-accent);
+      width: 0%;
+      transition: width 100ms linear;
+    }
+
+    /* ── Article header improvements ─────────────────────────── */
+    .hd-title { max-width: 26ch; }
+    .hd-lede { font-size: clamp(1rem, 1.4vw, 1.2rem); }
+
+    /* ── Back to top ──────────────────────────────────────────── */
+    .back-to-top {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      color: var(--fg-3);
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      margin-top: 32px;
+      transition: color var(--dur-base) var(--ease-out);
+    }
+    .back-to-top:hover { color: var(--color-accent); }
+
+    /* ── Related section tint bg ──────────────────────────────── */
+    .related-section { background: var(--color-surface-tint); }
+
+    @keyframes page-in { from { opacity: 0; } to { opacity: 1; } }
+    body { animation: page-in 300ms var(--ease-out) both; }
+  </style>
 </head>
 <body>
-<a class="skip-link" href="#main">본문으로 바로가기</a>
-<div id="site-header"></div>
-<main id="main">
-<article class="article-bleed">
-  <div class="article-shell">
-    <div class="hd">
-      <nav class="hd-crumbs" aria-label="breadcrumb">
-        <a href="/">이음교육저널</a>
-        <span aria-hidden="true">›</span>
-        <a href="/#latest">최신 기사</a>
-        <span aria-hidden="true">›</span>
-        <span class="hd-crumbs__here">아동·가족 해설</span>
+  <a class="skip-link" href="#main">본문으로 바로가기</a>
+
+  <!-- Mobile progress bar -->
+  <div class="mobile-rail mobile-rail-progress" aria-hidden="true">
+    <div class="mobile-rail-progress__fill" id="mobile-progress"></div>
+  </div>
+
+  <header class="site-header" id="hdr">
+    <div class="container header-inner">
+      <a class="brand-wrap" href="../index.html">
+        <div class="brand-mark" aria-hidden="true">em</div>
+        <div class="brand-text">
+          <div class="brand-name">이음교육저널</div>
+          <div class="brand-tag">em · education &amp; mind journal</div>
+        </div>
+      </a>
+      <nav class="main-nav" aria-label="주요 메뉴">
+        <a href="../index.html#articles">최신 기사</a>
+        <a href="../index.html#columns">칼럼</a>
+        <a href="../archive/index.html">아카이브</a>
+        <a href="../index.html#topics">주제</a>
+        <a href="../newsroom-about.html">소개</a>
       </nav>
-      <div class="hd-category">
-        <span class="hd-category__kicker">explainer</span>
-        <span class="hd-category__sep"></span>
-        <span class="hd-category__label">아동·가족 해설</span>
-      </div>
-      <h1 class="hd-title">잠들기 어려운 아이의 밤, 훈련보다 <em>공동조절</em>이 먼저라는 이유</h1>
-      <p class="hd-lede">영유아기의 수면은 습관 교정의 문제가 아니라, 애착과 공동조절이 형성되는 발달 과정으로 보는 편이 더 정확하다.</p>
-      <div class="hd-meta">
-        <div class="hd-meta__author">
-          <div class="byline-avatar">선</div>
-          <span class="hd-meta__name">선애순<span class="hd-meta__role"> · 편집장</span></span>
-        </div>
-        <span class="hd-meta__divider"></span>
-        <span class="hd-meta__date">2026.04.23 · 읽기 4분</span>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <a class="outbound-link" href="https://www.ieumedu.kr/" style="display:inline-flex;">이음통합평생교육원 <span style="margin-left:4px;" aria-hidden="true">↗</span></a>
+        <button class="mobile-menu-btn" id="menu-toggle" aria-label="메뉴 열기" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
       </div>
     </div>
+  </header>
 
-    <figure class="article-hero-figure">
-      <img src="/assets/articles/infant-sleep.jpg" alt="아기 침대와 은은한 조명이 있는 영유아 수면 기사 대표 이미지">
-      <figcaption>잠드는 시간은 아이가 혼자 버티는 시간이 아니라 보호자와 리듬을 맞춰 가는 시간에 가깝다.</figcaption>
-    </figure>
+  <nav class="mobile-nav" id="mobile-nav" aria-label="모바일 메뉴">
+    <a href="../index.html#articles">최신 기사</a>
+    <a href="../index.html#columns">칼럼</a>
+    <a href="../archive/index.html">아카이브</a>
+    <a href="../index.html#topics">주제</a>
+    <a href="../newsroom-about.html">소개</a>
+    <p class="mobile-nav-foot">em · education &amp; mind journal</p>
+  </nav>
 
-    <div class="article-columns">
-      <div>
-        <div class="article-summary">
-          <span class="article-summary__label">핵심 요약</span>
-          <ul>
-            <li>영유아기의 수면은 단순한 습관 교정보다 발달과 애착의 과정으로 읽는 편이 더 정확하다.</li>
-            <li>잠드는 시간은 아이가 혼자 버티는 시간이 아니라 보호자와 함께 리듬을 맞춰 가는 시간에 가깝다.</li>
-          </ul>
-        </div>
-        <div class="article-body">
-          <p>아이가 쉽게 잠들지 못하거나 밤중에 자주 깨면 보호자는 금세 수면 습관부터 떠올리게 된다. 몇 시에 재워야 하는지, 혼자 잠드는 훈련을 해야 하는지, 울음을 어느 정도 기다려야 하는지 같은 질문이 먼저 나온다. 그러나 영유아기의 잠을 발달의 관점에서 보면, 이 시기의 밤은 단순히 재우는 기술의 문제가 아니다. 아직 스스로 각성과 긴장을 조절하기 어려운 아이가 보호자와 함께 리듬을 맞춰 가는 시간에 더 가깝다.</p>
-          <h2 id="signal">버릇이 아니라 도움을 요청하는 신호</h2>
-          <p>영유아는 생리적으로도 정서적으로도 미성숙하다. 잠들기 전 울거나 몸을 긴장시키거나 계속해서 확인을 요구하는 행동은 버릇이 아니라, 스스로를 진정시키지 못해 외부의 조율을 요청하는 신호일 수 있다.</p>
-          <p>보호자의 목소리, 반복되는 취침 루틴, 예측 가능한 반응은 아이의 신경계를 안정시키고, 그 반복은 차츰 자기조절 능력의 바탕이 된다.</p>
-          <h2 id="safe">수면은 안전한 의존을 배우는 시간</h2>
-          <aside class="pull-quote">영유아기의 잠은 독립의 완성 여부를 시험하는 시간이 아니다.</aside>
-          <p>애착 역시 밤과 분리되지 않는다. 밤중에 깼을 때 누가 어떻게 반응하는지, 잠자리에 드는 시간이 아이에게 얼마나 안전한 경험으로 기억되는지는 "필요할 때 도움을 받을 수 있다"는 기본 신뢰를 쌓는 데 영향을 준다.</p>
-          <p>그래서 영유아기의 잠을 무조건 독립 훈련의 문제로만 다루면, 정작 중요한 정서적 안전감의 축적을 놓치기 쉽다.</p>
-          <h2 id="ask">먼저 물어야 할 것은 훈련이 아니라 조절</h2>
-          <p>물론 모든 각성이 같은 의미를 갖는 것은 아니다. 수면 환경이 지나치게 흔들리거나, 낮 동안 자극이 과도했거나, 보호자 역시 지쳐 일관된 반응을 유지하기 어려운 상황이라면 아이의 밤은 더 불안해질 수 있다. 이럴 때 필요한 것은 누가 잘못했는지를 가리는 판단보다, 아이가 지금 어떤 조절의 도움을 필요로 하는지 읽어내는 태도다.</p>
-          <p>영유아기의 잠은 독립의 완성 여부를 시험하는 시간이 아니다. 오히려 안전하게 의존하는 경험을 통해 조절 능력을 쌓는 단계에 가깝다. 잠들기 어려운 아이의 밤을 훈련의 실패로만 보기보다, 공동조절이 얼마나 안정적으로 작동하고 있는지를 묻는 쪽이 더 정확하다.</p>
-        </div>
-        <div class="article-tags">
-          <a class="tag" href="#">영유아 수면</a>
-          <a class="tag" href="#">공동조절</a>
-          <a class="tag" href="#">애착</a>
-          <a class="tag" href="#">발달심리</a>
-        </div>
-        <div class="article-end">
-          <span class="article-end__mark">— end —</span>
-          <span class="article-end__copyright">© 이음교육저널 · 무단 전재 및 재배포 금지</span>
-        </div>
-      </div>
-      <aside class="reading-rail" aria-label="읽기 보조">
-        <div class="rail-block">
-          <span class="rail-label">reading</span>
-          <div class="rail-progress"><div class="rail-progress__fill" style="width:0%"></div></div>
-          <div class="rail-progress__label">0% · 읽기 4분</div>
-        </div>
-        <div class="rail-block">
-          <span class="rail-label">in this article</span>
-          <ul class="rail-toc">
-            <li><a href="#signal" class="is-active">버릇이 아니라 신호</a></li>
-            <li><a href="#safe">안전한 의존을 배우는 시간</a></li>
-            <li><a href="#ask">훈련이 아니라 조절</a></li>
-          </ul>
-        </div>
-        <div class="rail-block">
-          <span class="rail-label">share</span>
-          <div class="rail-share">
-            <button type="button">copy link</button>
-            <button type="button">email</button>
-            <button type="button">print</button>
+  <main id="main">
+    <article class="article-bleed">
+      <div class="article-shell">
+
+        <!-- Article header -->
+        <div class="hd">
+          <nav class="hd-crumbs" aria-label="breadcrumb">
+            <a href="../index.html">이음교육저널</a>
+            <span aria-hidden="true">›</span>
+            <a href="../index.html#articles">최신 기사</a>
+            <span aria-hidden="true">›</span>
+            <span class="hd-crumbs__here">아동·가족 해설</span>
+          </nav>
+          <div class="hd-category">
+            <span class="hd-category__kicker">explainer</span>
+            <span class="hd-category__sep"></span>
+            <span class="hd-category__label">아동·가족 해설</span>
+          </div>
+          <h1 class="hd-title">잠들기 어려운 아이의 밤, 훈련보다 <em>공동조절</em>이 먼저라는 이유</h1>
+          <p class="hd-lede">영유아기의 수면은 습관 교정의 문제가 아니라, 애착과 공동조절이 형성되는 발달 과정으로 보는 편이 더 정확하다.</p>
+          <div class="hd-meta">
+            <div class="hd-meta__author">
+              <div class="byline-avatar">선</div>
+              <span class="hd-meta__name">선애순<span class="hd-meta__role"> · 편집장</span></span>
+            </div>
+            <span class="hd-meta__divider"></span>
+            <span class="hd-meta__date">2026.04.23 · 읽기 4분</span>
+            <div class="hd-meta__actions">
+              <button class="icon-btn" id="share-copy" title="링크 복사" aria-label="기사 링크 복사">link</button>
+              <button class="icon-btn" id="share-print" title="인쇄" aria-label="기사 인쇄">print</button>
+            </div>
           </div>
         </div>
-        <div class="rail-block">
-          <span class="rail-label">author</span>
-          <div class="rail-author">
-            <div class="rail-author__avatar">선</div>
-            <div class="rail-author__name">선애순</div>
-          </div>
-          <p class="rail-bio">이음통합평생교육원 대표. 수면·발달·애착을 중심으로 해설 기사와 칼럼을 씁니다.</p>
-        </div>
-      </aside>
-    </div>
-  </div>
-</article>
 
-<section class="related-section">
-  <div class="container">
-    <div class="related-header">
-      <div>
-        <span class="kicker">read next</span>
-        <h2>이어서 읽기</h2>
+        <!-- Hero image -->
+        <figure class="article-hero-figure">
+          <img src="../assets/articles/infant-sleep.jpg" alt="아기 침대와 은은한 조명이 있는 영유아 수면 기사 대표 이미지">
+          <figcaption>잠드는 시간은 아이가 혼자 버티는 시간이 아니라 보호자와 리듬을 맞춰 가는 시간에 가깝다.</figcaption>
+        </figure>
+
+        <!-- Two-column layout: body + rail -->
+        <div class="article-columns">
+          <div>
+            <!-- Summary -->
+            <div class="article-summary">
+              <span class="article-summary__label">핵심 요약</span>
+              <ul>
+                <li>영유아기의 수면은 단순한 습관 교정보다 발달과 애착의 과정으로 읽는 편이 더 정확하다.</li>
+                <li>잠드는 시간은 아이가 혼자 버티는 시간이 아니라 보호자와 함께 리듬을 맞춰 가는 시간에 가깝다.</li>
+              </ul>
+            </div>
+
+            <!-- Body -->
+            <div class="article-body">
+              <p>아이가 쉽게 잠들지 못하거나 밤중에 자주 깨면 보호자는 금세 수면 습관부터 떠올리게 된다. 몇 시에 재워야 하는지, 혼자 잠드는 훈련을 해야 하는지, 울음을 어느 정도 기다려야 하는지 같은 질문이 먼저 나온다. 그러나 영유아기의 잠을 발달의 관점에서 보면, 이 시기의 밤은 단순히 재우는 기술의 문제가 아니다. 아직 스스로 각성과 긴장을 조절하기 어려운 아이가 보호자와 함께 리듬을 맞춰 가는 시간에 더 가깝다.</p>
+
+              <h2 id="signal">버릇이 아니라 도움을 요청하는 신호</h2>
+              <p>영유아는 생리적으로도 정서적으로도 미성숙하다. 잠들기 전 울거나 몸을 긴장시키거나 계속해서 확인을 요구하는 행동은 버릇이 아니라, 스스로를 진정시키지 못해 외부의 조율을 요청하는 신호일 수 있다.</p>
+              <p>보호자의 목소리, 반복되는 취침 루틴, 예측 가능한 반응은 아이의 신경계를 안정시키고, 그 반복은 차츰 자기조절 능력의 바탕이 된다.</p>
+
+              <h2 id="safe">수면은 안전한 의존을 배우는 시간</h2>
+              <aside class="pull-quote">영유아기의 잠은 독립의 완성 여부를 시험하는 시간이 아니다.</aside>
+              <p>애착 역시 밤과 분리되지 않는다. 밤중에 깼을 때 누가 어떻게 반응하는지, 잠자리에 드는 시간이 아이에게 얼마나 안전한 경험으로 기억되는지는 "필요할 때 도움을 받을 수 있다"는 기본 신뢰를 쌓는 데 영향을 준다.</p>
+              <p>그래서 영유아기의 잠을 무조건 독립 훈련의 문제로만 다루면, 정작 중요한 정서적 안전감의 축적을 놓치기 쉽다.</p>
+
+              <h2 id="ask">먼저 물어야 할 것은 훈련이 아니라 조절</h2>
+              <p>물론 모든 각성이 같은 의미를 갖는 것은 아니다. 수면 환경이 지나치게 흔들리거나, 낮 동안 자극이 과도했거나, 보호자 역시 지쳐 일관된 반응을 유지하기 어려운 상황이라면 아이의 밤은 더 불안해질 수 있다. 이럴 때 필요한 것은 누가 잘못했는지를 가리는 판단보다, 아이가 지금 어떤 조절의 도움을 필요로 하는지 읽어내는 태도다.</p>
+              <p>영유아기의 잠은 독립의 완성 여부를 시험하는 시간이 아니다. 오히려 안전하게 의존하는 경험을 통해 조절 능력을 쌓는 단계에 가깝다. 잠들기 어려운 아이의 밤을 훈련의 실패로만 보기보다, 공동조절이 얼마나 안정적으로 작동하고 있는지를 묻는 쪽이 더 정확하다.</p>
+            </div>
+
+            <div class="article-tags">
+              <a class="tag" href="#">영유아 수면</a>
+              <a class="tag" href="#">공동조절</a>
+              <a class="tag" href="#">애착</a>
+              <a class="tag" href="#">발달심리</a>
+            </div>
+
+            <div class="article-end">
+              <span class="article-end__mark">— end —</span>
+              <span class="article-end__copyright">© 이음교육저널 · 무단 전재 및 재배포 금지</span>
+            </div>
+
+            <button class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+              ↑ 위로 돌아가기
+            </button>
+          </div>
+
+          <!-- Reading rail -->
+          <aside class="reading-rail" aria-label="읽기 보조">
+            <div class="rail-block">
+              <span class="rail-label">reading</span>
+              <div class="rail-progress"><div class="rail-progress__fill" id="rail-fill"></div></div>
+              <div class="rail-progress__label" id="rail-label">0% · 읽기 4분</div>
+            </div>
+            <div class="rail-block">
+              <span class="rail-label">in this article</span>
+              <ul class="rail-toc">
+                <li><a href="#signal" class="is-active">버릇이 아니라 신호</a></li>
+                <li><a href="#safe">안전한 의존을 배우는 시간</a></li>
+                <li><a href="#ask">훈련이 아니라 조절</a></li>
+              </ul>
+            </div>
+            <div class="rail-block">
+              <span class="rail-label">share</span>
+              <div class="rail-share">
+                <button type="button" id="rail-copy">copy link</button>
+                <button type="button" id="rail-email">email</button>
+                <button type="button" id="rail-print">print</button>
+              </div>
+            </div>
+            <div class="rail-block">
+              <span class="rail-label">author</span>
+              <div class="rail-author">
+                <div class="rail-author__avatar">선</div>
+                <div class="rail-author__name">선애순</div>
+              </div>
+              <p class="rail-bio">이음통합평생교육원 대표. 수면·발달·애착을 중심으로 해설 기사와 칼럼을 씁니다.</p>
+            </div>
+          </aside>
+        </div>
+
       </div>
-      <a class="inline-link" href="/#latest">더 보기 <span aria-hidden="true">→</span></a>
+    </article>
+
+    <!-- Related articles -->
+    <section class="related-section">
+      <div class="container">
+        <div class="related-header">
+          <div>
+            <span class="kicker">read next</span>
+            <h2>이어서 읽기</h2>
+          </div>
+          <a class="inline-link" href="../index.html#articles">더 보기 <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="card-grid">
+          <article class="article-card">
+            <a class="article-card__thumb" href="youth-sleep-rhythm.html">
+              <img src="../assets/articles/youth-sleep.jpg" alt="푸른 나무와 달빛" loading="lazy">
+              <span class="article-card__cat">청소년 리듬</span>
+            </a>
+            <div class="article-card__body">
+              <h3 class="article-card__title">청소년이 늦게 잠드는 이유, 게으름보다 먼저 봐야 할 리듬 변화</h3>
+              <p class="article-card__desc">늦게 잠드는 청소년의 밤을 생체리듬과 사회적 압박의 충돌로 설명합니다.</p>
+              <a class="inline-link" href="youth-sleep-rhythm.html">기사 보기 <span aria-hidden="true">→</span></a>
+            </div>
+          </article>
+          <article class="article-card">
+            <a class="article-card__thumb" href="development-delay-early-signals.html">
+              <img src="../assets/articles/development-delay.png" alt="놀이 도구 앞의 아이" loading="lazy">
+              <span class="article-card__cat">발달 현장</span>
+            </a>
+            <div class="article-card__body">
+              <h3 class="article-card__title">발달지연 조기 발견이 중요한 이유, 어린이집·가정이 함께 보는 신호들</h3>
+              <p class="article-card__desc">발달지연 조기 발견의 중요성과 가정, 어린이집이 함께 보는 신호를 짚습니다.</p>
+              <a class="inline-link" href="development-delay-early-signals.html">기사 보기 <span aria-hidden="true">→</span></a>
+            </div>
+          </article>
+          <article class="article-card">
+            <a class="article-card__thumb" href="column-sleep-is-not-medicine.html">
+              <img src="../assets/articles/sleep-not-medicine.jpg" alt="어두운 밤과 창문 불빛" loading="lazy">
+              <span class="article-card__cat">불안과 잠</span>
+            </a>
+            <div class="article-card__body">
+              <h3 class="article-card__title">잠은 최고의 보약이 아니다</h3>
+              <p class="article-card__desc">잘 자야 한다는 강박이 왜 밤을 더 긴장시키는지 돌아봅니다.</p>
+              <a class="inline-link" href="column-sleep-is-not-medicine.html">칼럼 읽기 <span aria-hidden="true">→</span></a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-panel">
+        <div class="footer-brand-row">
+          <div class="brand-mark brand-mark--on-dark" aria-hidden="true">em</div>
+          <h3 class="footer-brand">이음교육저널</h3>
+        </div>
+        <p class="footer-tag">em · education &amp; mind journal</p>
+        <p class="footer-body">수면, 발달, 교육현장을 중심으로 기사와 칼럼을 싣습니다.</p>
+      </div>
+      <div class="footer-panel">
+        <span class="footer-kicker">operating body</span>
+        <p class="footer-body">발행: 이음통합평생교육원</p>
+        <p class="footer-body">대표: 선애순</p>
+        <p class="footer-body">광주시 서구 회재로 859, 3층</p>
+      </div>
+      <div class="footer-panel">
+        <span class="footer-kicker">policy</span>
+        <ul class="footer-links">
+          <li><a href="../newsroom-about.html">신문 소개</a></li>
+          <li><a href="../rights-and-corrections.html">정정 · 반론 · 권리구제</a></li>
+          <li><a href="../privacy-policy.html">개인정보처리방침</a></li>
+          <li><a href="../terms.html">이용약관</a></li>
+        </ul>
+      </div>
     </div>
-    <div class="card-grid">
-    <article class="article-card">
-      <a class="article-card__thumb" href="/articles/youth-sleep-rhythm.html" aria-label="청소년이 늦게 잠드는 이유, 게으름보다 먼저 봐야 할 리듬 변화">
-        <img src="/assets/articles/youth-sleep.jpg" alt="푸른 나무와 달빛" loading="lazy">
-        <span class="article-card__cat">청소년 리듬</span>
-      </a>
-      <div class="article-card__body">
-        <h3 class="article-card__title">청소년이 늦게 잠드는 이유, 게으름보다 먼저 봐야 할 리듬 변화</h3>
-        <p class="article-card__desc">늦게 잠드는 청소년의 밤을 생체리듬과 사회적 압박의 충돌로 설명합니다.</p>
-        <a class="inline-link" href="/articles/youth-sleep-rhythm.html">기사 보기 <span aria-hidden="true">→</span></a>
-      </div>
-    </article>
-    <article class="article-card">
-      <a class="article-card__thumb" href="/articles/development-delay-early-signals.html" aria-label="발달지연 조기 발견이 중요한 이유, 어린이집·가정이 함께 보는 신호들">
-        <img src="/assets/articles/development-delay.png" alt="놀이 도구 앞의 아이" loading="lazy">
-        <span class="article-card__cat">발달 현장</span>
-      </a>
-      <div class="article-card__body">
-        <h3 class="article-card__title">발달지연 조기 발견이 중요한 이유, 어린이집·가정이 함께 보는 신호들</h3>
-        <p class="article-card__desc">발달지연 조기 발견의 중요성과 가정, 어린이집이 함께 보는 신호를 짚습니다.</p>
-        <a class="inline-link" href="/articles/development-delay-early-signals.html">기사 보기 <span aria-hidden="true">→</span></a>
-      </div>
-    </article>
-    <article class="article-card">
-      <a class="article-card__thumb" href="/articles/attachment-theory-sleep-and-relationship.html" aria-label="애착 이론으로 다시 읽는 잠, 아이의 밤을 관계의 언어로 보기">
-        <img src="/assets/articles/editor-note.jpg" alt="숲길과 빛이 보이는 이론 브리프 대표 이미지" loading="lazy">
-        <span class="article-card__cat">이론 브리프</span>
-      </a>
-      <div class="article-card__body">
-        <h3 class="article-card__title">애착 이론으로 다시 읽는 잠, 아이의 밤을 관계의 언어로 보기</h3>
-        <p class="article-card__desc">아이의 잠을 애착 이론으로 읽어내는 시선을 정리합니다.</p>
-        <a class="inline-link" href="/articles/attachment-theory-sleep-and-relationship.html">기사 보기 <span aria-hidden="true">→</span></a>
-      </div>
-    </article></div>
-  </div>
-</section></main>
-<div id="site-footer"></div>
-<script src="/assets/js/partials.js"></script>
-<script>
-  // reading progress
-  (function(){
-    const fill = document.querySelector('.rail-progress__fill');
-    const label = document.querySelector('.rail-progress__label');
-    const readLabel = label ? label.textContent.split('·').slice(1).join('·').trim() : '';
-    if(!fill) return;
-    const onScroll = () => {
-      const h = document.documentElement;
-      const total = h.scrollHeight - h.clientHeight;
-      const pct = total ? Math.max(0, Math.min(100, (h.scrollTop / total) * 100)) : 0;
-      fill.style.width = pct + '%';
-      if(label) label.textContent = Math.round(pct) + '% · ' + readLabel;
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-  })();
-  // hover mouse-xy for cards
-  document.querySelectorAll('.article-card').forEach(c=>{
-    c.addEventListener('mousemove',(e)=>{
-      const r = c.getBoundingClientRect();
-      c.style.setProperty('--mx',(e.clientX-r.left)+'px');
-      c.style.setProperty('--my',(e.clientY-r.top)+'px');
+    <div class="container footer-bottom">
+      <span>© 2026 이음교육저널</span>
+      <span>사업자등록번호 296-05-03812</span>
+    </div>
+  </footer>
+
+  <script>
+    // Sticky header
+    (function(){
+      const hdr = document.getElementById('hdr');
+      const onScroll = () => hdr.classList.toggle('site-header--scrolled', window.scrollY > 24);
+      window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+    })();
+
+    // Mobile menu
+    (function(){
+      const btn = document.getElementById('menu-toggle');
+      const nav = document.getElementById('mobile-nav');
+      btn.addEventListener('click', () => {
+        const open = nav.classList.toggle('is-open');
+        btn.classList.toggle('is-open', open);
+        btn.setAttribute('aria-expanded', open);
+        document.body.style.overflow = open ? 'hidden' : '';
+      });
+      nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+        nav.classList.remove('is-open'); btn.classList.remove('is-open');
+        btn.setAttribute('aria-expanded','false'); document.body.style.overflow = '';
+      }));
+    })();
+
+    // Reading progress
+    (function(){
+      const fill = document.getElementById('rail-fill');
+      const label = document.getElementById('rail-label');
+      const mobileFill = document.getElementById('mobile-progress');
+      const onScroll = () => {
+        const h = document.documentElement;
+        const total = h.scrollHeight - h.clientHeight;
+        const pct = total ? Math.max(0, Math.min(100, (h.scrollTop / total) * 100)) : 0;
+        const pctStr = pct.toFixed(0) + '%';
+        if(fill) fill.style.width = pctStr;
+        if(label) label.textContent = Math.round(pct) + '% · 읽기 4분';
+        if(mobileFill) mobileFill.style.width = pctStr;
+      };
+      window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+    })();
+
+    // Rail TOC active
+    (function(){
+      const links = document.querySelectorAll('.rail-toc a');
+      const headings = [...links].map(l => document.querySelector(l.getAttribute('href'))).filter(Boolean);
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if(e.isIntersecting){
+            links.forEach(l => l.classList.toggle('is-active', l.getAttribute('href') === '#'+e.target.id));
+          }
+        });
+      }, { rootMargin: '-20% 0px -70% 0px' });
+      headings.forEach(h => io.observe(h));
+    })();
+
+    // Share actions
+    (function(){
+      const url = window.location.href.split('#')[0];
+      const copyAction = async (btn) => {
+        try {
+          await navigator.clipboard.writeText(url);
+          const orig = btn.textContent; btn.textContent = 'copied!';
+          setTimeout(() => btn.textContent = orig, 1800);
+        } catch(_) { window.prompt('링크를 복사하세요.', url); }
+      };
+      ['share-copy','rail-copy'].forEach(id => {
+        const el = document.getElementById(id);
+        if(el) el.addEventListener('click', () => copyAction(el));
+      });
+      ['rail-email'].forEach(id => {
+        const el = document.getElementById(id);
+        if(el) el.addEventListener('click', () => {
+          window.location.href = `mailto:?subject=${encodeURIComponent(document.title)}&body=${encodeURIComponent(url)}`;
+        });
+      });
+      ['share-print','rail-print'].forEach(id => {
+        const el = document.getElementById(id);
+        if(el) el.addEventListener('click', () => window.print());
+      });
+    })();
+
+    // Card mouse effect
+    document.querySelectorAll('.article-card').forEach(c => {
+      c.addEventListener('mousemove', e => {
+        const r = c.getBoundingClientRect();
+        c.style.setProperty('--mx', (e.clientX-r.left)+'px');
+        c.style.setProperty('--my', (e.clientY-r.top)+'px');
+      });
     });
-  });
-</script>
+  </script>
 </body>
 </html>

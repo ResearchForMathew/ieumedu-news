@@ -5,144 +5,636 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>이음교육저널 — 밤의 감정과 낮의 교육을 한 지면에서</title>
   <meta name="description" content="이음교육저널(news.ieumedu.kr)은 수면, 발달, 애착, 교육현장을 중심으로 해설과 칼럼을 싣는 교육·심리 인터넷신문입니다.">
-  <link rel="stylesheet" href="/assets/css/colors_and_type.css">
-  <link rel="stylesheet" href="/assets/css/kit.css">
+  <link rel="stylesheet" href="assets/css/colors_and_type.css">
+  <link rel="stylesheet" href="assets/css/kit.css">
+  <style>
+    /* ── Mobile nav ─────────────────────────────────────────── */
+    .mobile-menu-btn {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      padding: 8px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      border-radius: var(--radius-md);
+      transition: background var(--dur-base) var(--ease-out);
+    }
+    .mobile-menu-btn:hover { background: var(--color-surface-tint); }
+    .mobile-menu-btn span {
+      display: block;
+      width: 22px;
+      height: 1.5px;
+      background: var(--fg-1);
+      transition: transform var(--dur-base) var(--ease-out), opacity var(--dur-base) var(--ease-out);
+      transform-origin: center;
+    }
+    .mobile-menu-btn.is-open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .mobile-menu-btn.is-open span:nth-child(2) { opacity: 0; }
+    .mobile-menu-btn.is-open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    .mobile-nav {
+      display: none;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: var(--color-bg);
+      z-index: 49;
+      padding: 96px var(--container-pad) 48px;
+      gap: 0;
+      overflow-y: auto;
+    }
+    .mobile-nav.is-open { display: flex; }
+    .mobile-nav a {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      font-weight: 500;
+      color: var(--fg-1);
+      padding: 18px 0;
+      border-bottom: 0.5px solid var(--color-border);
+      letter-spacing: var(--ls-tight);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: color var(--dur-base) var(--ease-out);
+    }
+    .mobile-nav a:hover { color: var(--color-accent); }
+    .mobile-nav a::after { content: "→"; font-family: var(--font-sans); font-size: 1rem; color: var(--fg-3); transition: transform var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out); }
+    .mobile-nav a:hover::after { transform: translateX(4px); color: var(--color-accent); }
+    .mobile-nav-foot {
+      margin-top: 32px;
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 13px;
+      color: var(--fg-3);
+      letter-spacing: 0.1em;
+    }
+
+    @media (max-width: 1040px) {
+      .mobile-menu-btn { display: flex; }
+      .main-nav { display: none !important; }
+    }
+
+    /* ── Hero improvements ──────────────────────────────────── */
+    .hero-section {
+      background: linear-gradient(160deg, #E8F2EE 0%, #ECF2EE 60%, #EEF2EF 100%);
+    }
+    .hero-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .hero-eyebrow-line {
+      width: 32px;
+      height: 1px;
+      background: var(--color-accent);
+    }
+    .hero-copy .kicker { margin-bottom: 0; }
+    .hero-title {
+      margin-top: 16px;
+    }
+
+    /* ── Filter bar ─────────────────────────────────────────── */
+    .filter-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 36px;
+      padding-bottom: 24px;
+      border-bottom: 0.5px solid var(--color-border);
+    }
+    .filter-btn {
+      padding: 8px 16px;
+      border-radius: var(--radius-pill);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 500;
+      border: 1px solid var(--color-border);
+      background: var(--color-surface);
+      color: var(--fg-2);
+      cursor: pointer;
+      transition: all var(--dur-base) var(--ease-out);
+      white-space: nowrap;
+    }
+    .filter-btn:hover {
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+    }
+    .filter-btn.is-active {
+      background: var(--color-accent);
+      border-color: var(--color-accent);
+      color: #fff;
+    }
+    .filter-count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      font-size: 10px;
+      font-weight: 600;
+      background: rgba(255,255,255,0.25);
+      margin-left: 4px;
+    }
+    .filter-btn:not(.is-active) .filter-count {
+      background: var(--color-surface-tint);
+      color: var(--fg-3);
+    }
+
+    /* ── Unified articles section ───────────────────────────── */
+    .articles-section { padding: var(--section-gap) 0; scroll-margin-top: 96px; }
+
+    .card-grid--filtered .article-card {
+      transition: transform var(--dur-base) var(--ease-out),
+                  border-color var(--dur-base) var(--ease-out),
+                  box-shadow var(--dur-base) var(--ease-out),
+                  opacity var(--dur-slow) var(--ease-out);
+    }
+    .article-card[data-hidden="true"] {
+      display: none;
+    }
+
+    /* ── Category badge variants ────────────────────────────── */
+    .article-card__cat[data-cat="칼럼"] { background: rgba(45,106,106,0.7); }
+    .article-card__cat[data-cat="사례 기록"] { background: rgba(13,46,46,0.65); }
+
+    /* ── Section label + count ──────────────────────────────── */
+    .section-head-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .articles-result-count {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 12px;
+      color: var(--fg-3);
+      letter-spacing: 0.06em;
+      padding-bottom: 4px;
+    }
+
+    /* ── Scroll reveal ──────────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 500ms var(--ease-out), transform 500ms var(--ease-out);
+    }
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 80ms; }
+    .reveal-delay-2 { transition-delay: 160ms; }
+    .reveal-delay-3 { transition-delay: 240ms; }
+
+    /* ── Featured article (first card wide) ─────────────────── */
+    .card-grid--featured {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 20px;
+    }
+    .article-card--featured {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: minmax(0,1.4fr) minmax(0,1fr);
+    }
+    .article-card--featured .article-card__thumb {
+      aspect-ratio: auto;
+      height: 100%;
+      min-height: 240px;
+      border-radius: 0;
+      border-bottom-left-radius: var(--radius-lg);
+      border-top-left-radius: var(--radius-lg);
+    }
+    .article-card--featured .article-card__body {
+      padding: 32px 28px;
+      justify-content: center;
+    }
+    .article-card--featured .article-card__title {
+      font-size: 22px;
+      -webkit-line-clamp: 3;
+    }
+    .article-card--featured .article-card__desc {
+      -webkit-line-clamp: 3;
+      font-size: 15px;
+    }
+    @media (max-width: 860px) {
+      .article-card--featured {
+        grid-column: auto;
+        display: flex;
+        flex-direction: column;
+      }
+      .article-card--featured .article-card__thumb {
+        height: auto;
+        aspect-ratio: 16/10;
+        min-height: unset;
+        border-radius: 0;
+        border-top-left-radius: var(--radius-lg);
+        border-top-right-radius: var(--radius-lg);
+      }
+    }
+    @media (max-width: 1040px) {
+      .card-grid--featured { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    }
+    @media (max-width: 640px) {
+      .card-grid--featured { grid-template-columns: 1fr; }
+    }
+
+    /* ── About teaser section ───────────────────────────────── */
+    .about-teaser {
+      background: var(--color-accent);
+      border-radius: var(--radius-xl);
+      padding: clamp(36px, 5vw, 56px) clamp(28px, 5vw, 56px);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 32px;
+      align-items: center;
+      margin-top: var(--section-gap);
+    }
+    .about-teaser__kicker {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      color: var(--color-accent-light);
+      display: block;
+      margin-bottom: 12px;
+    }
+    .about-teaser__title {
+      font-family: var(--font-serif);
+      font-weight: 600;
+      font-size: clamp(1.4rem, 2.5vw, 1.9rem);
+      line-height: 1.3;
+      letter-spacing: var(--ls-tight);
+      color: #fff;
+      margin: 0 0 10px;
+    }
+    .about-teaser__desc {
+      font-size: 15px;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.75);
+      margin: 0;
+      max-width: 44ch;
+    }
+    .about-teaser .btn--ghost {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: #fff;
+      white-space: nowrap;
+      transition: all var(--dur-base) var(--ease-out);
+    }
+    .about-teaser .btn--ghost:hover {
+      background: rgba(255,255,255,0.22);
+      border-color: rgba(255,255,255,0.5);
+      transform: translateY(-1px);
+    }
+    @media (max-width: 640px) {
+      .about-teaser { grid-template-columns: 1fr; }
+    }
+
+    /* ── Improved archive section ───────────────────────────── */
+    .archive-section-wrap {
+      background: var(--color-surface-soft);
+      border-radius: var(--radius-xl);
+      padding: clamp(32px, 5vw, 48px);
+      border: 1px solid var(--color-border);
+    }
+    .archive-meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .archive-stats {
+      display: flex;
+      gap: 20px;
+    }
+    .archive-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+    .archive-stat__num {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--color-accent);
+      letter-spacing: var(--ls-tight);
+    }
+    .archive-stat__label {
+      font-size: 11px;
+      color: var(--fg-3);
+      letter-spacing: 0.06em;
+    }
+    .archive-divider {
+      width: 1px;
+      height: 32px;
+      background: var(--color-border);
+    }
+    .archive-entries {
+      display: grid;
+      gap: 10px;
+    }
+    .archive-entry {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 16px;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      color: inherit;
+      transition: all var(--dur-base) var(--ease-out);
+    }
+    .archive-entry:hover {
+      border-color: var(--color-accent);
+      background: #fff;
+      transform: translateX(3px);
+    }
+    .archive-entry__icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      background: var(--color-accent-surface);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+    .archive-entry__icon svg {
+      width: 16px;
+      height: 16px;
+      stroke: var(--color-accent);
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .archive-entry__label {
+      font-family: var(--font-serif);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--fg-1);
+      letter-spacing: var(--ls-tight);
+    }
+    .archive-entry__desc {
+      font-size: 13px;
+      color: var(--fg-2);
+      line-height: 1.5;
+    }
+    .archive-entry__arrow {
+      margin-left: auto;
+      font-size: 14px;
+      color: var(--fg-3);
+      transition: transform var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out);
+    }
+    .archive-entry:hover .archive-entry__arrow {
+      transform: translateX(3px);
+      color: var(--color-accent);
+    }
+
+    /* ── Empty state ────────────────────────────────────────── */
+    .articles-empty {
+      grid-column: 1 / -1;
+      display: none;
+      text-align: center;
+      padding: 64px 0;
+      color: var(--fg-3);
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 18px;
+    }
+    .articles-empty.is-visible { display: block; }
+
+    /* ── Improved principle cards ───────────────────────────── */
+    .principle-card {
+      border-top: 2px solid var(--color-accent);
+    }
+
+    /* ── Footer margin fix ──────────────────────────────────── */
+    .site-footer { margin-top: 0; }
+
+    /* ── Page intro fade ────────────────────────────────────── */
+    @keyframes page-in {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    body { animation: page-in 300ms var(--ease-out) both; }
+  </style>
 </head>
 <body>
   <a class="skip-link" href="#main">본문으로 바로가기</a>
-  <div id="site-header"></div>
+
+  <!-- Header (injected by partials.js, enhanced below) -->
+  <div id="site-header-custom">
+    <header class="site-header" id="hdr">
+      <div class="container header-inner">
+        <a class="brand-wrap" href="/">
+          <div class="brand-mark" aria-hidden="true">em</div>
+          <div class="brand-text">
+            <div class="brand-name">이음교육저널</div>
+            <div class="brand-tag">em · education &amp; mind journal</div>
+          </div>
+        </a>
+        <nav class="main-nav" aria-label="주요 메뉴">
+          <a href="#latest">최신 기사</a>
+          <a href="#columns">칼럼</a>
+          <a href="archive/index.html">아카이브</a>
+          <a href="#topics">주제</a>
+          <a href="newsroom-about.html">소개</a>
+        </nav>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <a class="outbound-link" href="https://www.ieumedu.kr/" style="display:inline-flex;">
+            이음통합평생교육원 <span aria-hidden="true" style="margin-left:4px;">↗</span>
+          </a>
+          <button class="mobile-menu-btn" id="menu-toggle" aria-label="메뉴 열기" aria-expanded="false" aria-controls="mobile-nav">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </div>
+    </header>
+  </div>
+
+  <!-- Mobile nav overlay -->
+  <nav class="mobile-nav" id="mobile-nav" aria-label="모바일 메뉴">
+    <a href="#latest" class="mobile-nav-link">최신 기사</a>
+    <a href="#columns" class="mobile-nav-link">칼럼</a>
+    <a href="archive/index.html" class="mobile-nav-link">아카이브</a>
+    <a href="#topics" class="mobile-nav-link">주제</a>
+    <a href="newsroom-about.html" class="mobile-nav-link">소개</a>
+    <a href="https://www.ieumedu.kr/" class="mobile-nav-link">이음통합평생교육원 ↗</a>
+    <p class="mobile-nav-foot">em · education &amp; mind journal</p>
+  </nav>
 
   <main id="main">
+    <!-- ── Hero ──────────────────────────────────────────────── -->
     <section class="hero-section" id="top">
       <div class="hero-dotfield" aria-hidden="true"></div>
       <div class="container hero-grid">
         <div class="hero-copy">
-          <span class="kicker">editor&rsquo;s note</span>
+          <div class="hero-eyebrow">
+            <div class="hero-eyebrow-line" aria-hidden="true"></div>
+            <span class="kicker">editor&rsquo;s note</span>
+          </div>
           <h1 class="hero-title">밤의 감정과 낮의 교육을<br>한 지면에서 읽는다</h1>
           <p class="hero-lead">
-            영유아 수면, 청소년 리듬, 발달과 애착, 교육현장의 질문을 해설과 기록으로 엮습니다.
+            영유아 수면, 청소년 리듬, 발달과 애착, 교육현장의 질문을<br>해설과 기록으로 엮습니다.
           </p>
           <div class="hero-actions">
-            <a class="btn btn--primary" href="#latest">최신 기사 보기</a>
-            <a class="btn btn--secondary" href="/archive/">아카이브 보기</a>
+            <a class="btn btn--primary" href="#articles">기사 보기</a>
+            <a class="btn btn--secondary" href="archive/index.html">아카이브</a>
           </div>
           <div class="topic-chips">
-            <span class="chip">영유아 수면</span>
-            <span class="chip">청소년 리듬</span>
-            <span class="chip">발달과 애착</span>
-            <span class="chip">통합교육</span>
+            <span class="chip" data-filter="영유아 수면" role="button" tabindex="0">영유아 수면</span>
+            <span class="chip" data-filter="청소년 리듬" role="button" tabindex="0">청소년 리듬</span>
+            <span class="chip" data-filter="발달과 애착" role="button" tabindex="0">발달과 애착</span>
+            <span class="chip" data-filter="교육현장" role="button" tabindex="0">통합교육</span>
           </div>
         </div>
 
-        <aside class="editors-note" aria-label="대표 글">
+        <aside class="editors-note" aria-label="편집장 글">
           <span class="editors-note__shine" aria-hidden="true"></span>
           <span class="editors-note__label">editor&rsquo;s note</span>
           <h2 class="editors-note__title">잠들지 못하는 마음에게<br>보내는 편지</h2>
           <p class="editors-note__body">
             잠을 잘 자고 싶다는 말이 왜 마음을 쉬게 하고 싶다는 말과 닮아 있는지부터 이야기를 시작합니다.
           </p>
-          <a class="inline-link" href="/articles/editor-note-prologue.html">글 읽기 <span aria-hidden="true">→</span></a>
+          <a class="inline-link" href="articles/editor-note-prologue.html">글 읽기 <span aria-hidden="true">→</span></a>
         </aside>
       </div>
     </section>
 
-    <section class="section" id="latest">
+    <!-- ── Unified Articles (Latest + Columns) ───────────────── -->
+    <section class="articles-section" id="articles">
       <div class="container">
-        <div class="section-head">
+        <div class="section-head-row">
           <div>
-            <span class="kicker">latest</span>
-            <h2 class="section-title">최신 기사</h2>
-            <p class="section-desc">현장에서 가장 자주 마주치는 질문과 해답을 묶었습니다.</p>
+            <span class="kicker">all articles</span>
+            <h2 class="section-title" style="margin-top:8px;">기사 &amp; 칼럼</h2>
           </div>
+          <span class="articles-result-count" id="result-count">6 articles</span>
         </div>
-        <div class="card-grid">
-          <article class="article-card">
-            <a class="article-card__thumb" href="/articles/infant-sleep-coregulation.html" aria-label="잠들기 어려운 아이의 밤">
-              <img src="/assets/articles/infant-sleep.jpg" alt="아기 침대와 은은한 조명" loading="lazy">
-              <span class="article-card__cat">영유아 수면</span>
+
+        <!-- Filter bar -->
+        <div class="filter-bar" role="group" aria-label="카테고리 필터">
+          <button class="filter-btn is-active" data-filter="all">
+            전체 <span class="filter-count">6</span>
+          </button>
+          <button class="filter-btn" data-filter="해설">
+            해설 기사 <span class="filter-count">3</span>
+          </button>
+          <button class="filter-btn" data-filter="칼럼">
+            칼럼 <span class="filter-count">2</span>
+          </button>
+          <button class="filter-btn" data-filter="사례 기록">
+            사례 기록 <span class="filter-count">1</span>
+          </button>
+        </div>
+
+        <!-- Article grid -->
+        <div class="card-grid--featured" id="article-grid">
+
+          <!-- Featured: infant sleep -->
+          <article class="article-card article-card--featured" data-type="해설">
+            <a class="article-card__thumb" href="articles/infant-sleep-coregulation.html" aria-label="잠들기 어려운 아이의 밤">
+              <img src="assets/articles/infant-sleep.jpg" alt="아기 침대와 은은한 조명">
+              <span class="article-card__cat" data-cat="해설">영유아 수면</span>
             </a>
             <div class="article-card__body">
-              <h3 class="article-card__title">잠들기 어려운 아이의 밤, 훈련보다 공동조절이 먼저인 이유</h3>
-              <p class="article-card__desc">잠들기 어려운 아이의 밤을 수면 훈련보다 공동조절의 관점에서 다시 읽습니다.</p>
-              <a class="inline-link" href="/articles/infant-sleep-coregulation.html">기사 보기 <span aria-hidden="true">→</span></a>
+              <div>
+                <span class="kicker" style="margin-bottom:8px;">explainer</span>
+                <h3 class="article-card__title">잠들기 어려운 아이의 밤, 훈련보다 공동조절이 먼저인 이유</h3>
+              </div>
+              <p class="article-card__desc">영유아기의 수면은 습관 교정보다 애착과 공동조절의 관점에서 보는 편이 더 정확하다는 해설 기사입니다.</p>
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+                <a class="inline-link" href="articles/infant-sleep-coregulation.html">기사 보기 <span aria-hidden="true">→</span></a>
+                <span style="font-size:12px;color:var(--fg-3);letter-spacing:0.04em;">2026.04.23 · 4분</span>
+              </div>
             </div>
           </article>
-          <article class="article-card">
-            <a class="article-card__thumb" href="/articles/youth-sleep-rhythm.html" aria-label="청소년이 늦게 잠드는 이유">
-              <img src="/assets/articles/youth-sleep.jpg" alt="푸른 나무와 달빛" loading="lazy">
-              <span class="article-card__cat">청소년 리듬</span>
+
+          <!-- Youth sleep -->
+          <article class="article-card" data-type="해설">
+            <a class="article-card__thumb" href="articles/youth-sleep-rhythm.html" aria-label="청소년이 늦게 잠드는 이유">
+              <img src="assets/articles/youth-sleep.jpg" alt="푸른 나무와 달빛" loading="lazy">
+              <span class="article-card__cat" data-cat="해설">청소년 리듬</span>
             </a>
             <div class="article-card__body">
               <h3 class="article-card__title">청소년이 늦게 잠드는 이유, 게으름보다 먼저 봐야 할 리듬 변화</h3>
               <p class="article-card__desc">늦게 잠드는 청소년의 밤을 생체리듬과 사회적 압박의 충돌로 설명합니다.</p>
-              <a class="inline-link" href="/articles/youth-sleep-rhythm.html">기사 보기 <span aria-hidden="true">→</span></a>
+              <a class="inline-link" href="articles/youth-sleep-rhythm.html">기사 보기 <span aria-hidden="true">→</span></a>
             </div>
           </article>
-          <article class="article-card">
-            <a class="article-card__thumb" href="/articles/development-delay-early-signals.html" aria-label="발달지연 조기 발견">
-              <img src="/assets/articles/development-delay.png" alt="놀이 도구 앞의 아이" loading="lazy">
-              <span class="article-card__cat">발달 현장</span>
+
+          <!-- Development delay -->
+          <article class="article-card" data-type="해설">
+            <a class="article-card__thumb" href="articles/development-delay-early-signals.html" aria-label="발달지연 조기 발견">
+              <img src="assets/articles/development-delay.png" alt="놀이 도구 앞의 아이" loading="lazy">
+              <span class="article-card__cat" data-cat="해설">발달 현장</span>
             </a>
             <div class="article-card__body">
               <h3 class="article-card__title">발달지연 조기 발견이 중요한 이유, 어린이집·가정이 함께 보는 신호들</h3>
               <p class="article-card__desc">발달지연 조기 발견의 중요성과 가정, 어린이집이 함께 보는 신호를 짚습니다.</p>
-              <a class="inline-link" href="/articles/development-delay-early-signals.html">기사 보기 <span aria-hidden="true">→</span></a>
+              <a class="inline-link" href="articles/development-delay-early-signals.html">기사 보기 <span aria-hidden="true">→</span></a>
             </div>
           </article>
-        </div>
-      </div>
-    </section>
 
-    <section class="section section--tint" id="columns">
-      <div class="container">
-        <div class="section-head">
-          <div>
-            <span class="kicker">columns</span>
-            <h2 class="section-title">칼럼</h2>
-            <p class="section-desc">수면과 회복, 불안의 감각을 개인의 문장으로 짚어냅니다.</p>
-          </div>
-        </div>
-        <div class="card-grid">
-          <article class="article-card">
-            <a class="article-card__thumb" href="/articles/recovery-daily-life.html" aria-label="회복은 일상에서 시작된다">
-              <img src="/assets/articles/recovery-daily-life.png" alt="따뜻한 밤거리" loading="lazy">
-              <span class="article-card__cat">회복</span>
+          <!-- Recovery (column) -->
+          <article class="article-card" data-type="칼럼">
+            <a class="article-card__thumb" href="articles/recovery-daily-life.html" aria-label="회복은 일상에서 시작된다">
+              <img src="assets/articles/recovery-daily-life.png" alt="따뜻한 밤거리" loading="lazy">
+              <span class="article-card__cat" data-cat="칼럼">칼럼 · 회복</span>
             </a>
             <div class="article-card__body">
               <h3 class="article-card__title">회복은 일상에서 시작된다</h3>
               <p class="article-card__desc">회복은 특별한 밤이 아니라 낮의 작은 멈춤과 조정에서 시작된다고 말합니다.</p>
-              <a class="inline-link" href="/articles/recovery-daily-life.html">칼럼 읽기 <span aria-hidden="true">→</span></a>
+              <a class="inline-link" href="articles/recovery-daily-life.html">칼럼 읽기 <span aria-hidden="true">→</span></a>
             </div>
           </article>
-          <article class="article-card">
-            <a class="article-card__thumb" href="/articles/column-sleep-is-not-medicine.html" aria-label="잠은 최고의 보약이 아니다">
-              <img src="/assets/articles/sleep-not-medicine.jpg" alt="어두운 밤과 창문 불빛" loading="lazy">
-              <span class="article-card__cat">불안과 잠</span>
+
+          <!-- Sleep not medicine (column) -->
+          <article class="article-card" data-type="칼럼">
+            <a class="article-card__thumb" href="articles/column-sleep-is-not-medicine.html" aria-label="잠은 최고의 보약이 아니다">
+              <img src="assets/articles/sleep-not-medicine.jpg" alt="어두운 밤과 창문 불빛" loading="lazy">
+              <span class="article-card__cat" data-cat="칼럼">칼럼 · 불안과 잠</span>
             </a>
             <div class="article-card__body">
               <h3 class="article-card__title">잠은 최고의 보약이 아니다</h3>
               <p class="article-card__desc">잘 자야 한다는 강박이 왜 밤을 더 긴장시키는지 돌아봅니다.</p>
-              <a class="inline-link" href="/articles/column-sleep-is-not-medicine.html">칼럼 읽기 <span aria-hidden="true">→</span></a>
+              <a class="inline-link" href="articles/column-sleep-is-not-medicine.html">칼럼 읽기 <span aria-hidden="true">→</span></a>
             </div>
           </article>
-          <article class="article-card">
-            <a class="article-card__thumb" href="/articles/case-column-sleep-medication-gap.html" aria-label="잠은 오는데 왜 쉬지 못하는가">
-              <img src="/assets/articles/case-sleep-gap.jpg" alt="고요한 설경" loading="lazy">
-              <span class="article-card__cat">사례 기록</span>
+
+          <!-- Case record -->
+          <article class="article-card" data-type="사례 기록">
+            <a class="article-card__thumb" href="articles/case-column-sleep-medication-gap.html" aria-label="잠은 오는데 왜 쉬지 못하는가">
+              <img src="assets/articles/case-sleep-gap.jpg" alt="고요한 설경" loading="lazy">
+              <span class="article-card__cat" data-cat="사례 기록">사례 기록</span>
             </a>
             <div class="article-card__body">
               <h3 class="article-card__title">잠은 오는데 왜 쉬지 못하는가</h3>
               <p class="article-card__desc">잠은 오지만 쉬지 못하는 한 사람의 밤을 통해 수면과 회복의 간격을 살핍니다.</p>
-              <a class="inline-link" href="/articles/case-column-sleep-medication-gap.html">칼럼 읽기 <span aria-hidden="true">→</span></a>
+              <a class="inline-link" href="articles/case-column-sleep-medication-gap.html">칼럼 읽기 <span aria-hidden="true">→</span></a>
             </div>
           </article>
+
+          <!-- Empty state -->
+          <p class="articles-empty" id="articles-empty" role="status">해당 카테고리의 기사가 없습니다.</p>
         </div>
       </div>
     </section>
 
-    <section class="section" id="topics">
+    <!-- ── Topics ─────────────────────────────────────────────── -->
+    <section class="section section--tint" id="topics">
       <div class="container">
-        <div class="section-head">
+        <div class="section-head reveal">
           <div>
             <span class="kicker">topics</span>
             <h2 class="section-title">다루는 주제</h2>
@@ -150,56 +642,255 @@
           </div>
         </div>
         <div class="topics-grid">
-          <article class="topic-card"><h3>생애주기와 수면</h3><p>영유아기부터 성인기까지 발달 흐름 안에서 읽는 수면을 다룹니다.</p></article>
-          <article class="topic-card"><h3>발달과 애착</h3><p>애착, 공동조절, 사회학습을 현장의 언어로 풀어낸 기록을 모읍니다.</p></article>
-          <article class="topic-card"><h3>교육현장</h3><p>발달지연, 통합교육, 특수교육의 쟁점과 실제를 함께 다룹니다.</p></article>
-          <article class="topic-card"><h3>연구와 기록</h3><p>저서, 논문, 학위, 언론 보도 등 관련 기록을 한자리에서 확인할 수 있습니다.</p></article>
+          <article class="topic-card reveal reveal-delay-1">
+            <h3>생애주기와 수면</h3>
+            <p>영유아기부터 성인기까지 발달 흐름 안에서 읽는 수면을 다룹니다.</p>
+          </article>
+          <article class="topic-card reveal reveal-delay-2">
+            <h3>발달과 애착</h3>
+            <p>애착, 공동조절, 사회학습을 현장의 언어로 풀어낸 기록을 모읍니다.</p>
+          </article>
+          <article class="topic-card reveal reveal-delay-2">
+            <h3>교육현장</h3>
+            <p>발달지연, 통합교육, 특수교육의 쟁점과 실제를 함께 다룹니다.</p>
+          </article>
+          <article class="topic-card reveal reveal-delay-3">
+            <h3>연구와 기록</h3>
+            <p>저서, 논문, 학위, 언론 보도 등 관련 기록을 한자리에서 확인할 수 있습니다.</p>
+          </article>
         </div>
       </div>
     </section>
 
+    <!-- ── Archive ─────────────────────────────────────────────── -->
     <section class="section" id="archive">
       <div class="container">
-        <div class="archive-wrap">
-          <div class="archive-intro">
+        <div class="section-head reveal" style="margin-bottom:24px;">
+          <div>
             <span class="kicker">archive</span>
-            <h2>저서 · 연구 · 언론보도 아카이브</h2>
-            <p>저서, 논문, 학위, 언론 보도 등 관련 연구 기록을 한곳에서 확인할 수 있습니다.</p>
-            <a class="btn btn--primary" href="/archive/">아카이브 전체 보기</a>
+            <h2 class="section-title">저서 · 연구 · 언론보도</h2>
+            <p class="section-desc">저서, 논문, 학위, 언론 보도 등 관련 연구 기록을 한곳에서 확인할 수 있습니다.</p>
           </div>
-          <div class="archive-panel">
-            <div class="archive-list">
-              <a class="archive-item" href="/archive/#books"><strong>저서</strong><span>출간 도서와 관련 기록을 함께 확인합니다.</span></a>
-              <a class="archive-item" href="/archive/#papers"><strong>논문 · 학위</strong><span>논문과 학위, 연구 주제를 연도별로 확인합니다.</span></a>
-              <a class="archive-item" href="/archive/#media"><strong>언론보도</strong><span>외부 인터뷰와 기사, 보도 이력을 함께 살핍니다.</span></a>
+        </div>
+        <div class="archive-section-wrap reveal">
+          <div class="archive-meta-row">
+            <div class="archive-stats">
+              <div class="archive-stat">
+                <span class="archive-stat__num">9</span>
+                <span class="archive-stat__label">저서</span>
+              </div>
+              <div class="archive-divider"></div>
+              <div class="archive-stat">
+                <span class="archive-stat__num">6</span>
+                <span class="archive-stat__label">논문·학위</span>
+              </div>
+              <div class="archive-divider"></div>
+              <div class="archive-stat">
+                <span class="archive-stat__num">2</span>
+                <span class="archive-stat__label">언론보도</span>
+              </div>
             </div>
+            <a class="btn btn--secondary" href="archive/index.html" style="font-size:13px;padding:10px 18px;">전체 보기 →</a>
+          </div>
+          <div class="archive-entries">
+            <a class="archive-entry" href="archive/index.html#books">
+              <div class="archive-entry__icon">
+                <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+              </div>
+              <div>
+                <div class="archive-entry__label">저서</div>
+                <div class="archive-entry__desc">출간 도서와 관련 기록을 함께 확인합니다.</div>
+              </div>
+              <span class="archive-entry__arrow">→</span>
+            </a>
+            <a class="archive-entry" href="archive/index.html#research">
+              <div class="archive-entry__icon">
+                <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              </div>
+              <div>
+                <div class="archive-entry__label">논문 · 학위</div>
+                <div class="archive-entry__desc">논문과 학위, 연구 주제를 연도별로 확인합니다.</div>
+              </div>
+              <span class="archive-entry__arrow">→</span>
+            </a>
+            <a class="archive-entry" href="archive/index.html#media">
+              <div class="archive-entry__icon">
+                <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              </div>
+              <div>
+                <div class="archive-entry__label">언론보도</div>
+                <div class="archive-entry__desc">외부 인터뷰와 기사, 보도 이력을 함께 살핍니다.</div>
+              </div>
+              <span class="archive-entry__arrow">→</span>
+            </a>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="section" id="principles">
+    <!-- ── Principles ─────────────────────────────────────────── -->
+    <section class="section section--tint" id="principles">
       <div class="container">
-        <div class="section-head">
+        <div class="section-head reveal">
           <div>
             <span class="kicker">principles</span>
             <h2 class="section-title">이음저널의 4가지 원칙</h2>
-            <p class="section-desc">홈에서는 운영의 기준이 되는 네 가지 원칙만 짧게 제시합니다.</p>
+            <p class="section-desc">운영의 기준이 되는 네 가지 원칙을 짧게 제시합니다.</p>
           </div>
         </div>
         <div class="principles-grid">
-          <article class="principle-card"><div class="principle-card__num">01</div><p class="principle-card__text">단편적인 건강 정보보다 감정과 발달의 맥락을 먼저 설명합니다.</p></article>
-          <article class="principle-card"><div class="principle-card__num">02</div><p class="principle-card__text">개인의 고통을 자기관리 실패처럼 다루지 않습니다.</p></article>
-          <article class="principle-card"><div class="principle-card__num">03</div><p class="principle-card__text">현장의 언어를 공공의 문장으로 번역합니다.</p></article>
-          <article class="principle-card"><div class="principle-card__num">04</div><p class="principle-card__text">사례는 철저히 익명화하며, 광고와 기사를 명확히 분리합니다.</p></article>
+          <article class="principle-card reveal reveal-delay-1">
+            <div class="principle-card__num">01</div>
+            <p class="principle-card__text">단편적인 건강 정보보다 감정과 발달의 맥락을 먼저 설명합니다.</p>
+          </article>
+          <article class="principle-card reveal reveal-delay-2">
+            <div class="principle-card__num">02</div>
+            <p class="principle-card__text">개인의 고통을 자기관리 실패처럼 다루지 않습니다.</p>
+          </article>
+          <article class="principle-card reveal reveal-delay-2">
+            <div class="principle-card__num">03</div>
+            <p class="principle-card__text">현장의 언어를 공공의 문장으로 번역합니다.</p>
+          </article>
+          <article class="principle-card reveal reveal-delay-3">
+            <div class="principle-card__num">04</div>
+            <p class="principle-card__text">사례는 철저히 익명화하며, 광고와 기사를 명확히 분리합니다.</p>
+          </article>
+        </div>
+
+        <!-- About teaser -->
+        <div class="about-teaser reveal">
+          <div>
+            <span class="about-teaser__kicker">about</span>
+            <h3 class="about-teaser__title">이음교육저널에 대해<br>더 자세히 알아보세요</h3>
+            <p class="about-teaser__desc">편집 방향, 운영 정보, 다루는 주제에 대한 설명을 한 곳에서 확인합니다.</p>
+          </div>
+          <a class="btn btn--ghost" href="newsroom-about.html">신문 소개 보기 →</a>
         </div>
       </div>
     </section>
   </main>
 
-  <div id="site-footer"></div>
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-panel">
+        <div class="footer-brand-row">
+          <div class="brand-mark brand-mark--on-dark" aria-hidden="true">em</div>
+          <h3 class="footer-brand">이음교육저널</h3>
+        </div>
+        <p class="footer-tag">em · education &amp; mind journal</p>
+        <p class="footer-body">수면, 발달, 교육현장을 중심으로 기사와 칼럼을 싣습니다. 빠른 요약보다 맥락 설명을 먼저 둡니다.</p>
+      </div>
+      <div class="footer-panel">
+        <span class="footer-kicker">operating body</span>
+        <p class="footer-body">발행: 이음통합평생교육원</p>
+        <p class="footer-body">대표: 선애순</p>
+        <p class="footer-body">광주시 서구 회재로 859, 3층</p>
+        <p class="footer-body">062-655-4116</p>
+      </div>
+      <div class="footer-panel">
+        <span class="footer-kicker">policy</span>
+        <ul class="footer-links">
+          <li><a href="newsroom-about.html">신문 소개</a></li>
+          <li><a href="rights-and-corrections.html">정정 · 반론 · 권리구제</a></li>
+          <li><a href="youth-protection-policy.html">청소년보호정책</a></li>
+          <li><a href="privacy-policy.html">개인정보처리방침</a></li>
+          <li><a href="terms.html">이용약관</a></li>
+          <li><a href="https://www.ieumedu.kr/">이음통합평생교육원 ↗</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <span>© 2026 이음교육저널</span>
+      <span>사업자등록번호 296-05-03812</span>
+    </div>
+  </footer>
 
-  <script src="/assets/js/partials.js"></script>
-  <script src="/assets/js/hero.js"></script>
+  <script src="assets/js/hero.js"></script>
+  <script>
+    // ── Mobile menu ──────────────────────────────────────────
+    (function(){
+      const btn = document.getElementById('menu-toggle');
+      const nav = document.getElementById('mobile-nav');
+      if(!btn || !nav) return;
+
+      btn.addEventListener('click', () => {
+        const isOpen = nav.classList.toggle('is-open');
+        btn.classList.toggle('is-open', isOpen);
+        btn.setAttribute('aria-expanded', isOpen);
+        document.body.style.overflow = isOpen ? 'hidden' : '';
+      });
+
+      nav.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', () => {
+          nav.classList.remove('is-open');
+          btn.classList.remove('is-open');
+          btn.setAttribute('aria-expanded', 'false');
+          document.body.style.overflow = '';
+        });
+      });
+    })();
+
+    // ── Sticky header ────────────────────────────────────────
+    (function(){
+      const hdr = document.getElementById('hdr');
+      if(!hdr) return;
+      const onScroll = () => {
+        if(window.scrollY > 24) hdr.classList.add('site-header--scrolled');
+        else hdr.classList.remove('site-header--scrolled');
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+    })();
+
+    // ── Category filter ──────────────────────────────────────
+    (function(){
+      const btns = document.querySelectorAll('.filter-btn');
+      const cards = document.querySelectorAll('#article-grid .article-card');
+      const empty = document.getElementById('articles-empty');
+      const countEl = document.getElementById('result-count');
+
+      btns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const filter = btn.dataset.filter;
+          btns.forEach(b => b.classList.remove('is-active'));
+          btn.classList.add('is-active');
+
+          let visible = 0;
+          cards.forEach(card => {
+            const type = card.dataset.type;
+            const show = filter === 'all' || type === filter;
+            card.dataset.hidden = show ? 'false' : 'true';
+            if(show) visible++;
+          });
+
+          empty && (empty.style.display = visible === 0 ? 'block' : 'none');
+          countEl && (countEl.textContent = visible + (visible === 1 ? ' article' : ' articles'));
+        });
+      });
+
+      // Hero chip click → filter
+      document.querySelectorAll('.topic-chips .chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          document.getElementById('articles')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+        chip.addEventListener('keydown', e => {
+          if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); chip.click(); }
+        });
+      });
+    })();
+
+    // ── Scroll reveal ────────────────────────────────────────
+    (function(){
+      const els = document.querySelectorAll('.reveal');
+      if(!els.length) return;
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if(e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.1 });
+      els.forEach(el => io.observe(el));
+    })();
+  </script>
 </body>
 </html>

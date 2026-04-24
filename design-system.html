@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Design System · 이음교육저널</title>
+  <link rel="stylesheet" href="assets/css/colors_and_type.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: var(--color-bg); color: var(--fg-1); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ── DS Layout ───────────────────────────────────────────── */
+    .ds-layout { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+    .ds-sidebar {
+      position: sticky; top: 0; height: 100vh; overflow-y: auto;
+      background: var(--color-surface);
+      border-right: 1px solid var(--color-border);
+      padding: 0 0 48px;
+    }
+    .ds-sidebar::-webkit-scrollbar { width: 4px; }
+    .ds-sidebar::-webkit-scrollbar-track { background: transparent; }
+    .ds-sidebar::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 2px; }
+    .ds-main { padding: clamp(2rem,4vw,3.5rem) clamp(2rem,5vw,4rem); max-width: 960px; }
+
+    /* sidebar brand */
+    .ds-brand {
+      padding: 24px 24px 20px;
+      border-bottom: 1px solid var(--color-border);
+      margin-bottom: 8px;
+    }
+    .ds-brand__mark {
+      width: 36px; height: 36px; border-radius: 8px;
+      border: 1px solid var(--color-accent);
+      display: grid; place-items: center;
+      font-family: var(--font-display); font-style: italic;
+      font-size: 15px; color: var(--color-accent); margin-bottom: 10px;
+    }
+    .ds-brand__name { font-family: var(--font-serif); font-weight: 600; font-size: 15px; letter-spacing: -0.02em; }
+    .ds-brand__tag { font-family: var(--font-display); font-style: italic; font-size: 11px; color: var(--fg-3); letter-spacing: 0.08em; }
+
+    /* sidebar nav */
+    .ds-nav-section { padding: 8px 16px 4px; }
+    .ds-nav-section__label {
+      font-family: var(--font-display); font-style: italic; font-size: 10px;
+      letter-spacing: 0.18em; color: var(--fg-3); text-transform: lowercase;
+      padding: 8px 8px 6px; display: block;
+    }
+    .ds-nav-link {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 10px; border-radius: 6px;
+      font-size: 13px; color: var(--fg-2);
+      transition: all 150ms; cursor: pointer;
+      border: none; background: none; width: 100%; text-align: left;
+    }
+    .ds-nav-link:hover { background: var(--color-surface-tint); color: var(--fg-1); }
+    .ds-nav-link.is-active { background: var(--color-accent-surface); color: var(--color-accent); font-weight: 500; }
+    .ds-nav-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+    /* ── Section headers ─────────────────────────────────────── */
+    .ds-section { display: none; }
+    .ds-section.is-active { display: block; }
+    .ds-section-title {
+      font-family: var(--font-serif); font-weight: 600;
+      font-size: clamp(1.8rem,3vw,2.4rem); letter-spacing: -0.03em;
+      color: var(--fg-1); margin: 0 0 6px;
+    }
+    .ds-section-desc { font-size: 15px; line-height: 1.7; color: var(--fg-2); margin: 0 0 40px; max-width: 60ch; }
+    .ds-divider { border: none; border-top: 1px solid var(--color-border); margin: 40px 0; }
+    .ds-subsection-title {
+      font-family: var(--font-display); font-style: italic; font-size: 11px;
+      letter-spacing: 0.18em; color: var(--color-accent); text-transform: lowercase;
+      display: block; margin-bottom: 16px;
+    }
+
+    /* ── Color swatches ──────────────────────────────────────── */
+    .color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+    .color-swatch {
+      border-radius: 10px; overflow: hidden;
+      border: 1px solid var(--color-border);
+    }
+    .color-swatch__block { height: 64px; }
+    .color-swatch__info { padding: 10px 12px; background: var(--color-surface); }
+    .color-swatch__name { font-size: 12px; font-weight: 500; color: var(--fg-1); margin: 0 0 2px; }
+    .color-swatch__hex { font-family: monospace; font-size: 11px; color: var(--fg-3); }
+
+    /* ── Type specimens ──────────────────────────────────────── */
+    .type-specimen { padding: 24px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; margin-bottom: 12px; }
+    .type-specimen__label { font-family: var(--font-display); font-style: italic; font-size: 10.5px; letter-spacing: 0.14em; color: var(--fg-3); text-transform: lowercase; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
+    .type-specimen__meta { font-family: monospace; font-size: 10px; color: var(--fg-3); }
+
+    /* ── Spacing scale ───────────────────────────────────────── */
+    .space-row { display: flex; align-items: center; gap: 16px; margin-bottom: 10px; }
+    .space-row__bar { background: var(--color-accent); border-radius: 2px; height: 20px; flex-shrink: 0; }
+    .space-row__label { font-family: monospace; font-size: 12px; color: var(--fg-2); min-width: 60px; }
+    .space-row__value { font-size: 12px; color: var(--fg-3); }
+
+    /* ── Shadow scale ────────────────────────────────────────── */
+    .shadow-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .shadow-card { background: var(--color-surface); border-radius: 12px; padding: 28px 20px; text-align: center; }
+    .shadow-card__label { font-family: var(--font-display); font-style: italic; font-size: 11px; letter-spacing: 0.1em; color: var(--fg-3); margin-top: 12px; }
+
+    /* ── Radius scale ────────────────────────────────────────── */
+    .radius-grid { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end; }
+    .radius-item { background: var(--color-accent-surface); border: 1px solid var(--color-accent); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 8px; padding: 20px; }
+    .radius-item__label { font-family: monospace; font-size: 11px; color: var(--fg-2); }
+
+    /* ── Component previews ──────────────────────────────────── */
+    .component-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
+    .chip-demo { padding: 9px 14px; border-radius: 999px; font-size: 12.5px; font-weight: 500; border: 1px solid var(--color-border); color: var(--fg-1); background: var(--color-surface); cursor: pointer; transition: all 260ms cubic-bezier(0.16,1,0.3,1); }
+    .chip-demo:hover { background: var(--color-accent); color: #fff; border-color: var(--color-accent); }
+    .chip-demo.active { background: var(--color-accent); color: #fff; border-color: var(--color-accent); }
+    .btn-demo { display: inline-flex; align-items: center; padding: 12px 22px; border-radius: 999px; font-family: var(--font-sans); font-size: 14px; font-weight: 500; cursor: pointer; border: 1px solid transparent; transition: all 260ms cubic-bezier(0.16,1,0.3,1); }
+    .btn-demo--primary { background: var(--color-accent); color: #fff; box-shadow: 0 6px 16px rgba(45,106,106,.22); }
+    .btn-demo--primary:hover { background: #24585A; transform: translateY(-1px); }
+    .btn-demo--secondary { background: transparent; color: var(--fg-1); border-color: var(--color-border); }
+    .btn-demo--secondary:hover { border-color: var(--color-accent); color: var(--color-accent); }
+    .inline-link-demo { display: inline-flex; align-items: center; gap: 8px; color: var(--color-accent); font-weight: 500; font-size: 14px; cursor: pointer; }
+    .inline-link-demo span { transition: transform 260ms; }
+    .inline-link-demo:hover span { transform: translateX(3px); }
+
+    /* Mini card preview */
+    .card-preview { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 16px; overflow: hidden; max-width: 280px; box-shadow: 0 2px 8px rgba(13,31,31,.05); transition: transform 260ms cubic-bezier(0.16,1,0.3,1), border-color 260ms, box-shadow 260ms; }
+    .card-preview:hover { transform: translateY(-3px); border-color: #B8C8C3; box-shadow: 0 8px 24px rgba(13,31,31,.08); }
+    .card-preview__thumb { aspect-ratio: 16/10; overflow: hidden; position: relative; }
+    .card-preview__thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 420ms cubic-bezier(0.16,1,0.3,1); }
+    .card-preview:hover .card-preview__thumb img { transform: scale(1.04); }
+    .card-preview__cat { position: absolute; left: 10px; bottom: 10px; padding: 3px 8px; background: rgba(13,31,31,.55); color: #fff; font-size: 10px; border-radius: 4px; backdrop-filter: blur(6px); }
+    .card-preview__body { padding: 16px 18px 18px; }
+    .card-preview__title { font-family: var(--font-serif); font-weight: 600; font-size: 16px; line-height: 1.35; letter-spacing: -0.02em; margin: 0 0 8px; color: var(--fg-1); }
+    .card-preview__desc { font-size: 13px; line-height: 1.65; color: var(--fg-2); margin: 0 0 12px; }
+
+    /* Principle card preview */
+    .principle-preview { background: var(--color-surface); border: 1px solid var(--color-border); border-top: 2px solid var(--color-accent); border-radius: 10px; padding: 20px; max-width: 200px; }
+    .principle-preview__num { font-family: var(--font-serif); font-size: 28px; font-weight: 500; color: var(--color-accent); line-height: 1; margin-bottom: 12px; }
+    .principle-preview__text { font-family: var(--font-serif); font-size: 14px; line-height: 1.55; color: var(--fg-1); margin: 0; }
+
+    /* Header preview */
+    .header-preview {
+      background: rgba(241,243,239,.92); backdrop-filter: blur(10px);
+      border: 0.5px solid var(--color-border); border-radius: 10px;
+      padding: 14px 20px; display: flex; align-items: center;
+      justify-content: space-between; gap: 20px;
+    }
+    .hp-brand { display: flex; align-items: center; gap: 10px; }
+    .hp-mark { width: 30px; height: 30px; border-radius: 7px; border: 1px solid var(--color-accent); display: grid; place-items: center; font-family: var(--font-display); font-style: italic; font-size: 12px; color: var(--color-accent); }
+    .hp-name { font-family: var(--font-serif); font-weight: 600; font-size: 15px; letter-spacing: -0.02em; }
+    .hp-tag { font-family: var(--font-display); font-style: italic; font-size: 10px; color: var(--fg-3); }
+    .hp-nav { display: flex; gap: 18px; }
+    .hp-nav a { font-size: 12px; color: var(--fg-2); position: relative; padding-bottom: 2px; }
+    .hp-nav a::after { content:""; position:absolute; left:0; right:100%; bottom:0; height:1px; background:var(--color-accent); transition:right 260ms cubic-bezier(0.16,1,0.3,1); }
+    .hp-nav a:hover { color: var(--fg-1); }
+    .hp-nav a:hover::after { right: 0; }
+
+    /* Footer preview */
+    .footer-preview {
+      background: #1A3838; border-radius: 10px; padding: 24px 28px;
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;
+    }
+    .fp-brand { font-family: var(--font-serif); font-weight: 600; font-size: 16px; color: #E4F0EC; margin-bottom: 6px; }
+    .fp-tag { font-family: var(--font-display); font-style: italic; font-size: 11px; color: #5DCAA5; letter-spacing: 0.12em; }
+    .fp-body { font-size: 12px; color: #C8E8E0; opacity: 0.82; line-height: 1.65; margin: 8px 0 0; }
+    .fp-kicker { font-family: var(--font-display); font-style: italic; font-size: 10px; letter-spacing: 0.14em; color: #5DCAA5; display: block; margin-bottom: 8px; }
+    .fp-links { list-style: none; padding: 0; margin: 0; display: grid; gap: 5px; }
+    .fp-links a { font-size: 12px; color: #C8E8E0; opacity: 0.75; transition: opacity 200ms; }
+    .fp-links a:hover { opacity: 1; color: #9FE1CB; }
+
+    /* Motion demos */
+    .motion-demo { display: flex; gap: 12px; flex-wrap: wrap; }
+    .motion-card {
+      background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 10px;
+      padding: 20px 18px; display: flex; flex-direction: column; gap: 10px;
+      min-width: 160px; cursor: pointer;
+    }
+    .motion-bar { height: 3px; background: var(--color-accent); border-radius: 2px; transform-origin: left; transform: scaleX(0); }
+    .motion-card:hover .motion-bar { animation: grow var(--dur, 260ms) var(--ease, cubic-bezier(0.16,1,0.3,1)) forwards; }
+    @keyframes grow { to { transform: scaleX(1); } }
+    .motion-card__label { font-family: var(--font-display); font-style: italic; font-size: 11px; letter-spacing: 0.12em; color: var(--fg-3); }
+    .motion-card__val { font-family: monospace; font-size: 13px; color: var(--fg-1); }
+
+    /* Token table */
+    .token-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .token-table th { font-family: var(--font-display); font-style: italic; font-size: 10.5px; letter-spacing: 0.12em; color: var(--fg-3); text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--color-border); }
+    .token-table td { padding: 10px 12px; border-bottom: 0.5px solid var(--color-border-soft); vertical-align: middle; }
+    .token-table tr:hover td { background: rgba(45,106,106,0.03); }
+    .token-table code { font-family: monospace; font-size: 12px; background: var(--color-surface-tint); padding: 2px 6px; border-radius: 4px; color: var(--color-accent-dark); }
+
+    @media (max-width: 860px) {
+      .ds-layout { grid-template-columns: 1fr; }
+      .ds-sidebar { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--color-border); }
+      .shadow-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+<div class="ds-layout">
+
+  <!-- ── Sidebar ─────────────────────────────────────────────── -->
+  <aside class="ds-sidebar">
+    <div class="ds-brand">
+      <div class="ds-brand__mark">em</div>
+      <div class="ds-brand__name">이음교육저널</div>
+      <div class="ds-brand__tag">Design System v1.0</div>
+    </div>
+
+    <div class="ds-nav-section">
+      <span class="ds-nav-section__label">foundations</span>
+      <button class="ds-nav-link is-active" data-target="colors">
+        <span class="ds-nav-dot" style="background:#2D6A6A;"></span> Colors
+      </button>
+      <button class="ds-nav-link" data-target="typography">
+        <span class="ds-nav-dot" style="background:#0D1F1F;"></span> Typography
+      </button>
+      <button class="ds-nav-link" data-target="spacing">
+        <span class="ds-nav-dot" style="background:#4A5E5E;"></span> Spacing & Scale
+      </button>
+      <button class="ds-nav-link" data-target="motion">
+        <span class="ds-nav-dot" style="background:#9FE1CB;"></span> Motion
+      </button>
+    </div>
+
+    <div class="ds-nav-section">
+      <span class="ds-nav-section__label">components</span>
+      <button class="ds-nav-link" data-target="buttons">
+        <span class="ds-nav-dot" style="background:#D8E2DF;border:1px solid #B8C8C3;"></span> Buttons & Links
+      </button>
+      <button class="ds-nav-link" data-target="chips">
+        <span class="ds-nav-dot" style="background:#E4F0EC;border:1px solid #2D6A6A;"></span> Chips & Tags
+      </button>
+      <button class="ds-nav-link" data-target="cards">
+        <span class="ds-nav-dot" style="background:#F5F2EE;border:1px solid #D8E2DF;"></span> Cards
+      </button>
+      <button class="ds-nav-link" data-target="header">
+        <span class="ds-nav-dot" style="background:#0D2E2E;"></span> Header & Footer
+      </button>
+    </div>
+
+    <div class="ds-nav-section">
+      <span class="ds-nav-section__label">pages</span>
+      <button class="ds-nav-link" data-target="tokens">
+        <span class="ds-nav-dot" style="background:#8A9E9E;"></span> All Tokens
+      </button>
+    </div>
+  </aside>
+
+  <!-- ── Main ──────────────────────────────────────────────────── -->
+  <main class="ds-main">
+
+    <!-- ── Colors ──────────────────────────────────────────────── -->
+    <section class="ds-section is-active" id="ds-colors">
+      <p style="font-family:var(--font-display);font-style:italic;font-size:12px;letter-spacing:.18em;color:var(--color-accent);margin:0 0 10px;">foundations</p>
+      <h1 class="ds-section-title">Colors</h1>
+      <p class="ds-section-desc">파인 틸(Pine Teal) 단색 팔레트. 따뜻한 오프화이트 위에 틸 액센트 하나. 의도적으로 보조 색상 없음.</p>
+
+      <span class="ds-subsection-title">backgrounds & surfaces</span>
+      <div class="color-grid">
+        <div class="color-swatch"><div class="color-swatch__block" style="background:#F1F3EF;"></div><div class="color-swatch__info"><p class="color-swatch__name">--color-bg</p><p class="color-swatch__hex">#F1F3EF</p></div></div>
+        <div class="color-swatch"><div class="color-swatch__block" style="background:#FAFBF8;"></div><div class="color-swatch__info"><p class="color-swatch__name">--color-surface</p><p class="color-swatch__hex">#FAFBF8</p></div></div>
+        <div class="color-swatch"><div class="color-swatch__block" style="background:#E8EDE7;"></div><div class="color-swatch__info"><p class="color-swatch__name">--color-surface-tint</p><p class="color-swatch__hex">#E8EDE7</p></div></div>
+        <div class="color-swatch"><div class="color-swatch__block" style="background:#EEF2EF;"></div><div class="color-swatch__info"><p class="color-swatch__name">--color-surface-soft</p><p class="color-swatch__hex">#EEF2EF</p></div></div>
+      </div>
+
+      <hr class="ds-divider">
+      <span class="ds-subsection-title">text</span>
+      <div class="color-grid">
+        <div class="color-swatch"><div class="color-swatch__block" style="background:#1A2523;"></div><div class="color-swatch__info"><p class="color-swatch__name">--color-text</p><p class="color-swatch__hex">#1A2523</p></div></div>
+        <div class="color-swatch"><div class="color-swatch__block" style="background:#56615C;"></div><div class="color-swatch__info"><p class="color-swatch__name">--color-text-muted</p><p class="color-swatch__hex">#56615C</p></div></div>
+        <div class="color-swatch"><div class="color-swatch__block" style="background:#8D9790;"></div><div class="color-swatch__info"><p class="color-swatch__name">--color-text-faint</p><p class="color-swatch__hex">#8D9790</p></div></div>
+      </div>
+
+      <hr class="ds-divider">
+      <span class="ds-subsection-title">accent — pine teal</span>
+      <div class="color-grid">
+        <div class="color-swatch"><div class="color-swatch__block" style="background:#2D6A6A;"></div><div class="color-swatch__info"><p class="color-swatch__name">--color-accent</p><p class="color-swatch__hex">#2D6A6A</p></div></div>
+        <div class="color-swatch"><div class="color-swatch__block" style="background:#24585A;"></div><div class="color-swatch__info"><p class="color-swatch__name">--color-accent-hover</p><p class="color-swatch__hex">#24585A</p></div></div>
+        <div class="color-swatch"><div class="color-swatch__block" style="background:#0D3D3D;"></div><div class="color-swatch__info"><p class="color-swatch__name">--color-accent-dark</p><p class="color-swatch__hex">#0D3D3D</p></div></div>
+        <div class="color-swatch"><div class="color-swatch__block" style="background:#9FE1CB;"></div><div class="color-swatch__info"><p class="color-swatch__name">--color-accent-light</p><p class="color-swatch__hex">#9FE1CB</p></div></div>
+        <div class="color-swatch"><div class="color-swatch__block" style="background:#E4F0EC;"></div><div class="color-swatch__info"><p class="color-swatch__name">--color-accent-surface</p><p class="color-swatch__hex">#E4F0EC</p></div></div>
+      </div>
+
+      <hr class="ds-divider">
+      <span class="ds-subsection-title">border & footer</span>
+      <div class="color-grid">
+        <div class="color-swatch"><div class="color-swatch__block" style="background:#D6DDD7;border:1px solid #ddd;"></div><div class="color-swatch__info"><p class="color-swatch__name">--color-border</p><p class="color-swatch__hex">#D6DDD7</p></div></div>
+        <div class="color-swatch"><div class="color-swatch__block" style="background:#0D2E2E;"></div><div class="color-swatch__info"><p class="color-swatch__name">--footer-bg</p><p class="color-swatch__hex">#0D2E2E</p></div></div>
+        <div class="color-swatch"><div class="color-swatch__block" style="background:#C8E8E0;"></div><div class="color-swatch__info"><p class="color-swatch__name">--footer-text</p><p class="color-swatch__hex">#C8E8E0</p></div></div>
+        <div class="color-swatch"><div class="color-swatch__block" style="background:#5DCAA5;"></div><div class="color-swatch__info"><p class="color-swatch__name">--footer-muted</p><p class="color-swatch__hex">#5DCAA5</p></div></div>
+      </div>
+    </section>
+
+    <!-- ── Typography ─────────────────────────────────────────── -->
+    <section class="ds-section" id="ds-typography">
+      <p style="font-family:var(--font-display);font-style:italic;font-size:12px;letter-spacing:.18em;color:var(--color-accent);margin:0 0 10px;">foundations</p>
+      <h1 class="ds-section-title">Typography</h1>
+      <p class="ds-section-desc">세 목소리: 세리프(제목), 산세리프(본문), Playfair(영문 kicker). 숫자에 세리프 사용 — 저널 코딩의 핵심.</p>
+
+      <span class="ds-subsection-title">font families</span>
+      <div style="display:grid;gap:10px;margin-bottom:32px;">
+        <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;padding:20px 22px;">
+          <div style="font-family:var(--font-display);font-style:italic;font-size:10.5px;letter-spacing:.14em;color:var(--fg-3);margin-bottom:10px;">--font-serif · Noto Serif KR</div>
+          <div style="font-family:var(--font-serif);font-size:28px;font-weight:600;letter-spacing:-0.025em;color:var(--fg-1);">밤의 감정과 낮의 교육</div>
+          <div style="font-family:var(--font-serif);font-size:15px;color:var(--fg-2);margin-top:4px;">제목, 카드 타이틀, 숫자 강조에 사용</div>
+        </div>
+        <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;padding:20px 22px;">
+          <div style="font-family:var(--font-display);font-style:italic;font-size:10.5px;letter-spacing:.14em;color:var(--fg-3);margin-bottom:10px;">--font-sans · Noto Sans KR</div>
+          <div style="font-family:var(--font-sans);font-size:17px;line-height:1.75;color:var(--fg-1);">수면, 발달, 교육현장을 중심으로 기사와 칼럼을 싣습니다. 빠른 요약보다 맥락 설명을 먼저 둡니다.</div>
+          <div style="font-family:var(--font-display);font-style:italic;font-size:10.5px;letter-spacing:.14em;color:var(--fg-3);margin-top:8px;">본문, 메타, 버튼, 내비게이션에 사용</div>
+        </div>
+        <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;padding:20px 22px;">
+          <div style="font-family:var(--font-display);font-style:italic;font-size:10.5px;letter-spacing:.14em;color:var(--fg-3);margin-bottom:10px;">--font-display · Playfair Display</div>
+          <div style="font-family:var(--font-display);font-style:italic;font-size:13px;letter-spacing:.18em;color:var(--color-accent);text-transform:lowercase;">latest · columns · archive · principles</div>
+          <div style="font-family:var(--font-display);font-style:italic;font-size:10.5px;letter-spacing:.14em;color:var(--fg-3);margin-top:8px;">영문 kicker, 에디터스 노트 accent에만 사용</div>
+        </div>
+      </div>
+
+      <span class="ds-subsection-title">type scale</span>
+      <div style="display:grid;gap:8px;">
+        <div class="type-specimen">
+          <div class="type-specimen__label">hero · --text-hero · clamp(2.25rem, 6vw, 3.75rem) <span class="type-specimen__meta">serif 600 ls:-0.032em lh:1.16</span></div>
+          <div style="font-family:var(--font-serif);font-weight:600;font-size:clamp(2.25rem,6vw,3.75rem);line-height:1.16;letter-spacing:-0.032em;color:var(--fg-1);">밤의 감정과 낮의 교육</div>
+        </div>
+        <div class="type-specimen">
+          <div class="type-specimen__label">h2 · --text-4xl · clamp(2rem, 5vw, 3rem) <span class="type-specimen__meta">serif 600 ls:-0.028em lh:1.22</span></div>
+          <div style="font-family:var(--font-serif);font-weight:600;font-size:clamp(2rem,5vw,3rem);line-height:1.22;letter-spacing:-0.028em;color:var(--fg-1);">최신 기사</div>
+        </div>
+        <div class="type-specimen">
+          <div class="type-specimen__label">section title · --text-3xl · 2rem <span class="type-specimen__meta">serif 600 ls:-0.025em</span></div>
+          <div style="font-family:var(--font-serif);font-weight:600;font-size:2rem;letter-spacing:-0.025em;color:var(--fg-1);">다루는 주제</div>
+        </div>
+        <div class="type-specimen">
+          <div class="type-specimen__label">card title · --text-2xl · 1.5rem <span class="type-specimen__meta">serif 600 ls:-0.022em lh:1.35</span></div>
+          <div style="font-family:var(--font-serif);font-weight:600;font-size:1.5rem;line-height:1.35;letter-spacing:-0.022em;color:var(--fg-1);">잠들기 어려운 아이의 밤</div>
+        </div>
+        <div class="type-specimen">
+          <div class="type-specimen__label">body · --text-md · 1rem <span class="type-specimen__meta">sans 400 lh:1.75</span></div>
+          <div style="font-family:var(--font-sans);font-size:1rem;line-height:1.75;color:var(--fg-1);">영유아기의 수면은 습관 교정의 문제가 아니라, 애착과 공동조절이 형성되는 발달 과정으로 보는 편이 더 정확하다.</div>
+        </div>
+        <div class="type-specimen">
+          <div class="type-specimen__label">kicker · --text-xs · 0.6875rem <span class="type-specimen__meta">Playfair italic ls:0.18em lowercase</span></div>
+          <div style="font-family:var(--font-display);font-style:italic;font-size:0.6875rem;letter-spacing:0.18em;color:var(--color-accent);text-transform:lowercase;">latest · columns · archive</div>
+        </div>
+        <div class="type-specimen">
+          <div class="type-specimen__label">numeral · --text-3xl · 2rem <span class="type-specimen__meta">serif 500 color-accent — 저널 코딩의 핵심</span></div>
+          <div style="font-family:var(--font-serif);font-weight:500;font-size:2rem;color:var(--color-accent);letter-spacing:-0.025em;">01 02 03 04</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Spacing ────────────────────────────────────────────── -->
+    <section class="ds-section" id="ds-spacing">
+      <p style="font-family:var(--font-display);font-style:italic;font-size:12px;letter-spacing:.18em;color:var(--color-accent);margin:0 0 10px;">foundations</p>
+      <h1 class="ds-section-title">Spacing & Scale</h1>
+      <p class="ds-section-desc">4px 기본 단위. 아끼고 통일된 공간감이 에디토리얼 질감의 핵심.</p>
+
+      <span class="ds-subsection-title">spacing scale</span>
+      <div style="margin-bottom:32px;">
+        <div class="space-row"><div class="space-row__bar" style="width:4px;"></div><span class="space-row__label">--sp-1</span><span class="space-row__value">4px (0.25rem)</span></div>
+        <div class="space-row"><div class="space-row__bar" style="width:8px;"></div><span class="space-row__label">--sp-2</span><span class="space-row__value">8px (0.5rem)</span></div>
+        <div class="space-row"><div class="space-row__bar" style="width:12px;"></div><span class="space-row__label">--sp-3</span><span class="space-row__value">12px (0.75rem)</span></div>
+        <div class="space-row"><div class="space-row__bar" style="width:16px;"></div><span class="space-row__label">--sp-4</span><span class="space-row__value">16px (1rem)</span></div>
+        <div class="space-row"><div class="space-row__bar" style="width:24px;"></div><span class="space-row__label">--sp-6</span><span class="space-row__value">24px (1.5rem)</span></div>
+        <div class="space-row"><div class="space-row__bar" style="width:32px;"></div><span class="space-row__label">--sp-8</span><span class="space-row__value">32px (2rem)</span></div>
+        <div class="space-row"><div class="space-row__bar" style="width:48px;"></div><span class="space-row__label">--sp-12</span><span class="space-row__value">48px (3rem)</span></div>
+        <div class="space-row"><div class="space-row__bar" style="width:64px;"></div><span class="space-row__label">--sp-16</span><span class="space-row__value">64px (4rem)</span></div>
+        <div class="space-row"><div class="space-row__bar" style="width:96px;"></div><span class="space-row__label">--sp-24</span><span class="space-row__value">96px (6rem)</span></div>
+      </div>
+
+      <hr class="ds-divider">
+      <span class="ds-subsection-title">border radius</span>
+      <div class="radius-grid" style="margin-bottom:32px;">
+        <div class="radius-item" style="width:48px;height:48px;border-radius:6px;"><span class="radius-item__label">sm·6</span></div>
+        <div class="radius-item" style="width:64px;height:64px;border-radius:10px;"><span class="radius-item__label">md·10</span></div>
+        <div class="radius-item" style="width:80px;height:80px;border-radius:16px;"><span class="radius-item__label">lg·16</span></div>
+        <div class="radius-item" style="width:96px;height:96px;border-radius:24px;"><span class="radius-item__label">xl·24</span></div>
+        <div class="radius-item" style="width:64px;height:36px;border-radius:999px;"><span class="radius-item__label">pill</span></div>
+      </div>
+
+      <hr class="ds-divider">
+      <span class="ds-subsection-title">shadows</span>
+      <div class="shadow-grid">
+        <div class="shadow-card" style="box-shadow:0 1px 2px rgba(13,31,31,.04);">
+          <div style="font-size:13px;color:var(--fg-2);">xs</div>
+          <p class="shadow-card__label">--shadow-xs</p>
+        </div>
+        <div class="shadow-card" style="box-shadow:0 2px 8px rgba(13,31,31,.05);">
+          <div style="font-size:13px;color:var(--fg-2);">sm</div>
+          <p class="shadow-card__label">--shadow-sm</p>
+        </div>
+        <div class="shadow-card" style="box-shadow:0 8px 24px rgba(13,31,31,.06);">
+          <div style="font-size:13px;color:var(--fg-2);">md</div>
+          <p class="shadow-card__label">--shadow-md</p>
+        </div>
+        <div class="shadow-card" style="box-shadow:0 18px 48px rgba(13,31,31,.08);">
+          <div style="font-size:13px;color:var(--fg-2);">lg</div>
+          <p class="shadow-card__label">--shadow-lg</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Motion ─────────────────────────────────────────────── -->
+    <section class="ds-section" id="ds-motion">
+      <p style="font-family:var(--font-display);font-style:italic;font-size:12px;letter-spacing:.18em;color:var(--color-accent);margin:0 0 10px;">foundations</p>
+      <h1 class="ds-section-title">Motion</h1>
+      <p class="ds-section-desc">느리고 유기적. 바운스 없음, 스케일업 없음, 효과 과잉 없음. 읽기를 방해하지 않는 움직임.</p>
+
+      <span class="ds-subsection-title">easing (hover to preview)</span>
+      <div class="motion-demo" style="margin-bottom:32px;">
+        <div class="motion-card" style="--dur:150ms;--ease:cubic-bezier(0.16,1,0.3,1);">
+          <div class="motion-bar"></div>
+          <div class="motion-card__label">--ease-out</div>
+          <div class="motion-card__val">cubic-bezier(0.16,1,0.3,1)</div>
+          <div style="font-size:12px;color:var(--fg-3);">기본 — 부드러운 감속</div>
+        </div>
+        <div class="motion-card" style="--dur:260ms;--ease:cubic-bezier(0.65,0,0.35,1);">
+          <div class="motion-bar"></div>
+          <div class="motion-card__label">--ease-in-out</div>
+          <div class="motion-card__val">cubic-bezier(0.65,0,0.35,1)</div>
+          <div style="font-size:12px;color:var(--fg-3);">전환 — 씬 변경</div>
+        </div>
+        <div class="motion-card" style="--dur:420ms;--ease:cubic-bezier(0.34,1.56,0.64,1);">
+          <div class="motion-bar"></div>
+          <div class="motion-card__label">--ease-spring</div>
+          <div class="motion-card__val">cubic-bezier(0.34,1.56,0.64,1)</div>
+          <div style="font-size:12px;color:var(--fg-3);">칩, 소형 reveal에만</div>
+        </div>
+      </div>
+
+      <span class="ds-subsection-title">durations</span>
+      <table class="token-table">
+        <thead><tr><th>Token</th><th>Value</th><th>Use case</th></tr></thead>
+        <tbody>
+          <tr><td><code>--dur-fast</code></td><td>150ms</td><td>링크 언더라인, 미세 hover</td></tr>
+          <tr><td><code>--dur-base</code></td><td>260ms</td><td>카드 hover, 버튼, 칩 — 기본값</td></tr>
+          <tr><td><code>--dur-slow</code></td><td>420ms</td><td>nav 상태 변경, 히어로 등장</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ── Buttons & Links ────────────────────────────────────── -->
+    <section class="ds-section" id="ds-buttons">
+      <p style="font-family:var(--font-display);font-style:italic;font-size:12px;letter-spacing:.18em;color:var(--color-accent);margin:0 0 10px;">components</p>
+      <h1 class="ds-section-title">Buttons & Links</h1>
+      <p class="ds-section-desc">Pill 형태. CTA는 Primary, 보조는 Secondary. 인라인 링크는 화살표 → 포함.</p>
+
+      <span class="ds-subsection-title">buttons</span>
+      <div class="component-row" style="margin-bottom:24px;">
+        <button class="btn-demo btn-demo--primary">최신 기사 보기</button>
+        <button class="btn-demo btn-demo--secondary">아카이브 보기</button>
+      </div>
+      <table class="token-table" style="margin-bottom:32px;">
+        <thead><tr><th>Variant</th><th>State</th><th>Behaviour</th></tr></thead>
+        <tbody>
+          <tr><td>Primary</td><td>hover</td><td>translateY(-1px), shadow 증가</td></tr>
+          <tr><td>Secondary</td><td>hover</td><td>border-color → accent, text → accent</td></tr>
+          <tr><td>Both</td><td>focus-visible</td><td>outline: 2px solid --color-accent, offset 4px</td></tr>
+        </tbody>
+      </table>
+
+      <hr class="ds-divider">
+      <span class="ds-subsection-title">inline links</span>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px;">
+        <div>
+          <span class="inline-link-demo">기사 보기 <span aria-hidden="true">→</span></span>
+          <span style="font-size:12px;color:var(--fg-3);margin-left:16px;font-family:var(--font-display);font-style:italic;">hover → arrow slides right +3px</span>
+        </div>
+        <div>
+          <a href="#" style="color:var(--color-accent);border-bottom:1px solid rgba(45,106,106,.3);font-size:15px;">본문 내 링크 스타일</a>
+          <span style="font-size:12px;color:var(--fg-3);margin-left:16px;font-family:var(--font-display);font-style:italic;">hover → border-color: --color-accent</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Chips & Tags ───────────────────────────────────────── -->
+    <section class="ds-section" id="ds-chips">
+      <p style="font-family:var(--font-display);font-style:italic;font-size:12px;letter-spacing:.18em;color:var(--color-accent);margin:0 0 10px;">components</p>
+      <h1 class="ds-section-title">Chips & Tags</h1>
+      <p class="ds-section-desc">주제 필터, 카테고리 태그. Pill 형태. hover → accent bg + white text.</p>
+
+      <span class="ds-subsection-title">topic chips (hero)</span>
+      <div class="component-row" style="margin-bottom:24px;">
+        <div class="chip-demo active">영유아 수면</div>
+        <div class="chip-demo">청소년 리듬</div>
+        <div class="chip-demo">발달과 애착</div>
+        <div class="chip-demo">통합교육</div>
+      </div>
+
+      <span class="ds-subsection-title">filter buttons (articles section)</span>
+      <div class="component-row" style="margin-bottom:24px;">
+        <button style="padding:8px 16px;border-radius:999px;font-size:13px;font-weight:500;background:var(--color-accent);border:1px solid var(--color-accent);color:#fff;cursor:pointer;">전체 <span style="display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;font-size:9px;background:rgba(255,255,255,0.25);margin-left:4px;">6</span></button>
+        <button style="padding:8px 16px;border-radius:999px;font-size:13px;font-weight:500;background:var(--color-surface);border:1px solid var(--color-border);color:var(--fg-2);cursor:pointer;">해설 기사</button>
+        <button style="padding:8px 16px;border-radius:999px;font-size:13px;font-weight:500;background:var(--color-surface);border:1px solid var(--color-border);color:var(--fg-2);cursor:pointer;">칼럼</button>
+      </div>
+
+      <span class="ds-subsection-title">article tags</span>
+      <div class="component-row">
+        <a style="font-size:11.5px;letter-spacing:.04em;padding:5px 12px;border-radius:999px;background:var(--color-surface-tint);color:var(--fg-2);border:1px solid transparent;cursor:pointer;">영유아 수면</a>
+        <a style="font-size:11.5px;letter-spacing:.04em;padding:5px 12px;border-radius:999px;background:var(--color-surface-tint);color:var(--fg-2);border:1px solid transparent;cursor:pointer;">공동조절</a>
+        <a style="font-size:11.5px;letter-spacing:.04em;padding:5px 12px;border-radius:999px;background:var(--color-surface-tint);color:var(--fg-2);border:1px solid transparent;cursor:pointer;">애착</a>
+      </div>
+    </section>
+
+    <!-- ── Cards ──────────────────────────────────────────────── -->
+    <section class="ds-section" id="ds-cards">
+      <p style="font-family:var(--font-display);font-style:italic;font-size:12px;letter-spacing:.18em;color:var(--color-accent);margin:0 0 10px;">components</p>
+      <h1 class="ds-section-title">Cards</h1>
+      <p class="ds-section-desc">기사 카드 + 원칙 카드 두 종류. 모두 border-first, shadow-additive.</p>
+
+      <span class="ds-subsection-title">article card</span>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:32px;">
+        <div class="card-preview">
+          <div class="card-preview__thumb">
+            <img src="assets/articles/infant-sleep.jpg" alt="기사 카드 예시">
+            <span class="card-preview__cat">영유아 수면</span>
+          </div>
+          <div class="card-preview__body">
+            <h3 class="card-preview__title">잠들기 어려운 아이의 밤, 훈련보다 공동조절이 먼저인 이유</h3>
+            <p class="card-preview__desc">영유아기의 수면을 발달과 애착의 관점에서 다시 읽습니다.</p>
+            <span class="inline-link-demo" style="font-size:13px;">기사 보기 <span>→</span></span>
+          </div>
+        </div>
+        <div class="card-preview">
+          <div class="card-preview__thumb">
+            <img src="assets/articles/sleep-not-medicine.jpg" alt="칼럼 카드 예시">
+            <span class="card-preview__cat" style="background:rgba(45,106,106,0.7);">칼럼 · 불안과 잠</span>
+          </div>
+          <div class="card-preview__body">
+            <h3 class="card-preview__title">잠은 최고의 보약이 아니다</h3>
+            <p class="card-preview__desc">잘 자야 한다는 강박이 왜 밤을 더 긴장시키는지 돌아봅니다.</p>
+            <span class="inline-link-demo" style="font-size:13px;">칼럼 읽기 <span>→</span></span>
+          </div>
+        </div>
+      </div>
+
+      <hr class="ds-divider">
+      <span class="ds-subsection-title">principle card</span>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <div class="principle-preview">
+          <div class="principle-preview__num">01</div>
+          <p class="principle-preview__text">단편적인 건강 정보보다 감정과 발달의 맥락을 먼저 설명합니다.</p>
+        </div>
+        <div class="principle-preview">
+          <div class="principle-preview__num">02</div>
+          <p class="principle-preview__text">개인의 고통을 자기관리 실패처럼 다루지 않습니다.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Header & Footer ────────────────────────────────────── -->
+    <section class="ds-section" id="ds-header">
+      <p style="font-family:var(--font-display);font-style:italic;font-size:12px;letter-spacing:.18em;color:var(--color-accent);margin:0 0 10px;">components</p>
+      <h1 class="ds-section-title">Header & Footer</h1>
+      <p class="ds-section-desc">헤더는 scroll시 배경 등장. 푸터는 deep forest(#1A3838) 배경으로 3열 그리드.</p>
+
+      <span class="ds-subsection-title">header — scrolled state</span>
+      <div class="header-preview" style="margin-bottom:32px;">
+        <div class="hp-brand">
+          <div class="hp-mark">em</div>
+          <div>
+            <div class="hp-name">이음교육저널</div>
+            <div class="hp-tag">em · education & mind journal</div>
+          </div>
+        </div>
+        <nav class="hp-nav">
+          <a href="#">최신 기사</a>
+          <a href="#">칼럼</a>
+          <a href="#">아카이브</a>
+          <a href="#">주제</a>
+          <a href="#">소개</a>
+        </nav>
+        <div style="padding:8px 14px;border:1px solid var(--color-border);border-radius:999px;font-size:12px;color:var(--fg-1);">이음통합평생교육원 ↗</div>
+      </div>
+
+      <span class="ds-subsection-title">footer</span>
+      <div class="footer-preview">
+        <div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+            <div style="width:32px;height:32px;border-radius:8px;border:1px solid rgba(159,225,203,.5);display:grid;place-items:center;font-family:var(--font-display);font-style:italic;font-size:13px;color:#9FE1CB;">em</div>
+            <div class="fp-brand">이음교육저널</div>
+          </div>
+          <div class="fp-tag">em · education & mind journal</div>
+          <p class="fp-body">수면, 발달, 교육현장을 중심으로 기사와 칼럼을 싣습니다.</p>
+        </div>
+        <div>
+          <span class="fp-kicker">operating body</span>
+          <p class="fp-body">발행: 이음통합평생교육원</p>
+          <p class="fp-body">대표: 선애순</p>
+          <p class="fp-body">광주시 서구 회재로 859, 3층</p>
+        </div>
+        <div>
+          <span class="fp-kicker">policy</span>
+          <ul class="fp-links">
+            <li><a href="#">신문 소개</a></li>
+            <li><a href="#">정정 · 반론 · 권리구제</a></li>
+            <li><a href="#">개인정보처리방침</a></li>
+            <li><a href="#">이용약관</a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── All Tokens ─────────────────────────────────────────── -->
+    <section class="ds-section" id="ds-tokens">
+      <p style="font-family:var(--font-display);font-style:italic;font-size:12px;letter-spacing:.18em;color:var(--color-accent);margin:0 0 10px;">reference</p>
+      <h1 class="ds-section-title">All Tokens</h1>
+      <p class="ds-section-desc">colors_and_type.css에 정의된 전체 CSS 커스텀 프로퍼티 목록.</p>
+
+      <span class="ds-subsection-title">colors</span>
+      <table class="token-table" style="margin-bottom:32px;">
+        <thead><tr><th>Token</th><th>Value</th><th>Role</th></tr></thead>
+        <tbody>
+          <tr><td><code>--color-bg</code></td><td>#F1F3EF</td><td>페이지 배경</td></tr>
+          <tr><td><code>--color-surface</code></td><td>#FAFBF8</td><td>카드, 패널</td></tr>
+          <tr><td><code>--color-surface-tint</code></td><td>#E8EDE7</td><td>히어로, 틴트 섹션</td></tr>
+          <tr><td><code>--color-surface-soft</code></td><td>#EEF2EF</td><td>섹션 배경 variant</td></tr>
+          <tr><td><code>--color-text</code></td><td>#1A2523</td><td>주 텍스트</td></tr>
+          <tr><td><code>--color-text-muted</code></td><td>#56615C</td><td>보조 텍스트, 메타</td></tr>
+          <tr><td><code>--color-text-faint</code></td><td>#8D9790</td><td>3차 텍스트, 날짜</td></tr>
+          <tr><td><code>--color-accent</code></td><td>#2D6A6A</td><td>모든 링크, kicker, hover</td></tr>
+          <tr><td><code>--color-accent-hover</code></td><td>#24585A</td><td>accent hover state</td></tr>
+          <tr><td><code>--color-accent-dark</code></td><td>#0D3D3D</td><td>에디터스 노트 accent</td></tr>
+          <tr><td><code>--color-accent-light</code></td><td>#9FE1CB</td><td>푸터 하이라이트</td></tr>
+          <tr><td><code>--color-accent-surface</code></td><td>#E4F0EC</td><td>chip bg, tag bg</td></tr>
+          <tr><td><code>--color-border</code></td><td>#D6DDD7</td><td>카드 border, divider</td></tr>
+          <tr><td><code>--footer-bg</code></td><td>#0D2E2E</td><td>딥 포레스트 푸터</td></tr>
+        </tbody>
+      </table>
+
+      <span class="ds-subsection-title">type scale</span>
+      <table class="token-table" style="margin-bottom:32px;">
+        <thead><tr><th>Token</th><th>Value</th><th>Use</th></tr></thead>
+        <tbody>
+          <tr><td><code>--text-xs</code></td><td>0.6875rem (11px)</td><td>kicker, meta caps</td></tr>
+          <tr><td><code>--text-sm</code></td><td>0.75rem (12px)</td><td>captions</td></tr>
+          <tr><td><code>--text-base</code></td><td>0.875rem (14px)</td><td>nav, UI labels</td></tr>
+          <tr><td><code>--text-md</code></td><td>1rem (16px)</td><td>body</td></tr>
+          <tr><td><code>--text-lg</code></td><td>1.125rem (18px)</td><td>lead, card body</td></tr>
+          <tr><td><code>--text-xl</code></td><td>1.25rem (20px)</td><td>—</td></tr>
+          <tr><td><code>--text-2xl</code></td><td>1.5rem (24px)</td><td>card title</td></tr>
+          <tr><td><code>--text-3xl</code></td><td>2rem (32px)</td><td>section title</td></tr>
+          <tr><td><code>--text-4xl</code></td><td>clamp(2rem, 5vw, 3rem)</td><td>h2</td></tr>
+          <tr><td><code>--text-hero</code></td><td>clamp(2.25rem, 6vw, 3.75rem)</td><td>h1 on hero</td></tr>
+        </tbody>
+      </table>
+
+      <span class="ds-subsection-title">motion</span>
+      <table class="token-table">
+        <thead><tr><th>Token</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td><code>--ease-out</code></td><td>cubic-bezier(0.16, 1, 0.3, 1)</td></tr>
+          <tr><td><code>--ease-in-out</code></td><td>cubic-bezier(0.65, 0, 0.35, 1)</td></tr>
+          <tr><td><code>--ease-spring</code></td><td>cubic-bezier(0.34, 1.56, 0.64, 1)</td></tr>
+          <tr><td><code>--dur-fast</code></td><td>150ms</td></tr>
+          <tr><td><code>--dur-base</code></td><td>260ms</td></tr>
+          <tr><td><code>--dur-slow</code></td><td>420ms</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  // Sidebar navigation
+  const navLinks = document.querySelectorAll('.ds-nav-link');
+  const sections = document.querySelectorAll('.ds-section');
+  const sectionMap = {
+    colors: 'ds-colors', typography: 'ds-typography', spacing: 'ds-spacing',
+    motion: 'ds-motion', buttons: 'ds-buttons', chips: 'ds-chips',
+    cards: 'ds-cards', header: 'ds-header', tokens: 'ds-tokens'
+  };
+
+  navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      const target = link.dataset.target;
+      navLinks.forEach(l => l.classList.remove('is-active'));
+      link.classList.add('is-active');
+      sections.forEach(s => s.classList.remove('is-active'));
+      const section = document.getElementById(sectionMap[target]);
+      if(section) section.classList.add('is-active');
+      // scroll main to top
+      document.querySelector('.ds-main').scrollTop = 0;
+      window.scrollTo(0, 0);
+    });
+  });
+</script>
+</body>
+</html>

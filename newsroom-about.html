@@ -4,66 +4,845 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>신문 소개 · 이음교육저널</title>
-  <meta name="description" content="이음교육저널의 편집 방향과 다루는 주제를 소개합니다.">
-  <link rel="stylesheet" href="/assets/css/colors_and_type.css">
-  <link rel="stylesheet" href="/assets/css/kit.css">
-  <link rel="stylesheet" href="/assets/css/page.css">
+  <meta name="description" content="이음교육저널의 편집 방향, 운영 정보, 다루는 주제를 소개합니다.">
+  <link rel="stylesheet" href="assets/css/colors_and_type.css">
+  <link rel="stylesheet" href="assets/css/kit.css">
+  <link rel="stylesheet" href="assets/css/page.css">
+  <style>
+    /* ── Mobile nav (same as homepage) ─────────────────────── */
+    .mobile-menu-btn {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      padding: 8px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      border-radius: var(--radius-md);
+      transition: background var(--dur-base) var(--ease-out);
+    }
+    .mobile-menu-btn span {
+      display: block;
+      width: 22px;
+      height: 1.5px;
+      background: var(--fg-1);
+      transition: transform var(--dur-base) var(--ease-out), opacity var(--dur-base) var(--ease-out);
+      transform-origin: center;
+    }
+    .mobile-menu-btn.is-open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .mobile-menu-btn.is-open span:nth-child(2) { opacity: 0; }
+    .mobile-menu-btn.is-open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+    .mobile-nav {
+      display: none;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: var(--color-bg);
+      z-index: 49;
+      padding: 96px var(--container-pad) 48px;
+      overflow-y: auto;
+    }
+    .mobile-nav.is-open { display: flex; }
+    .mobile-nav a {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      font-weight: 500;
+      color: var(--fg-1);
+      padding: 18px 0;
+      border-bottom: 0.5px solid var(--color-border);
+      letter-spacing: var(--ls-tight);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: color var(--dur-base) var(--ease-out);
+    }
+    .mobile-nav a:hover { color: var(--color-accent); }
+    .mobile-nav a::after { content: "→"; font-family: var(--font-sans); font-size: 1rem; color: var(--fg-3); }
+    .mobile-nav-foot { margin-top: 32px; font-family: var(--font-display); font-style: italic; font-size: 13px; color: var(--fg-3); letter-spacing: 0.1em; }
+    @media (max-width: 1040px) {
+      .mobile-menu-btn { display: flex; }
+      .main-nav { display: none !important; }
+    }
+
+    /* ── About masthead ────────────────────────────────────── */
+    .about-masthead {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(155deg, #E4F0EC 0%, #ECF2EE 55%, #EEF2EF 100%);
+      padding: clamp(5rem, 10vw, 7.5rem) 0 0;
+      border-bottom: 0.5px solid var(--color-border);
+    }
+    .about-masthead-inner {
+      display: grid;
+      grid-template-columns: 1fr minmax(0, 420px);
+      gap: 48px;
+      align-items: end;
+    }
+    .about-masthead__eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .about-masthead__eyebrow-line {
+      width: 32px;
+      height: 1px;
+      background: var(--color-accent);
+    }
+    .about-masthead h1 {
+      font-family: var(--font-serif);
+      font-weight: 600;
+      font-size: clamp(2.4rem, 5.5vw, 3.75rem);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      color: var(--hero-text-deep);
+      margin: 0 0 24px;
+      text-wrap: balance;
+    }
+    .about-masthead h1 em {
+      font-style: italic;
+      font-family: var(--font-display);
+      color: var(--color-accent);
+    }
+    .about-masthead__lede {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(1rem, 1.6vw, 1.2rem);
+      line-height: 1.75;
+      color: var(--fg-2);
+      margin: 0 0 40px;
+      max-width: 48ch;
+      padding-left: 18px;
+      border-left: 2px solid var(--color-accent);
+      text-wrap: pretty;
+    }
+    .about-masthead__image {
+      position: relative;
+      border-top-left-radius: var(--radius-xl);
+      border-top-right-radius: var(--radius-xl);
+      overflow: hidden;
+      height: 340px;
+      background: var(--color-surface-tint);
+    }
+    .about-masthead__image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 30%;
+    }
+    .about-masthead__image-caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 48px 20px 16px;
+      background: linear-gradient(transparent, rgba(13,31,31,0.55));
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 12px;
+      color: rgba(255,255,255,0.75);
+      letter-spacing: 0.04em;
+    }
+    @media (max-width: 860px) {
+      .about-masthead-inner { grid-template-columns: 1fr; }
+      .about-masthead__image { height: 220px; border-radius: var(--radius-xl); margin-top: 32px; }
+    }
+
+    /* ── Mission statement strip ──────────────────────────── */
+    .mission-strip {
+      background: var(--color-accent);
+      padding: clamp(40px, 6vw, 64px) 0;
+    }
+    .mission-strip__inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(32px, 5vw, 80px);
+      align-items: center;
+    }
+    .mission-strip__label {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      color: var(--color-accent-light);
+      display: block;
+      margin-bottom: 16px;
+    }
+    .mission-strip__quote {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: clamp(1.3rem, 2.5vw, 1.75rem);
+      line-height: 1.45;
+      letter-spacing: -0.025em;
+      color: #fff;
+      margin: 0;
+      text-wrap: balance;
+    }
+    .mission-strip__desc {
+      font-size: 15px;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.75);
+      margin: 0;
+    }
+    @media (max-width: 720px) {
+      .mission-strip__inner { grid-template-columns: 1fr; gap: 28px; }
+    }
+
+    /* ── Principles section ───────────────────────────────── */
+    .about-principles {
+      padding: clamp(4rem, 8vw, 6rem) 0;
+    }
+    .principles-list {
+      display: grid;
+      gap: 0;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+    }
+    .principle-row {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 0;
+      border-bottom: 0.5px solid var(--color-border);
+      transition: background var(--dur-base) var(--ease-out);
+    }
+    .principle-row:last-child { border-bottom: none; }
+    .principle-row:hover { background: var(--color-surface-soft); }
+    .principle-row__num {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px 0;
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 28px;
+      color: var(--color-accent);
+      letter-spacing: var(--ls-tight);
+      border-right: 0.5px solid var(--color-border);
+      background: var(--color-surface);
+    }
+    .principle-row__body {
+      padding: 28px 32px;
+      background: var(--color-surface);
+    }
+    .principle-row:hover .principle-row__body,
+    .principle-row:hover .principle-row__num {
+      background: var(--color-surface-soft);
+    }
+    .principle-row__title {
+      font-family: var(--font-serif);
+      font-weight: 600;
+      font-size: 18px;
+      letter-spacing: var(--ls-tight);
+      color: var(--fg-1);
+      margin: 0 0 8px;
+    }
+    .principle-row__desc {
+      font-size: 14.5px;
+      line-height: 1.75;
+      color: var(--fg-2);
+      margin: 0;
+    }
+
+    /* ── Topics grid ──────────────────────────────────────── */
+    .about-topics {
+      padding: 0 0 clamp(4rem, 8vw, 6rem);
+    }
+    .topics-detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    .topic-detail-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 28px 26px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
+    }
+    .topic-detail-card:hover {
+      border-color: var(--color-accent);
+      transform: translateY(-2px);
+    }
+    .topic-detail-card::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--color-accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform var(--dur-base) var(--ease-out);
+    }
+    .topic-detail-card:hover::after { transform: scaleX(1); }
+    .topic-detail-card__num {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      color: var(--color-accent);
+      display: block;
+      margin-bottom: 12px;
+    }
+    .topic-detail-card__title {
+      font-family: var(--font-serif);
+      font-weight: 600;
+      font-size: 19px;
+      line-height: 1.3;
+      letter-spacing: var(--ls-tight);
+      color: var(--fg-1);
+      margin: 0 0 10px;
+    }
+    .topic-detail-card__desc {
+      font-size: 14.5px;
+      line-height: 1.75;
+      color: var(--fg-2);
+      margin: 0 0 16px;
+    }
+    .topic-detail-card__examples {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .topic-tag {
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      background: var(--color-accent-surface);
+      color: var(--color-accent-dark);
+      font-size: 12px;
+      font-weight: 500;
+    }
+    @media (max-width: 640px) {
+      .topics-detail-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── Editor profile ───────────────────────────────────── */
+    .about-editor {
+      padding: 0 0 clamp(4rem, 8vw, 6rem);
+    }
+    .editor-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: clamp(32px, 5vw, 48px);
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 40px;
+      align-items: start;
+    }
+    .editor-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--color-accent-surface);
+      display: grid;
+      place-items: center;
+      font-family: var(--font-serif);
+      font-weight: 600;
+      font-size: 28px;
+      color: var(--color-accent-dark);
+      flex-shrink: 0;
+    }
+    .editor-card__name {
+      font-family: var(--font-serif);
+      font-weight: 600;
+      font-size: 22px;
+      letter-spacing: var(--ls-tight);
+      color: var(--fg-1);
+      margin: 0 0 4px;
+    }
+    .editor-card__role {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 13px;
+      letter-spacing: 0.1em;
+      color: var(--color-accent);
+      margin: 0 0 16px;
+    }
+    .editor-card__bio {
+      font-family: var(--font-serif);
+      font-size: 16px;
+      line-height: 1.8;
+      color: var(--fg-2);
+      margin: 0 0 20px;
+    }
+    .editor-card__credentials {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .credential {
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--color-border);
+      font-size: 12.5px;
+      color: var(--fg-2);
+      background: var(--color-surface-soft);
+    }
+    @media (max-width: 600px) {
+      .editor-card { grid-template-columns: 1fr; }
+      .editor-avatar { width: 60px; height: 60px; font-size: 22px; }
+    }
+
+    /* ── Operating info ───────────────────────────────────── */
+    .about-info {
+      padding: 0 0 clamp(4rem, 8vw, 6rem);
+    }
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 32px;
+    }
+    .info-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 22px 22px;
+    }
+    .info-card__label {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      color: var(--color-accent);
+      text-transform: lowercase;
+      display: block;
+      margin-bottom: 8px;
+    }
+    .info-card__title {
+      font-family: var(--font-serif);
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--fg-1);
+      margin: 0 0 6px;
+    }
+    .info-card__value {
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--fg-2);
+      margin: 0;
+    }
+    .info-card__value a {
+      color: var(--color-accent);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color var(--dur-fast) var(--ease-out);
+    }
+    .info-card__value a:hover { border-bottom-color: var(--color-accent); }
+    @media (max-width: 860px) {
+      .info-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .info-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── Policy links ─────────────────────────────────────── */
+    .about-policy {
+      background: var(--color-surface-soft);
+      border-top: 0.5px solid var(--color-border);
+      padding: clamp(3rem, 6vw, 4rem) 0;
+    }
+    .policy-links-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px;
+      margin-top: 24px;
+    }
+    .policy-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      color: var(--fg-1);
+      text-decoration: none;
+      transition: all var(--dur-base) var(--ease-out);
+    }
+    .policy-link:hover {
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+    }
+    .policy-link span { font-size: 12px; color: var(--fg-3); transition: color var(--dur-base) var(--ease-out); }
+    .policy-link:hover span { color: var(--color-accent); }
+
+    /* ── Reveal ───────────────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 500ms var(--ease-out), transform 500ms var(--ease-out);
+    }
+    .reveal.is-visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 80ms; }
+    .reveal-delay-2 { transition-delay: 160ms; }
+
+    @keyframes page-in { from { opacity: 0; } to { opacity: 1; } }
+    body { animation: page-in 300ms var(--ease-out) both; }
+  </style>
 </head>
 <body>
   <a class="skip-link" href="#main">본문으로 바로가기</a>
-  <div id="site-header"></div>
+
+  <!-- Header -->
+  <header class="site-header" id="hdr">
+    <div class="container header-inner">
+      <a class="brand-wrap" href="index.html">
+        <div class="brand-mark" aria-hidden="true">em</div>
+        <div class="brand-text">
+          <div class="brand-name">이음교육저널</div>
+          <div class="brand-tag">em · education &amp; mind journal</div>
+        </div>
+      </a>
+      <nav class="main-nav" aria-label="주요 메뉴">
+        <a href="index.html#articles">최신 기사</a>
+        <a href="index.html#columns">칼럼</a>
+        <a href="archive/index.html">아카이브</a>
+        <a href="index.html#topics">주제</a>
+        <a href="newsroom-about.html" aria-current="page">소개</a>
+      </nav>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <a class="outbound-link" href="https://www.ieumedu.kr/" style="display:inline-flex;">
+          이음통합평생교육원 <span style="margin-left:4px;" aria-hidden="true">↗</span>
+        </a>
+        <button class="mobile-menu-btn" id="menu-toggle" aria-label="메뉴 열기" aria-expanded="false" aria-controls="mobile-nav">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="mobile-nav" id="mobile-nav" aria-label="모바일 메뉴">
+    <a href="index.html#articles">최신 기사</a>
+    <a href="index.html#columns">칼럼</a>
+    <a href="archive/index.html">아카이브</a>
+    <a href="index.html#topics">주제</a>
+    <a href="newsroom-about.html">소개</a>
+    <a href="https://www.ieumedu.kr/">이음통합평생교육원 ↗</a>
+    <p class="mobile-nav-foot">em · education &amp; mind journal</p>
+  </nav>
+
   <main id="main">
-    <section class="page-masthead">
-      <div class="container page-masthead__inner">
-        <nav class="page-crumbs" aria-label="breadcrumb"><a href="/">이음교육저널</a><span aria-hidden="true">›</span><span class="page-crumbs__here">신문 소개</span></nav>
-        <span class="page-masthead__kicker">about</span>
-        <h1>신문 소개</h1>
-        <p class="page-masthead__lede">이음교육저널은 수면, 발달, 교육현장을 교육과 심리의 언어로 풀어 쓰는 온라인 저널입니다.</p>
+
+    <!-- ── Masthead ──────────────────────────────────────── -->
+    <section class="about-masthead">
+      <div class="container">
+        <div class="about-masthead-inner">
+          <div>
+            <nav class="page-crumbs" aria-label="breadcrumb">
+              <a href="index.html">이음교육저널</a>
+              <span aria-hidden="true">›</span>
+              <span class="page-crumbs__here">신문 소개</span>
+            </nav>
+            <div class="about-masthead__eyebrow">
+              <div class="about-masthead__eyebrow-line" aria-hidden="true"></div>
+              <span class="kicker">about</span>
+            </div>
+            <h1>밤의 감정과<br>낮의 교육을<br><em>한 지면에서</em></h1>
+            <p class="about-masthead__lede">
+              수면, 발달, 애착, 교육현장의 질문을 교육과 심리의 언어로 풀어 쓰는 온라인 저널입니다.
+              빠른 요약보다 맥락 설명을 먼저 둡니다.
+            </p>
+          </div>
+          <div class="about-masthead__image">
+            <img src="assets/articles/editor-note.jpg" alt="이음교육저널 대표 이미지" loading="lazy">
+            <span class="about-masthead__image-caption">em · education &amp; mind journal</span>
+          </div>
+        </div>
       </div>
     </section>
 
-    <article class="doc-shell">
-      <div class="doc-body">
-        <h2><span class="num">01</span>편집 방향</h2>
-        <p>빠른 요약보다 맥락 설명을 먼저 둡니다. 아이의 밤, 청소년의 리듬, 발달지연의 신호, 상담과 교육 현장의 언어를 기사와 칼럼으로 다룹니다.</p>
-        <p>메인에는 해설과 현장 기사를 먼저 두고, 칼럼은 별도 섹션에서 조금 더 느린 문장으로 읽히게 놓았습니다. 저서와 연구, 외부 보도는 기록면에서 따로 볼 수 있습니다.</p>
-        <h2><span class="num">02</span>운영 정보</h2>
-        <div class="about-grid">
-          <section class="about-card">
-            <span class="kbd">operating body</span>
-            <h3>이음통합평생교육원 연계</h3>
-            <p>이음교육저널은 이음통합평생교육원과 연결된 온라인 저널입니다.</p>
-          </section>
-          <section class="about-card">
-            <span class="kbd">representative</span>
-            <h3>대표</h3>
-            <p>선애순</p>
-          </section>
-          <section class="about-card">
-            <span class="kbd">business number</span>
-            <h3>사업자등록번호</h3>
-            <p>296-05-03812</p>
-          </section>
-          <section class="about-card">
-            <span class="kbd">address</span>
-            <h3>주소</h3>
-            <p>광주시 서구 회재로 859, 3층</p>
-          </section>
-          <section class="about-card">
-            <span class="kbd">phone</span>
-            <h3>전화</h3>
-            <p>062-655-4116</p>
-          </section>
-          <section class="about-card">
-            <span class="kbd">official site</span>
-            <h3>교육원 사이트</h3>
-            <p><a href="https://www.ieumedu.kr/">https://www.ieumedu.kr</a></p>
-          </section>
+    <!-- ── Mission strip ─────────────────────────────────── -->
+    <div class="mission-strip">
+      <div class="container">
+        <div class="mission-strip__inner">
+          <div>
+            <span class="mission-strip__label">editorial stance</span>
+            <p class="mission-strip__quote">"개인의 고통을 자기관리 실패처럼 다루지 않습니다."</p>
+          </div>
+          <p class="mission-strip__desc">
+            이음교육저널은 수면 문제, 발달 지연, 불안을 "고쳐야 할 증상"으로 다루지 않습니다.
+            임상과 현장의 언어를 공공의 문장으로 번역하는 것이 이 저널의 역할입니다.
+          </p>
         </div>
       </div>
-    </article>
+    </div>
+
+    <!-- ── Principles ─────────────────────────────────────── -->
+    <section class="about-principles" id="principles">
+      <div class="container">
+        <div class="section-head reveal" style="margin-bottom:32px;">
+          <div>
+            <span class="kicker">principles</span>
+            <h2 class="section-title">편집 원칙</h2>
+            <p class="section-desc">이음교육저널이 기사와 칼럼을 쓰는 기준이 되는 네 가지 원칙입니다.</p>
+          </div>
+        </div>
+        <div class="principles-list reveal">
+          <div class="principle-row">
+            <div class="principle-row__num">01</div>
+            <div class="principle-row__body">
+              <h3 class="principle-row__title">감정과 발달의 맥락 먼저</h3>
+              <p class="principle-row__desc">단편적인 건강 정보보다 감정과 발달의 맥락을 먼저 설명합니다. 수면 팁보다 왜 그 시기의 수면이 그 방식으로 작동하는지를 묻습니다.</p>
+            </div>
+          </div>
+          <div class="principle-row">
+            <div class="principle-row__num">02</div>
+            <div class="principle-row__body">
+              <h3 class="principle-row__title">고통을 실패로 다루지 않는다</h3>
+              <p class="principle-row__desc">개인의 고통을 자기관리 실패처럼 다루지 않습니다. 잠들지 못하는 밤, 달래기 어려운 아이, 지치는 보호자 — 모두 판단 없이 씁니다.</p>
+            </div>
+          </div>
+          <div class="principle-row">
+            <div class="principle-row__num">03</div>
+            <div class="principle-row__body">
+              <h3 class="principle-row__title">현장의 언어를 공공의 문장으로</h3>
+              <p class="principle-row__desc">현장의 언어를 공공의 문장으로 번역합니다. 임상 언어, 교육학 언어가 일상의 글로 읽히도록 다듬습니다.</p>
+            </div>
+          </div>
+          <div class="principle-row">
+            <div class="principle-row__num">04</div>
+            <div class="principle-row__body">
+              <h3 class="principle-row__title">익명화와 광고·기사 분리</h3>
+              <p class="principle-row__desc">사례는 철저히 익명화하며, 광고와 기사를 명확히 분리합니다. 독자가 읽고 있는 것이 기사인지 광고인지 항상 명확합니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Topics ─────────────────────────────────────────── -->
+    <section class="about-topics" id="topics">
+      <div class="container">
+        <div class="section-head reveal" style="margin-bottom:32px;">
+          <div>
+            <span class="kicker">coverage</span>
+            <h2 class="section-title">다루는 주제</h2>
+            <p class="section-desc">생애주기와 수면, 발달과 애착, 교육현장을 중심으로 다룹니다.</p>
+          </div>
+        </div>
+        <div class="topics-detail-grid">
+          <div class="topic-detail-card reveal reveal-delay-1">
+            <span class="topic-detail-card__num">01 · lifecycle &amp; sleep</span>
+            <h3 class="topic-detail-card__title">생애주기와 수면</h3>
+            <p class="topic-detail-card__desc">영유아기부터 청소년기, 성인기까지 발달 흐름 안에서 읽는 수면을 다룹니다. 수면을 단순한 건강 습관이 아니라 관계와 발달의 문제로 접근합니다.</p>
+            <div class="topic-detail-card__examples">
+              <span class="topic-tag">영유아 수면</span>
+              <span class="topic-tag">청소년 리듬</span>
+              <span class="topic-tag">공동조절</span>
+            </div>
+          </div>
+          <div class="topic-detail-card reveal reveal-delay-1">
+            <span class="topic-detail-card__num">02 · development &amp; attachment</span>
+            <h3 class="topic-detail-card__title">발달과 애착</h3>
+            <p class="topic-detail-card__desc">애착, 공동조절, 사회학습을 현장의 언어로 풀어낸 기록을 모읍니다. 발달을 단계 체크리스트로 보지 않고 관계 안에서 읽습니다.</p>
+            <div class="topic-detail-card__examples">
+              <span class="topic-tag">애착이론</span>
+              <span class="topic-tag">발달지연</span>
+              <span class="topic-tag">조기 신호</span>
+            </div>
+          </div>
+          <div class="topic-detail-card reveal reveal-delay-2">
+            <span class="topic-detail-card__num">03 · classroom</span>
+            <h3 class="topic-detail-card__title">교육현장</h3>
+            <p class="topic-detail-card__desc">발달지연, 통합교육, 특수교육의 쟁점과 실제를 다룹니다. 어린이집, 가정, 학교 현장의 언어로 씁니다.</p>
+            <div class="topic-detail-card__examples">
+              <span class="topic-tag">통합교육</span>
+              <span class="topic-tag">특수교육</span>
+              <span class="topic-tag">현장 기록</span>
+            </div>
+          </div>
+          <div class="topic-detail-card reveal reveal-delay-2">
+            <span class="topic-detail-card__num">04 · research &amp; archive</span>
+            <h3 class="topic-detail-card__title">연구와 기록</h3>
+            <p class="topic-detail-card__desc">저서, 논문, 학위, 언론 보도 등 관련 기록을 한자리에서 확인할 수 있습니다. 기사의 바탕이 되는 연구 맥락을 함께 공개합니다.</p>
+            <div class="topic-detail-card__examples">
+              <span class="topic-tag">저서</span>
+              <span class="topic-tag">논문</span>
+              <span class="topic-tag">언론보도</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Editor ─────────────────────────────────────────── -->
+    <section class="about-editor" id="editor">
+      <div class="container">
+        <div class="section-head reveal" style="margin-bottom:32px;">
+          <div>
+            <span class="kicker">editor</span>
+            <h2 class="section-title">편집장</h2>
+          </div>
+        </div>
+        <div class="editor-card reveal">
+          <div class="editor-avatar" aria-hidden="true">선</div>
+          <div>
+            <h3 class="editor-card__name">선애순</h3>
+            <p class="editor-card__role">편집장 · editor-in-chief</p>
+            <p class="editor-card__bio">
+              이음통합평생교육원 대표. 영유아 발달, 수면, 애착을 교육과 심리의 언어로 풀어 쓰고 있습니다.
+              저서 9권, 논문 6편, 교육 현장 경험을 바탕으로 이음교육저널을 운영합니다.
+            </p>
+            <div class="editor-card__credentials">
+              <span class="credential">영유아 발달</span>
+              <span class="credential">수면 심리</span>
+              <span class="credential">애착이론</span>
+              <span class="credential">통합교육</span>
+              <span class="credential">모래놀이심리상담</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Operating info ─────────────────────────────────── -->
+    <section class="about-info" id="info">
+      <div class="container">
+        <div class="section-head reveal" style="margin-bottom:4px;">
+          <div>
+            <span class="kicker">operating body</span>
+            <h2 class="section-title">운영 정보</h2>
+          </div>
+        </div>
+        <div class="info-grid">
+          <div class="info-card reveal">
+            <span class="info-card__label">publisher</span>
+            <h4 class="info-card__title">발행</h4>
+            <p class="info-card__value">이음통합평생교육원</p>
+          </div>
+          <div class="info-card reveal reveal-delay-1">
+            <span class="info-card__label">representative</span>
+            <h4 class="info-card__title">대표</h4>
+            <p class="info-card__value">선애순</p>
+          </div>
+          <div class="info-card reveal reveal-delay-1">
+            <span class="info-card__label">business number</span>
+            <h4 class="info-card__title">사업자등록번호</h4>
+            <p class="info-card__value">296-05-03812</p>
+          </div>
+          <div class="info-card reveal reveal-delay-2">
+            <span class="info-card__label">address</span>
+            <h4 class="info-card__title">주소</h4>
+            <p class="info-card__value">광주시 서구 회재로 859, 3층</p>
+          </div>
+          <div class="info-card reveal reveal-delay-2">
+            <span class="info-card__label">phone</span>
+            <h4 class="info-card__title">전화</h4>
+            <p class="info-card__value">062-655-4116</p>
+          </div>
+          <div class="info-card reveal reveal-delay-2">
+            <span class="info-card__label">official site</span>
+            <h4 class="info-card__title">교육원 사이트</h4>
+            <p class="info-card__value"><a href="https://www.ieumedu.kr/">www.ieumedu.kr ↗</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Policy links ────────────────────────────────────── -->
+    <section class="about-policy">
+      <div class="container">
+        <span class="kicker">policy &amp; legal</span>
+        <h2 class="section-title" style="font-size:var(--text-2xl);margin-top:10px;">정책 안내</h2>
+        <div class="policy-links-grid">
+          <a class="policy-link" href="rights-and-corrections.html">
+            정정 · 반론 · 권리구제 <span>→</span>
+          </a>
+          <a class="policy-link" href="youth-protection-policy.html">
+            청소년보호정책 <span>→</span>
+          </a>
+          <a class="policy-link" href="privacy-policy.html">
+            개인정보처리방침 <span>→</span>
+          </a>
+          <a class="policy-link" href="terms.html">
+            이용약관 <span>→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
   </main>
-  <div id="site-footer"></div>
-  <script src="/assets/js/partials.js"></script>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-panel">
+        <div class="footer-brand-row">
+          <div class="brand-mark brand-mark--on-dark" aria-hidden="true">em</div>
+          <h3 class="footer-brand">이음교육저널</h3>
+        </div>
+        <p class="footer-tag">em · education &amp; mind journal</p>
+        <p class="footer-body">수면, 발달, 교육현장을 중심으로 기사와 칼럼을 싣습니다. 빠른 요약보다 맥락 설명을 먼저 둡니다.</p>
+      </div>
+      <div class="footer-panel">
+        <span class="footer-kicker">operating body</span>
+        <p class="footer-body">발행: 이음통합평생교육원</p>
+        <p class="footer-body">대표: 선애순</p>
+        <p class="footer-body">광주시 서구 회재로 859, 3층</p>
+        <p class="footer-body">062-655-4116</p>
+      </div>
+      <div class="footer-panel">
+        <span class="footer-kicker">policy</span>
+        <ul class="footer-links">
+          <li><a href="newsroom-about.html">신문 소개</a></li>
+          <li><a href="rights-and-corrections.html">정정 · 반론 · 권리구제</a></li>
+          <li><a href="youth-protection-policy.html">청소년보호정책</a></li>
+          <li><a href="privacy-policy.html">개인정보처리방침</a></li>
+          <li><a href="terms.html">이용약관</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <span>© 2026 이음교육저널</span>
+      <span>사업자등록번호 296-05-03812</span>
+    </div>
+  </footer>
+
+  <script>
+    // Sticky header
+    (function(){
+      const hdr = document.getElementById('hdr');
+      if(!hdr) return;
+      const onScroll = () => {
+        hdr.classList.toggle('site-header--scrolled', window.scrollY > 24);
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+    })();
+
+    // Mobile menu
+    (function(){
+      const btn = document.getElementById('menu-toggle');
+      const nav = document.getElementById('mobile-nav');
+      if(!btn || !nav) return;
+      btn.addEventListener('click', () => {
+        const isOpen = nav.classList.toggle('is-open');
+        btn.classList.toggle('is-open', isOpen);
+        btn.setAttribute('aria-expanded', isOpen);
+        document.body.style.overflow = isOpen ? 'hidden' : '';
+      });
+      nav.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', () => {
+          nav.classList.remove('is-open');
+          btn.classList.remove('is-open');
+          btn.setAttribute('aria-expanded', 'false');
+          document.body.style.overflow = '';
+        });
+      });
+    })();
+
+    // Scroll reveal
+    (function(){
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('is-visible'); io.unobserve(e.target); }});
+      }, { threshold: 0.08 });
+      document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    })();
+  </script>
 </body>
 </html>
