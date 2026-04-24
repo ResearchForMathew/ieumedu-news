@@ -209,3 +209,9 @@
   .reading-rail,.archive-toc{position:static}
   .pull-quote{float:none;width:auto;margin:32px 0}
 }
+
+@media (max-width:720px){
+  .archive-row{grid-template-columns:64px 1fr;gap:8px 14px;padding:18px 0}
+  .archive-row__tag{grid-column:2}
+  .archive-row__source{text-align:left;grid-column:2}
+}

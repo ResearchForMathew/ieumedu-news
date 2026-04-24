@@ -77,9 +77,45 @@
 </footer>`;
   }
 
+  function initShareActions(){
+    document.querySelectorAll('.rail-share').forEach((group) => {
+      const buttons = Array.from(group.querySelectorAll('button'));
+      buttons.forEach((button) => {
+        const action = button.textContent.trim().toLowerCase();
+        if(action === 'copy link'){
+          button.setAttribute('aria-label', '현재 기사 링크 복사');
+          button.addEventListener('click', async () => {
+            const url = window.location.href.split('#')[0];
+            try {
+              await navigator.clipboard.writeText(url);
+              const original = button.textContent;
+              button.textContent = 'copied';
+              window.setTimeout(() => { button.textContent = original; }, 1800);
+            } catch (_) {
+              window.prompt('기사 링크를 복사하세요.', url);
+            }
+          });
+        }
+        if(action === 'email'){
+          button.setAttribute('aria-label', '현재 기사를 이메일로 공유');
+          button.addEventListener('click', () => {
+            const subject = encodeURIComponent(document.title);
+            const body = encodeURIComponent(window.location.href.split('#')[0]);
+            window.location.href = `mailto:?subject=${subject}&body=${body}`;
+          });
+        }
+        if(action === 'print'){
+          button.setAttribute('aria-label', '현재 기사 인쇄');
+          button.addEventListener('click', () => window.print());
+        }
+      });
+    });
+  }
+
   if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', () => { initHeader(); initFooter(); });
+    document.addEventListener('DOMContentLoaded', () => { initHeader(); initFooter(); initShareActions(); });
   } else {
     initHeader(); initFooter();
+    initShareActions();
   }
 })();

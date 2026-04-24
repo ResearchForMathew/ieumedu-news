@@ -16,6 +16,8 @@
   --color-text-faint:    #8D9790;
   --color-border:        #D6DDD7;
   --color-border-soft:   #E4E9E4;
+  --color-border-strong: #B8C8C3;
+  --color-surface-soft:  #EEF2EF;
 
   /* ── Accent: Teal (pine / juniper) ── */
   --color-accent:         #2D6A6A;
