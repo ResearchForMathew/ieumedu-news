@@ -5,6 +5,24 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>발달지연 조기 발견이 중요한 이유, 어린이집·가정이 함께 보는 신호들 · 이음교육저널</title>
   <meta name="description" content="발달지연과 부적응 신호를 조기에 발견하기 위해 가정과 교육기관이 함께 봐야 할 지점을 정리한 현장 해설입니다.">
+  <link rel="canonical" href="https://news.ieumedu.kr/articles/development-delay-early-signals.html">
+  <meta property="og:title" content="발달지연 조기 발견이 중요한 이유, 어린이집·가정이 함께 보는 신호들 · 이음교육저널">
+  <meta property="og:description" content="발달지연과 부적응 신호를 조기에 발견하기 위해 가정과 교육기관이 함께 봐야 할 지점을 정리한 현장 해설입니다.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://news.ieumedu.kr/articles/development-delay-early-signals.html">
+  <meta property="og:image" content="https://news.ieumedu.kr/assets/articles/development-delay.png">
+  <meta property="og:site_name" content="이음교육저널">
+  <meta property="og:locale" content="ko_KR">
+  <meta property="article:published_time" content="2026-04-23">
+  <meta property="article:author" content="선애순">
+  <meta property="article:section" content="현장 해설">
+  <meta property="article:tag" content="발달지연">
+  <meta property="article:tag" content="조기 발견">
+  <meta property="article:tag" content="통합교육">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="발달지연 조기 발견이 중요한 이유, 어린이집·가정이 함께 보는 신호들 · 이음교육저널">
+  <meta name="twitter:description" content="발달지연과 부적응 신호를 조기에 발견하기 위해 가정과 교육기관이 함께 봐야 할 지점을 정리한 현장 해설입니다.">
+  <meta name="twitter:image" content="https://news.ieumedu.kr/assets/articles/development-delay.png">
   <link rel="stylesheet" href="/assets/css/colors_and_type.css">
   <link rel="stylesheet" href="/assets/css/kit.css">
   <link rel="stylesheet" href="/assets/css/detail.css">
@@ -81,9 +99,9 @@
         <div class="rail-block">
           <span class="rail-label">share</span>
           <div class="rail-share">
-            <button type="button">copy link</button>
-            <button type="button">email</button>
-            <button type="button">print</button>
+            <button type="button" id="rail-copy" aria-label="기사 링크 복사">copy link</button>
+            <button type="button" id="rail-email" aria-label="이메일로 기사 공유">email</button>
+            <button type="button" id="rail-print" aria-label="기사 인쇄">print</button>
           </div>
         </div>
         <div class="rail-block">
@@ -168,6 +186,27 @@
       c.style.setProperty('--my',(e.clientY-r.top)+'px');
     });
   });
+  (function(){
+    const url = window.location.href.split('#')[0];
+    const copyAction = async (btn) => {
+      try {
+        await navigator.clipboard.writeText(url);
+        const original = btn.textContent;
+        btn.textContent = 'copied!';
+        setTimeout(() => { btn.textContent = original; }, 1800);
+      } catch (_) {
+        window.prompt('링크를 복사하세요.', url);
+      }
+    };
+    const copy = document.getElementById('rail-copy');
+    const email = document.getElementById('rail-email');
+    const print = document.getElementById('rail-print');
+    if(copy) copy.addEventListener('click', () => copyAction(copy));
+    if(email) email.addEventListener('click', () => {
+      window.location.href = `mailto:?subject=${encodeURIComponent(document.title)}&body=${encodeURIComponent(url)}`;
+    });
+    if(print) print.addEventListener('click', () => window.print());
+  })();
 </script>
 </body>
 </html>
