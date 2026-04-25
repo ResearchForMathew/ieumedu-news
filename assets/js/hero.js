@@ -1,30 +1,31 @@
-// Mouse-responsive dotfield + 3D tilt for the editor's note card.
+// Mouse-responsive hero scene + 3D tilt for the editor's note card.
 (function(){
-  function initDotfield(){
+  function initHeroScene(){
     const field = document.querySelector('.hero-dotfield');
     if(!field) return;
-    // deterministic scatter (seeded rng)
-    const rng = (s) => { const x = Math.sin(s) * 10000; return x - Math.floor(x); };
-    const dots = Array.from({length:28}, (_,i)=>({
-      x: rng(i*7.13)*100, y: rng(i*11.7+1)*100,
-      r: 3 + rng(i*3.1)*22,
-      stroke: rng(i*5.9) > 0.4,
-      depth: 0.3 + rng(i*2.2)*1.0,
-      drift: 4 + rng(i*8.8)*6,
-      delay: rng(i*1.4)*4,
-    }));
-    dots.forEach(d=>{
-      const el = document.createElement('span');
-      el.className = 'hero-dot ' + (d.stroke ? 'hero-dot--stroke' : 'hero-dot--fill');
-      Object.assign(el.style,{
-        left: d.x+'%', top: d.y+'%',
-        width: (d.r*2)+'px', height: (d.r*2)+'px',
-        animationDuration: d.drift+'s',
-        animationDelay: d.delay+'s',
-      });
-      el._depth = d.depth;
-      field.appendChild(el);
-    });
+    field.innerHTML = `
+      <div class="hero-scene" aria-hidden="true">
+        <span class="hero-scene__glow hero-scene__glow--night"></span>
+        <span class="hero-scene__glow hero-scene__glow--day"></span>
+        <span class="hero-scene__orb hero-scene__orb--moon"></span>
+        <span class="hero-scene__orb hero-scene__orb--sun"></span>
+        <span class="hero-scene__thread hero-scene__thread--emotion"></span>
+        <span class="hero-scene__thread hero-scene__thread--education"></span>
+        <div class="hero-scene__page">
+          <span class="hero-scene__page-spine"></span>
+          <span class="hero-scene__page-line hero-scene__page-line--one"></span>
+          <span class="hero-scene__page-line hero-scene__page-line--two"></span>
+          <span class="hero-scene__page-line hero-scene__page-line--three"></span>
+          <span class="hero-scene__page-line hero-scene__page-line--four"></span>
+        </div>
+        <div class="hero-scene__constellation">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <div class="hero-scene__classroom">
+          <span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+    `;
     let tx=0.5, ty=0.5, cx=0.5, cy=0.5, raf=0;
     const onMove = (e)=>{
       const r = field.getBoundingClientRect();
@@ -35,14 +36,22 @@
     const tick = ()=>{
       cx += (tx - cx) * 0.08;
       cy += (ty - cy) * 0.08;
-      [...field.children].forEach(el=>{
-        const d = el._depth || 1;
-        const dx = (cx - 0.5) * 40 * d;
-        const dy = (cy - 0.5) * 28 * d;
-        el.style.transform = `translate(-50%,-50%) translate(${dx}px,${dy}px)`;
+      field.querySelectorAll('[data-depth]').forEach(el=>{
+        const d = Number(el.dataset.depth) || 1;
+        const dx = (cx - 0.5) * 38 * d;
+        const dy = (cy - 0.5) * 26 * d;
+        el.style.setProperty('--scene-x', dx.toFixed(2)+'px');
+        el.style.setProperty('--scene-y', dy.toFixed(2)+'px');
       });
       raf = requestAnimationFrame(tick);
     };
+    field.querySelector('.hero-scene__glow--night')?.setAttribute('data-depth','0.45');
+    field.querySelector('.hero-scene__glow--day')?.setAttribute('data-depth','0.55');
+    field.querySelector('.hero-scene__orb--moon')?.setAttribute('data-depth','1.2');
+    field.querySelector('.hero-scene__orb--sun')?.setAttribute('data-depth','1.0');
+    field.querySelector('.hero-scene__page')?.setAttribute('data-depth','0.75');
+    field.querySelector('.hero-scene__constellation')?.setAttribute('data-depth','1.45');
+    field.querySelector('.hero-scene__classroom')?.setAttribute('data-depth','0.9');
     field.addEventListener('mousemove', onMove);
     field.addEventListener('mouseleave', onLeave);
     raf = requestAnimationFrame(tick);
@@ -77,8 +86,8 @@
   }
 
   if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', ()=>{ initDotfield(); initTilt(); initCardHover(); });
+    document.addEventListener('DOMContentLoaded', ()=>{ initHeroScene(); initTilt(); initCardHover(); });
   } else {
-    initDotfield(); initTilt(); initCardHover();
+    initHeroScene(); initTilt(); initCardHover();
   }
 })();
