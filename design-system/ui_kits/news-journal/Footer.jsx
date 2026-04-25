@@ -17,7 +17,7 @@ function Footer() {
           <span className="footer-kicker">operating body</span>
           <p className="footer-body">발행: 이음통합평생교육원</p>
           <p className="footer-body">대표: 선애순</p>
-          <p className="footer-body">광주시 서구 회재로 859, 3층</p>
+          <p className="footer-body">광주광역시 서구 회재로 859, 3층</p>
           <p className="footer-body">062-655-4116</p>
         </div>
         <div className="footer-panel">

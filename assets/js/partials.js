@@ -55,7 +55,7 @@
       <span class="footer-kicker">operating body</span>
       <p class="footer-body">발행: 이음통합평생교육원</p>
       <p class="footer-body">대표: 선애순</p>
-      <p class="footer-body">광주시 서구 회재로 859, 3층</p>
+      <p class="footer-body">광주광역시 서구 회재로 859, 3층</p>
       <p class="footer-body">062-655-4116</p>
     </div>
     <div class="footer-panel">
