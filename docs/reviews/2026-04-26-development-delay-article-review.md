@@ -23,7 +23,7 @@
 
 ### P2. 공유 버튼이 보이지만 동작 코드가 없다
 
-`articles/development-delay-early-signals.html`의 reading rail에는 `copy link`, `email`, `print` 버튼이 렌더링된다. 하지만 이 페이지 하단 스크립트는 읽기 진행률과 관련 카드 hover만 처리하고, 공유 버튼 클릭 핸들러가 없다.
+리뷰 당시 `articles/development-delay-early-signals.html`의 reading rail에는 `copy link`, `email`, `print` 버튼이 렌더링되어 있었지만, 페이지 하단 스크립트는 읽기 진행률과 관련 카드 hover만 처리하고 공유 버튼 클릭 핸들러는 없었다.
 
 비교 기준으로 `articles/infant-sleep-coregulation.html`에는 `share-copy`, `rail-copy`, `rail-print`, `mailto`, `navigator.clipboard`, `window.print()` 처리가 이미 들어가 있다. 따라서 현재 페이지는 사용자가 버튼을 눌러도 기대한 공유 동작이 발생하지 않는 상태다.
 
@@ -33,7 +33,7 @@
 
 ### P2. 소셜 공유 메타 정보가 부족하다
 
-현재 기사 head에는 `title`과 `meta description`은 있지만 `canonical`, `og:title`, `og:description`, `og:image`, `twitter:card` 계열 메타가 없다.
+리뷰 당시 기사 head에는 `title`과 `meta description`은 있었지만 `canonical`, `og:title`, `og:description`, `og:image`, `twitter:card` 계열 메타가 없었다.
 
 이 기사는 외부 공유 가능성이 있는 주제형 기사이므로, 카카오톡/메신저/검색 결과에서 제목과 대표 이미지가 안정적으로 잡히도록 기사별 OG 메타를 추가하는 것이 좋다.
 
